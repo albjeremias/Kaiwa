@@ -1,15 +1,10 @@
 /*global, IDBKeyRange*/
 "use strict";
 
-function ArchiveStorage(storage) {
-    this.storage = storage;
-}
-
-ArchiveStorage.prototype = {
-    constructor: {
-        value: ArchiveStorage
-    },
-    setup: function (db) {
+export default class ArchiveStorage {
+    constructor (public storage) {}
+    
+    setup (db) {
         if (db.objectStoreNames.contains('archive')) {
             db.deleteObjectStore('archive');
         }
@@ -17,20 +12,23 @@ ArchiveStorage.prototype = {
             keyPath: 'archivedId'
         });
         store.createIndex("owner", "owner", {unique: false});
-    },
-    transaction: function (mode) {
+    }
+    
+    transaction (mode) {
         var trans = this.storage.db.transaction('archive', mode);
         return trans.objectStore('archive');
-    },
-    add: function (message, cb) {
+    }
+    
+    add (message, cb) {
         cb = cb || function () {};
         var request = this.transaction('readwrite').put(message);
         request.onsuccess = function () {
             cb(false, message);
         };
         request.onerror = cb;
-    },
-    get: function (id, cb) {
+    }
+    
+    get (id, cb) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
@@ -45,8 +43,9 @@ ArchiveStorage.prototype = {
             cb(false, request.result);
         };
         request.onerror = cb;
-    },
-    getAll: function (owner, cb) {
+    }
+    
+    getAll (owner, cb) {
         cb = cb || function () {};
         var results = [];
 
@@ -63,9 +62,7 @@ ArchiveStorage.prototype = {
             }
         };
         request.onerror = cb;
-    },
- 
-};
-
-
-module.exports = ArchiveStorage;
+    }
+    
+    value = ArchiveStorage
+}
