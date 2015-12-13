@@ -4,7 +4,7 @@ module.exports = {
     debug: true,
     devtool: 'cheap-source-map',
     resolve: {
-        extensions: ['', '.ts', '.js', '.json', '.jade', '.html', '.less', '.css', '.json']
+        extensions: ['', '.ts', '.tsx', '.js', '.json', '.jade', '.html', '.less', '.css', '.json']
     },
     
     context: path.join(__dirname, 'src', 'js'),
@@ -19,7 +19,7 @@ module.exports = {
             './libraries/sugar-1.2.1-dates.js',
             './libraries/jquery.oembed.js'
         ],
-        "app": "./app.ts"
+        "app": "./app.tsx"
     },
 
     output: {
@@ -38,6 +38,10 @@ module.exports = {
             { 
                 test: /jquery\.js$/, 
                 loader: "expose?$!expose?jQuery"
+            },
+            { 
+                test: /react\.js$/, 
+                loader: "expose?React"
             },
             {
               test: /resampler\.js$/,
