@@ -28,19 +28,19 @@ const ApplicationView = createClass<Properties, State>({
         return <div>How did u get here?</div>
     },
     
-    async init() {
+    async init(): Promise<App|Error> {
         const props = this.props
         const app = props.app
         
         try {
-            const loadedApp = await app.launch()
+            const loadedApp: App = await app.launch()
             this.setState({ error: null })
             return loadedApp
         } 
         
         catch (e) {
             this.setState({ error: e })
-            return Promise.reject(e)
+            return Promise.reject<Error>(e)
         }
     }
 })

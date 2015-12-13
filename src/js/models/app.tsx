@@ -45,8 +45,8 @@ export default class App {
         if (!config) {
             console.log('missing config')
             window.location = 'login.html' as any
-            
-            return Promise.reject<App>(app)
+            const error = new Error("no config")
+            return Promise.reject<Error>(error)
         }
 
         app.config = this.parseConfig(config)
