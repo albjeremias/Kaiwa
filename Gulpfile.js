@@ -40,15 +40,13 @@ gulp.task('resources', function () {
 });
 
 gulp.task('client', ['jade-templates', 'jade-views'], function (cb) {
-    webpack(Object.assign({
-            plugins: []
-        }, require('./webpack.config.js')), null, function(err, stats) {
-            if(err) return cb(JSON.stringify(err));
-            gutil.log("[webpack]", stats.toString());
-            return stats;
-        })
-        .pipe(gulp.dest('./public/js'))
-        .on('end', cb);
+    var cfg = require('./webpack.config.js');
+
+    webpack(cfg, null, function(err, stats) {
+        if(err) return cb(JSON.stringify(err));
+        gutil.log("[webpack]", stats.toString());
+        return stats;
+    }).pipe(gulp.dest('./public/js')).on('end', cb);
 });
 
 gulp.task('config', function (cb) {
