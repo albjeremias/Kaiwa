@@ -9,15 +9,10 @@
 //    rosterID: string
 
 
-function RosterStorage(storage) {
-    this.storage = storage;
-}
-
-RosterStorage.prototype = {
-    constructor: {
-        value: RosterStorage
-    },
-    setup: function (db) {
+export default class RosterStorage{
+    constructor(public storage) {}
+    
+    setup (db) {
         if (db.objectStoreNames.contains('roster')) {
             db.deleteObjectStore('roster');
         }
@@ -25,20 +20,23 @@ RosterStorage.prototype = {
             keyPath: 'storageId'
         });
         store.createIndex("owner", "owner", {unique: false});
-    },
-    transaction: function (mode) {
+    }
+    
+    transaction (mode) {
         var trans = this.storage.db.transaction('roster', mode);
         return trans.objectStore('roster');
-    },
-    add: function (contact, cb) {
+    }
+    
+    add (contact, cb) {
         cb = cb || function () {};
         var request = this.transaction('readwrite').put(contact);
         request.onsuccess = function () {
             cb(false, contact);
         };
         request.onerror = cb;
-    },
-    get: function (id, cb) {
+    }
+    
+    get (id, cb) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
@@ -52,8 +50,9 @@ RosterStorage.prototype = {
             cb(false, request.result);
         };
         request.onerror = cb;
-    },
-    getAll: function (owner, cb) {
+    }
+    
+    getAll (owner, cb) {
         cb = cb || function () {};
         var results = [];
 
@@ -69,16 +68,18 @@ RosterStorage.prototype = {
             }
         };
         request.onerror = cb;
-    },
-    remove: function (id, cb) {
+    }
+    
+    remove (id, cb) {
         cb = cb || function () {};
         var request = this.transaction('readwrite')['delete'](id);
         request.onsuccess = function (e) {
             cb(false, request.result);
         };
         request.onerror = cb;
-    },
-    clear: function (cb) {
+    }
+    
+    clear (cb) {
         cb = cb || function () {};
         var request = this.transaction('readwrite').clear();
         request.onsuccess = function () {
@@ -86,7 +87,6 @@ RosterStorage.prototype = {
         };
         request.onerror = cb;
     }
-};
-
-
-module.exports = RosterStorage;
+    
+    value = RosterStorage
+}

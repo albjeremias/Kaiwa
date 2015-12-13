@@ -9,35 +9,33 @@
 //    rosterVer: string
 
 
-function ProfileStorage(storage) {
-    this.storage = storage;
-}
-
-ProfileStorage.prototype = {
-    constructor: {
-        value: ProfileStorage
-    },
-    setup: function (db) {
+export default class ProfileStorage {
+    constructor(public storage) {}
+    
+    setup (db) {
         if (db.objectStoreNames.contains('profiles')) {
             db.deleteObjectStore('profiles');
         }
         var store = db.createObjectStore('profiles', {
             keyPath: 'jid'
         });
-    },
-    transaction: function (mode) {
+    }
+    
+    transaction (mode) {
         var trans = this.storage.db.transaction('profiles', mode);
         return trans.objectStore('profiles');
-    },
-    set: function (profile, cb) {
+    }
+    
+    set (profile, cb) {
         cb = cb || function () {};
         var request = this.transaction('readwrite').put(profile);
         request.onsuccess = function () {
             cb(false, profile);
         };
         request.onerror = cb;
-    },
-    get: function (id, cb) {
+    }
+    
+    get (id, cb) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
@@ -51,8 +49,9 @@ ProfileStorage.prototype = {
             cb(false, request.result);
         };
         request.onerror = cb;
-    },
-    remove: function (id, cb) {
+    }
+    
+    remove (id, cb) {
         cb = cb || function () {};
         var request = this.transaction('readwrite')['delete'](id);
         request.onsuccess = function (e) {
@@ -60,7 +59,6 @@ ProfileStorage.prototype = {
         };
         request.onerror = cb;
     }
-};
-
-
-module.exports = ProfileStorage;
+    
+    value = ProfileStorage
+}
