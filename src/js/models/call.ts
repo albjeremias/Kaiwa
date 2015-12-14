@@ -1,25 +1,18 @@
 /*global app, me, client*/
 "use strict";
 
-var _ = require('underscore');
-var HumanModel = require('human-model');
-var logger = require('andlog');
+import App from './app'
 
+declare const app: App
 
-module.exports = HumanModel.define({
-    type: 'call',
-    initialize: function (attrs) {
+export default class Call {
+    constructor() {
         this.contact.onCall = true;
         // temporary, this won't stay here
         app.navigate('/chat/' + encodeURIComponent(this.contact.jid));
-    },
-    session: {
-        contact: 'object',
-        jingleSession: 'object',
-        state: ['string', true, 'inactive'],
-        multiUser: ['boolean', true, false]
-    },
-    end: function (reasonForEnding) {
+    }
+    
+    end (reasonForEnding) {
         var reason = reasonForEnding || 'success';
         this.contact.onCall = false;
         if (this.jingleSession) {
@@ -27,4 +20,9 @@ module.exports = HumanModel.define({
         }
         this.collection.remove(this);
     }
-});
+    
+    contact: {onCall; jid} = null
+    jingleSession: {end} = null
+    state: string = 'inactive'
+    multiUser: boolean = false
+}

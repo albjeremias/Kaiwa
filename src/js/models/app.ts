@@ -1,17 +1,16 @@
 'use strict';
 
+import Me from './me'
+
 declare const SERVER_CONFIG: any
 declare const client: any
-declare const me: any
+declare const me: Me
 
 interface Storage {}
 interface StorageConstructor {
     new(): Storage
     prototype: Storage
 }
-
-// var Backbone = require('backbone')
-// Backbone.$ = $
 
 var $: JQueryStatic = require('jquery')
 var _: _.LoDashStatic = require('lodash')
@@ -21,7 +20,6 @@ const asyncjs: Async = require('async')
 var StanzaIO = require('stanza.io')
 
 var AppState = require('./state')
-var MeModel = require('./me')
 const MainView = require('../views/main')
 var Router = require('../router')
 var Storage: StorageConstructor = require('../storage')
@@ -86,7 +84,7 @@ export default class App {
            
             app = await (async() => new Promise<App>((resolve, reject) => {
                 app.state = new AppState()
-                app.me = window['me'] = new MeModel(profile)
+                app.me = window['me'] = new Me(profile)
 
                 window.onbeforeunload = function () {
                     if (app.api.sessionStarted) {
@@ -207,15 +205,15 @@ export default class App {
     }
     // TODO: add typings
     private view: any
-    private api: any
+    api: any
     private id: any
-    private timeInterval: any
+    timeInterval: any
     currentPage: any
     state: any
     history: any
     config: any
     soundManager: any
-    me: any
+    me: Me
     storage: any
     notifications: any
     desktop: any

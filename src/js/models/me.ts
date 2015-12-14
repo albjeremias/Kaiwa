@@ -1,20 +1,24 @@
 /*global app, client, URL, me*/
 "use strict";
 
-var HumanModel = require('human-model');
 var getUserMedia = require('getusermedia');
-var Contacts = require('./contacts');
-var Calls = require('./calls');
-var Contact = require('./contact');
-var MUCs = require('./mucs');
-var MUC = require('./muc');
-var ContactRequests = require('./contactRequests');
 var fetchAvatar = require('../helpers/fetchAvatar');
 var crypto = require('crypto');
 var StanzaIo = require('stanza.io');
 
-module.exports = HumanModel.define({
-    initialize: function (opts) {
+import App from './app'
+
+declare const app: App
+
+import Contacts from './contacts'
+import Calls from './calls'
+import Contact from './contact'
+import MUCs from './mucs'
+import MUC from './muc'
+import ContactRequests from './contactRequests'
+
+export default class Me {
+    constructor(opts) {
         this.setAvatar(opts ? opts.avatarID : null);
 
         this.bind('change:jid', this.load, this);
@@ -29,63 +33,9 @@ module.exports = HumanModel.define({
         this.contacts.bind('change:unreadCount', this.updateUnreadCount, this);
         app.state.bind('change:active', this.updateIdlePresence, this);
         app.state.bind('change:deviceIDReady', this.registerDevice, this);
-    },
-    props: {
-        jid: ['object', true],
-        status: 'string',
-        avatarID: 'string',
-        rosterVer: 'string',
-        nick: 'string'
-    },
-    session: {
-        avatar: 'string',
-        connected: ['bool', false, false],
-        shouldAskForAlertsPermission: ['bool', false, false],
-        hasFocus: ['bool', false, false],
-        _activeContact: 'string',
-        stream: 'object',
-        soundEnabled: ['bool', false, true],
-    },
-    collections: {
-        contacts: Contacts,
-        contactRequests: ContactRequests,
-        mucs: MUCs,
-        calls: Calls
-    },
-    derived: {
-        displayName: {
-            deps: ['nick', 'jid'],
-            fn: function () {
-                return this.nick || this.jid.bare;
-            }
-        },
-        streamUrl: {
-            deps: ['stream'],
-            fn: function () {
-                if (!this.stream) return '';
-                return URL.createObjectURL(this.stream);
-            }
-        },
-        organization: {
-            deps: ['orga'],
-            fn: function () {
-                return app.serverConfig().name || 'Kaiwa';
-            }
-        },
-        soundEnabledClass: {
-            deps: ['soundEnabled'],
-            fn: function () {
-                return this.soundEnabled ? "primary" : "secondary";
-            }
-        },
-        isAdmin: {
-            deps: ['jid'],
-            fn: function () {
-               return this.jid.local === SERVER_CONFIG.admin ? 'meIsAdmin' : '';
-            }
-        }
-    },
-    setActiveContact: function (jid) {
+    }
+    
+    setActiveContact (jid) {
         var prev = this.getContact(this._activeContact);
         if (prev) {
             prev.activeContact = false;
@@ -96,24 +46,29 @@ module.exports = HumanModel.define({
             curr.unreadCount = 0;
             this._activeContact = curr.id;
         }
-    },
-    getName: function () {
+    }
+    
+    getName () {
         return this.displayName;
-    },
-    getNickname: function () {
+    }
+    
+    getNickname () {
         return this.displayName != this.nick ? this.nick : '';
-    },
-    getAvatar: function () {
+    }
+    
+    getAvatar () {
         return this.avatar;
-    },
-    setAvatar: function (id, type, source) {
+    }
+    
+    setAvatar (id, type?, source?) {
         var self = this;
         fetchAvatar('', id, type, source, function (avatar) {
             self.avatarID = avatar.id;
             self.avatar = avatar.uri;
         });
-    },
-    publishAvatar: function (data) {
+    }
+    
+    publishAvatar (data) {
         if (!data) data = this.avatar;
         if (!data || data.indexOf('https://') != -1) return;
 
@@ -132,11 +87,13 @@ module.exports = HumanModel.define({
                 }]);
             });
         });
-    },
-    setSoundNotification: function(enable) {
+    }
+    
+    setSoundNotification(enable) {
         this.soundEnabled = enable;
-    },
-    getContact: function (jid, alt) {
+    }
+    
+    getContact (jid, alt) {
         if (typeof jid === 'string') {
             if (SERVER_CONFIG.domain && jid.indexOf('@') == -1) jid += '@' + SERVER_CONFIG.domain;
             jid = new StanzaIo.JID(jid);
@@ -152,8 +109,9 @@ module.exports = HumanModel.define({
         return this.contacts.get(jid.bare) ||
             this.mucs.get(jid.bare) ||
             this.calls.findWhere('jid', jid);
-    },
-    setContact: function (data, create) {
+    }
+    
+    setContact (data, create) {
         var contact = this.getContact(data.jid);
         data.jid = data.jid.bare;
 
@@ -167,16 +125,18 @@ module.exports = HumanModel.define({
             contact.save();
             this.contacts.add(contact);
         }
-    },
-    removeContact: function (jid) {
+    }
+    
+    removeContact (jid) {
         var self = this;
         client.removeRosterItem(jid, function(err, res) {
             var contact = self.getContact(jid);
             self.contacts.remove(contact.jid);
             app.storage.roster.remove(contact.storageId);
         });
-    },
-    load: function () {
+    }
+    
+    load () {
         if (!this.jid.bare) return;
 
         var self = this;
@@ -207,11 +167,13 @@ module.exports = HumanModel.define({
         this.mucs.once('loaded', function () {
             self.contacts.trigger('loaded');
         });
-    },
-    isMe: function (jid) {
+    }
+    
+    isMe (jid) {
         return jid && (jid.bare === this.jid.bare);
-    },
-    updateJid: function(newJid) {
+    }
+    
+    updateJid(newJid) {
         if (this.jid.domain && this.isMe(newJid)) {
             this.jid.full = newJid.full;
             this.jid.resource = newJid.resource;
@@ -221,8 +183,9 @@ module.exports = HumanModel.define({
             this.jid = newJid;
             this.nick = this.jid.local;
         }
-    },
-    updateIdlePresence: function () {
+    }
+    
+    updateIdlePresence () {
         var update = {
             status: this.status,
             show: this.show,
@@ -230,23 +193,26 @@ module.exports = HumanModel.define({
         };
 
         if (!app.state.active) {
-            update.idle = {since: app.state.idleSince};
+            update['idle'] = {since: app.state.idleSince};
         }
 
         app.api.sendPresence(update);
-    },
-    updateUnreadCount: function () {
+    }
+    
+    updateUnreadCount () {
         var unreadCounts = this.contacts.pluck('unreadCount');
         var count = unreadCounts.reduce(function (a, b) { return a + b; });
         if (count === 0) {
             count = '';
         }
         app.state.badge = '' + count;
-    },
-    updateActiveCalls: function () {
+    }
+    
+    updateActiveCalls () {
         app.state.hasActiveCall = !!this.calls.length;
-    },
-    save: function () {
+    }
+    
+    save () {
         var data = {
             jid: this.jid.bare,
             avatarID: this.avatarID,
@@ -255,8 +221,9 @@ module.exports = HumanModel.define({
             soundEnabled: this.soundEnabled
         };
         app.storage.profiles.set(data);
-    },
-    cameraOn: function () {
+    }
+    
+    cameraOn () {
         var self = this;
         getUserMedia(function (err, stream) {
             if (err) {
@@ -265,14 +232,16 @@ module.exports = HumanModel.define({
                 self.stream = stream;
             }
         });
-    },
-    cameraOff: function () {
+    }
+    
+    cameraOff () {
         if (this.stream) {
             this.stream.stop();
             this.stream = null;
         }
-    },
-    registerDevice: function () {
+    }
+    
+    registerDevice () {
         var deviceID = app.state.deviceID;
         if (!!deviceID && deviceID !== undefined && deviceID !== 'undefined') {
             client.otalkRegister(deviceID).then(function () {
@@ -282,4 +251,44 @@ module.exports = HumanModel.define({
             });
         }
     }
-});
+    
+    avatar: string = ""
+    connected: boolean = false
+    shouldAskForAlertsPermission: boolean = false
+    hasFocus: boolean = false
+    private _activeContact: string = ""
+    stream: Object = null
+    soundEnabled: boolean = true
+    
+    jid: {bare; local} = null
+    status: string = ""
+    avatarID: string = ""
+    rosterVer: string = ""
+    nick: string = ""
+    
+    contacts: Contacts
+    contactsRequests: ContactRequests
+    mucs: MUCs
+    calls: Calls
+    
+    get displayName() {
+        return this.nick || this.jid.bare;
+    }
+    
+    get streamUrl() {
+        if (!this.stream) return '';
+        return URL.createObjectURL(this.stream);
+    }
+    
+    get organization() {
+        return app.serverConfig().name || 'Kaiwa';
+    }
+    
+    get soundEnabledClass() {
+        return this.soundEnabled ? "primary" : "secondary";
+    }
+    
+    get isAdmin() {
+        return this.jid.local === SERVER_CONFIG.admin ? 'meIsAdmin' : '';
+    }
+}

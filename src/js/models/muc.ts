@@ -1,18 +1,21 @@
 /*global app, me, client*/
 "use strict";
 
-var _ = require('underscore');
+import App from './app'
+
+declare const app: App
+
 var async = require('async');
 var uuid = require('node-uuid');
 var htmlify = require('../helpers/htmlify');
-var HumanModel = require('human-model');
-var Resources = require('./resources');
-var Messages = require('./messages');
-var Message = require('./message');
 var fetchAvatar = require('../helpers/fetchAvatar');
 
-module.exports = HumanModel.define({
-    initialize: function (attrs) {
+import Resources from './resources'
+import Messages from './messages'
+import Message from './message'
+
+export default class MUC {
+    constructor(attrs) {
         if (attrs.jid) {
             this.id = attrs.jid.full;
         }
@@ -20,64 +23,9 @@ module.exports = HumanModel.define({
         this.resources.bind("add remove reset", function(){
             self.membersCount = self.resources.length;
         });
-    },
-    type: 'muc',
-    props: {
-        id: ['string', true],
-        name: 'string',
-        autoJoin: ['bool', false, false],
-        nick: 'string',
-        jid: 'object'
-    },
-    session: {
-        subject: 'string',
-        activeContact: ['bool', false, false],
-        lastInteraction: 'date',
-        lastSentMessage: 'object',
-        unreadCount: ['number', false, 0],
-        persistent: ['bool', false, false],
-        joined: ['bool', true, false],
-        membersCount: ['number', false, 0],
-    },
-    derived: {
-        displayName: {
-            deps: ['name', 'jid'],
-            fn: function () {
-                var disp = this.name;
-                if (!disp) disp = this.jid.jid;
-                return disp.split('@')[0];
-            }
-        },
-        displayUnreadCount: {
-            deps: ['unreadCount'],
-            fn: function () {
-                if (this.unreadCount > 0) {
-                    if (this.unreadCount < 100)
-                      return this.unreadCount.toString();
-                    else
-                      return '99+'
-                }
-                return '';
-            }
-        },
-        displaySubject: {
-            deps: ['subject'],
-            fn: function () {
-                return htmlify.toHTML(this.subject);
-            }
-        },
-        hasUnread: {
-            deps: ['unreadCount'],
-            fn: function () {
-                return this.unreadCount > 0;
-            }
-        }
-    },
-    collections: {
-        resources: Resources,
-        messages: Messages
-    },
-    getName: function (jid) {
+    }
+    
+    getName (jid) {
         var nickname = jid.split('/')[1];
         var name = nickname;
         var xmppContact = me.getContact(nickname);
@@ -85,19 +33,22 @@ module.exports = HumanModel.define({
             name = xmppContact.displayName;
         }
         return name != '' ? name : nickname;
-    },
-    getNickname: function (jid) {
+    }
+    
+    getNickname (jid) {
         var nickname = jid.split('/')[1];
         return nickname != this.getName(jid) ? nickname : '';
-    },
-    getAvatar: function (jid) {
+    }
+    
+    getAvatar (jid) {
         var resource = this.resources.get(jid);
         if (resource && resource.avatar) {
             return resource.avatar;
         }
         return "https://www.gravatar.com/avatar/00000000000000000000000000000000?s=80&d=mm"
-    },
-    addMessage: function (message, notify) {
+    }
+    
+    addMessage (message, notify) {
         message.owner = me.jid.bare;
 
         var self = this;
@@ -157,8 +108,9 @@ module.exports = HumanModel.define({
         if (!this.lastInteraction || this.lastInteraction < newInteraction) {
             this.lastInteraction = newInteraction;
         }
-    },
-    join: function (manual) {
+    }
+    
+    join (manual) {
         if (!this.nick) {
             this.nick = me.jid.local;
         }
@@ -213,8 +165,9 @@ module.exports = HumanModel.define({
                 self.fetchHistory(true);
             }
         });
-    },
-    fetchHistory: function(allInterval) {
+    }
+    
+    fetchHistory(allInterval) {
         var self = this;
         app.whenConnected(function () {
             var filter = {
@@ -276,9 +229,52 @@ module.exports = HumanModel.define({
                 }
             });
         });
-    },
-    leave: function () {
+    }
+    
+    leave () {
         this.resources.reset();
         client.leaveRoom(this.jid, this.nick);
     }
-});
+    
+    subject: string = ""
+    activeContact: boolean = false
+    lastInteraction: Date = null
+    lastSentMessage: Object = null
+    unreadCount: number = 0
+    persistent: boolean = false
+    joined: boolean = false
+    membersCount: number = 0
+    
+    id: string = ""
+    name: string = ""
+    autoJoin: boolean = false
+    nick: string = ""
+    jid: {jid} = null
+    
+    get displayName() {
+        var disp = this.name;
+        if (!disp) disp = this.jid.jid;
+        return disp.split('@')[0];
+    }
+    
+    get displayUnreadCount() {
+        if (this.unreadCount > 0) {
+            if (this.unreadCount < 100)
+                return this.unreadCount.toString();
+            else
+                return '99+'
+        }
+        return '';
+    }
+    
+    get displaySubject() {
+        return htmlify.toHTML(this.subject);
+    }
+    
+    get hasUnread() {
+        return this.unreadCount > 0;
+    }
+    
+    resources: Resources
+    messages: Messages
+}

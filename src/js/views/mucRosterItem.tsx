@@ -1,14 +1,14 @@
-import {createClass} from 'react'
+import {Component} from 'react'
 
 export interface MucRosterItemProperties {
     item: any
 }
 
-const MucRosterItem = createClass<MucRosterItemProperties,{}>({
+export default class MucRosterItem extends Component<MucRosterItemProperties,{}>{
     
     handleClick() {
         
-    },
+    }
     
     render() {
         return (
@@ -18,10 +18,7 @@ const MucRosterItem = createClass<MucRosterItemProperties,{}>({
         )
         
     }
-})
-
-export default MucRosterItem
-
+}
 
 // var _ = require('underscore');
 // var HumanView = require('human-view');

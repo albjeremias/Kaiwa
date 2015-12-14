@@ -1,12 +1,10 @@
 "use strict";
 
-var BaseCollection = require('./baseCollection');
-var Resource = require('./resource');
+import Resource from './models/resource'
+import Collection from './models/baseCollection'
 
-module.exports = BaseCollection.extend({
-    type: 'resources',
-    model: Resource,
-    comparator: function (res1, res2) {
+export default class Resources extends Collection<Resource> {
+    comparator(res1, res2): number {
         if (res1.priority > res2.priority) {
             return -1;
         }
@@ -41,13 +39,16 @@ module.exports = BaseCollection.extend({
             return -1;
         }
         return 1;
-    },
-    search : function (letters, removeMe, addAll) {
+    }
+    
+    search (letters, removeMe, addAll) {
         if(letters == "" && !removeMe) return this;
 
-        var collection = new module.exports(this.models);
-        if (addAll)
-            collection.add({id: this.parent.jid.bare + '/all'});
+        var collection = this;
+        if (addAll) {
+            const resource = new Resource({this.parent.jid.bare + '/all'})
+            collection.push(resource);
+        }
 
         var pattern = new RegExp('^' + letters + '.*$', "i");
         var filtered = collection.filter(function(data) {
@@ -57,4 +58,4 @@ module.exports = BaseCollection.extend({
         });
         return new module.exports(filtered);
     }
-});
+}

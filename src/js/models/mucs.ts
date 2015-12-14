@@ -1,15 +1,15 @@
 /*global app, client*/
 "use strict";
 
-var async = require('async');
-var BaseCollection = require('./baseCollection');
-var MUC = require('./muc');
+import App from './app'
 
+declare const app: App
 
-module.exports = BaseCollection.extend({
-    type: 'mucs',
-    model: MUC,
-    comparator: function (model1, model2) {
+import Collection from './baseCollection'
+import MUC from './muc'
+
+export default class MUCs extends Collection<MUC> {
+    comparator (model1, model2) {
         var name1 = model1.displayName.toLowerCase();
         var name2 = model2.displayName.toLowerCase();
         if (name1 === name2) {
@@ -19,18 +19,16 @@ module.exports = BaseCollection.extend({
             return -1;
         }
         return 1;
-    },
-    initialize: function (model, options) {
-        this.bind('change', this.sort, this);
-    },
-    fetch: function () {
+    }
+    
+    fetch () {
         var self = this;
         app.whenConnected(function () {
             client.getBookmarks(function (err, res) {
                 if (err) return;
 
-                var mucs = res.privateStorage.bookmarks.conferences || [];
-                mucs.forEach(function (muc) {
+                var mucs = res.privateStorage.bookmarks.conferences || [] as MUCs;
+                mucs.forEach(function (muc: MUC) {
                     self.add(muc);
                     if (muc.autoJoin) {
                         self.get(muc.jid).join();
@@ -40,12 +38,13 @@ module.exports = BaseCollection.extend({
                 self.trigger('loaded');
             });
         });
-    },
-    save: function (cb) {
+    }
+    
+    save (cb) {
         var self = this;
         app.whenConnected(function () {
             var models = [];
-            self.models.forEach(function (model) {
+            self.forEach(function (model) {
                 models.push({
                     name: model.name,
                     jid: model.jid,
@@ -56,4 +55,4 @@ module.exports = BaseCollection.extend({
             client.setBookmarks({conferences: models}, cb);
         });
     }
-});
+}
