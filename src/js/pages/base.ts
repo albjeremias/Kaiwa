@@ -1,12 +1,19 @@
 /*global $, app, me*/
 "use strict";
 
-var _ = require('underscore');
-var HumanView = require('human-view');
+import App from '../models/app'
+import Me from '../models/me'
 
+declare const app: App
+declare const me: Me
 
-module.exports = HumanView.extend({
-    show: function (animation) {
+export interface Page {
+    show(animation)
+    hide()
+}
+
+export class PageMixIn implements Page {
+    show (animation) {
         var self = this;
 
         $('body').scrollTop(0);
@@ -31,8 +38,8 @@ module.exports = HumanView.extend({
         }
 
         return this;
-    },
-    hide: function () {
+    }
+    hide () {
         var self = this;
 
         this.$el.removeClass('active');
@@ -50,4 +57,4 @@ module.exports = HumanView.extend({
 
         return this;
     }
-});
+}

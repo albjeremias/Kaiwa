@@ -1,47 +1,31 @@
 import {Component} from 'react'
+import Resource from '../models/resource'
+
 
 export interface MucRosterItemProperties {
-    item: any
+    resource: Resource
 }
 
 export default class MucRosterItem extends Component<MucRosterItemProperties,{}>{
     
     handleClick() {
-        
+//         this.parent.trigger('rosterItemClicked', this.model.mucDisplayName);
     }
     
     render() {
+        const {resource} = this.props
+        const classes = classNames({
+                "online": true,
+                "show": !!resource.show,
+                "chatState": !!resource.chatState,
+                "idle": !!resource.idle
+            })
+            
         return (
-            <li className="online" onClick={this.handleClick}>
-                <div className="name"></div>
+            <li className={classes} onClick={this.handleClick}>
+                <div className="name">{resource.mucDisplayName}</div>
             </li>
         )
         
     }
 }
-
-// var _ = require('underscore');
-// var HumanView = require('human-view');
-// var templates = require('../templates');
-
-// module.exports = HumanView.extend({
-//     template: templates.includes.mucRosterItem,
-//     events: {
-//         'click': 'handleClick'
-//     },
-//     classBindings: {
-//         show: '',
-//         chatState: '',
-//         idle: ''
-//     },
-//     textBindings: {
-//         mucDisplayName: '.name'
-//     },
-//     render: function () {
-//         this.renderAndBind({contact: this.model});
-//         return this;
-//     },
-//     handleClick: function (e) {
-//         this.parent.trigger('rosterItemClicked', this.model.mucDisplayName);
-//     }
-// });

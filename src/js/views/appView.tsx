@@ -1,6 +1,7 @@
 import {Component, createClass} from 'react'
 
 import App from '../models/app'
+import Settings from '../pages/settings'
 
 export interface Properties {
     app: App
@@ -22,7 +23,7 @@ const ApplicationView = createClass<Properties, State>({
         const {error} = this.state
         
         if (_.isUndefined(error)) return <LoaderView />
-        if (error === null) return <div>loaded</div>
+        if (error === null) return <Settings/>
         if (error instanceof Error) return <ErrorView error={error}/>
         
         return <div>How did u get here?</div>
