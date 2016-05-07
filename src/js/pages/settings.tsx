@@ -9,26 +9,26 @@ import {Page, PageMixIn} from './base'
 import {Component} from 'react'
 
 export interface SettingsPageProperties {
-    
+
 }
 
 export interface SettingsPageState {
-    
+
 }
 
-export default class SettingsPage 
+export default class SettingsPage
     extends Component<SettingsPageProperties, {}>
     implements Page {
-    
+
     constructor(props?: SettingsPageProperties, context?: any) {
         super(props, context)
-        _.extend(this, PageMixIn.call(this))     
+        _.extend(this, PageMixIn.call(this))
     }
-    
+
     componentDidMount() {
         this.setState({} as SettingsPageState)
     }
-    
+
     enableAlerts () {
         if (app.notifications.permissionNeeded()) {
             app.notifications.requestPermission(function (perm) {
@@ -40,7 +40,7 @@ export default class SettingsPage
             });
         }
     }
-    
+
     installFirefox () {
         if (!app.desktop.installed) {
             app.desktop.install();
@@ -48,11 +48,11 @@ export default class SettingsPage
             app.desktop.uninstall();
         }
     }
-    
+
     handleSoundNotifs (e) {
-        this.model.setSoundNotification(!this.model.soundEnabled);
+        app.me.setSoundNotification(!app.me.soundEnabled);
     }
-    
+
     handleAvatarChange (e) {
         var file;
 
@@ -69,23 +69,23 @@ export default class SettingsPage
         if (file.type.match('image.*')) {
             var fileTracker = new FileReader();
             fileTracker.onload = function () {
-                me.publishAvatar(this.result);
+                app.me.publishAvatar(this.result);
             };
             fileTracker.readAsDataURL(file);
         }
     }
-    
+
     handleAvatarChangeDragOver (e) {
         e.preventDefault();
         return false;
     }
-    
-    
+
+
     handleDisconnect (e) {
         client.disconnect();
     }
-    
-    render() { 
+
+    render() {
         return (
             <section className="page main" onDrop={this.handleAvatarChange} onDragOver={this.handleAvatarChangeDragOver}>
                 <h1 id="title">Settings</h1>
@@ -112,7 +112,7 @@ export default class SettingsPage
             </section>
         )
     }
-    
+
     show
     hide
 }
@@ -130,5 +130,5 @@ export default class SettingsPage
 //     textBindings: {
 //         status: '.status'
 //     },
-    
+
 // });
