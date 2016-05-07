@@ -1,8 +1,10 @@
-/node_modules/
-
 /build/
-/src/js/templates.js
+/node_modules/
 /public/
+/typings/
+
+/src/js/templates.js
+
 /dev_config.json
 
 *.log
