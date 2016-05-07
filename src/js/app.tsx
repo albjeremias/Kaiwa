@@ -1,6 +1,3 @@
-/// <reference path="../../typings/main.d.ts" />
-'use strict';
-
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 import ApplicationView from './views/appView'
