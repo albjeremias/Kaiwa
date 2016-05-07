@@ -24,7 +24,7 @@ application:
 
 After that compile the application:
 
-    $ npm run compile
+    $ npm run webpack
 
 And start the server:
 

@@ -8,4 +8,4 @@ node_js:
 sudo: false
 script:
 - cp dev_config.example.json dev_config.json
-- npm run compile
+- npm run webpack
