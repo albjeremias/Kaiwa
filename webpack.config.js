@@ -24,7 +24,7 @@ module.exports = {
     context: path.join(__dirname, 'src'),
 
     plugins: [new HtmlWebpackPlugin({
-        'template': './html/index.html'
+        'template': './html/layout.html'
     })],
 
     entry: {

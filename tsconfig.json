@@ -6,6 +6,8 @@
     "jsx": "react"
   },
   "files": [
+    "src/js/app.tsx",
+    "src/js/views/login.tsx",
     "typings/main.d.ts"
   ]
 }
