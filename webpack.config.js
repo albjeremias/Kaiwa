@@ -28,7 +28,6 @@ module.exports = {
     })],
 
     entry: {
-        'js/0-babel-polyfill': 'babel-polyfill',
         'js/1-vendor':
         [
             require.resolve('jquery'),
