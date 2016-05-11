@@ -9,9 +9,9 @@ import { Login } from './views/login';
 $(() =>
     render((
         <Router history={hashHistory}>
-            <Route path="/" component={Login} /> {/* TODO: There should be App here ~ F */}
+            <Route path="/" component={Login} />
         </Router>
-    ), document.getElementById('application')));
+    ), document.getElementById('application'))); // TODO: There should be path="/" component={App} here ~ F
 // TODO: Uncomment these. ~ F
 //import App from './models/app'
 //
