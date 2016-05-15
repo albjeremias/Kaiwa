@@ -32,7 +32,7 @@ And start the server:
 
 For the development purposes you may use
 
-    $ npm run devel-nix # or devel-win for Windows environment
+    $ npm run devel
 
 It will continously monitor the `src` directory for changes and recompile
 application on any change.
