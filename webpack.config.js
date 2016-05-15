@@ -37,7 +37,8 @@ module.exports = {
             require.resolve('sugar-date'),
             './js/libraries/jquery.oembed.js'
         ],
-        'js/app': './js/app'
+        'js/app': './js/app',
+        'js/config': '../config.js'
     },
 
     output: {

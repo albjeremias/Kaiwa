@@ -21,6 +21,7 @@ application:
     $ cd kaiwa
     $ npm install
     $ cp dev_config.example.json dev_config.json # and edit the file
+    $ cp config.example.js config.js # and edit the file
 
 After that compile the application:
 
@@ -51,21 +52,23 @@ be made. After that, the Kaiwa client should connect fine.
 
 ## Configuration
 
-Application configuration is taken from `dev_config.json` file.
+Development server configuration is taken from `dev_config.json` file.
 
-`server.sasl` is optional parameter that can be used to configure the
-authentication scheme. It can be a single string or a priority list. The default
-priorities as defined by [stanza.io][] are `['external', 'scram-sha-1',
-'digest-md5', 'plain', 'anonymous']`.
+Application configuration is taken from `config.js` file.
 
-You may enable XMPP pings by setting the `server.keepalive.interval` (time
-between ping attempts) and `server.keepalive.timeout` (timeout to close the
-connection if pong was not received); both of these are in seconds. If
-`server.keepalive` is not defined, then XMPP ping will use the default settings
-(with interval of 5 minutes).
+`sasl` is optional parameter that can be used to configure the authentication
+scheme. It can be a single string or a priority list. The default priorities as
+defined by [stanza.io][] are `['external', 'scram-sha-1', 'digest-md5', 'plain',
+'anonymous']`.
 
-Set `server.securePasswordStorage` to `false` if you want the users to save
-their *passwords* in the browser local storage. In secure mode with SCRAM
+You may enable XMPP pings by setting the `keepalive.interval` (time between ping
+attempts) and `server.keepalive.timeout` (timeout to close the connection if
+pong was not received); both of these are in seconds. If `server.keepalive` is
+not defined, then XMPP ping will use the default settings (with interval of 5
+minutes).
+
+Set `securePasswordStorage` to `false` if you want the users to save their
+*passwords* in the browser local storage. In secure mode with SCRAM
 authentication enabled Kaiwa will try to save only salted data. The secure mode
 *will not work* with `digest-md5` authentication.
 
