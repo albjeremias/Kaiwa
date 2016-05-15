@@ -12,12 +12,10 @@ interface IFieldProps {
 }
 
 class Field extends Component<IFieldProps, {}> {
-    getDefaultProps(): IFieldProps {
-        return {
-            id: '',
-            type: 'text',
-            autoFocus: false
-        };
+    static defaultProps = {
+        id: '',
+        type: 'text',
+        autoFocus: false
     }
 
     render() {
