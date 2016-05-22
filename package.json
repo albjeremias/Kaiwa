@@ -86,6 +86,7 @@
     "stylus-loader": "^2.0.0",
     "ts-loader": "^0.7.2",
     "typescript": "^1.8.10",
+    "typings": "^1.0.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^1.12.9",

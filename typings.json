@@ -1,7 +1,7 @@
 {
   "name": "kaiwa.im",
   "version": false,
-  "ambientDependencies": {
+  "globalDependencies": {
     "async": "github:DefinitelyTyped/DefinitelyTyped/async/async.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
     "classnames": "github:DefinitelyTyped/DefinitelyTyped/classnames/classnames.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#c3ab375b371b7b4204adee3b1209baecd81cec02",
