@@ -38,7 +38,7 @@ module.exports = {
             './js/libraries/jquery.oembed.js'
         ],
         'js/app': './js/app',
-        'js/config': '../config.js'
+        'js/config': '../config.js' // TODO: Add server version info to config.js ~ F
     },
 
     output: {
