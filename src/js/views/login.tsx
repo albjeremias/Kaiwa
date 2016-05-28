@@ -44,7 +44,11 @@ export class Login extends Component<{}, {}> {
             <div className="content">
                 <form id="login-form">
                     <Field id="jid" label="Username" placeholder="you" tabIndex={1} autoFocus={true} />
-                    <Field id="password" label="Password" placeholder="•••••••••••••" tabIndex={2} />
+                    <Field id="password"
+                           type="password"
+                           label="Password"
+                           placeholder="••••••••"
+                           tabIndex={2} />
                     {showWssSelector
                         ? <Field id="connURL" label="WebSocket or BOSH URL" placeholder="wss://aweso.me:5281/xmpp-websocket" tabIndex={3} />
                         : null}
