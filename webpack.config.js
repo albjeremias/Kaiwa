@@ -12,7 +12,6 @@ module.exports = {
             '.ts',
             '.tsx',
             '.js',
-            '.json',
             '.jade',
             '.html',
             '.less',
