@@ -20,8 +20,7 @@ application:
     $ git clone https://github.com/ForNeVeR/kaiwa.git
     $ cd kaiwa
     $ npm install
-    $ cp dev_config.example.json dev_config.json # and edit the file
-    $ cp config.example.js config.js # and edit the file
+    $ cp config.example.json config.json # and edit the file
 
 After that compile the application:
 

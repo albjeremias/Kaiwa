@@ -1,5 +1,5 @@
 interface Window {
-    SERVER_CONFIG: {
+    KAIWA_CONFIG: {
         isDev: boolean;
         name: string;
         baseUrl: string;

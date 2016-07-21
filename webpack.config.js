@@ -1,10 +1,9 @@
-var path = require('path')
+var path = require('path');
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var webpack = require('webpack');
 
 module.exports = {
-    debug: true,
-    devtool: 'cheap-source-map',
     resolve: {
         extensions: [
             '',
@@ -25,6 +24,8 @@ module.exports = {
     plugins: [new HtmlWebpackPlugin({
         template: './html/layout.html',
         inject: false
+    }), new webpack.DefinePlugin({
+        KAIWA_CONFIG: require('./config').client // TODO: Add KAIWA_VERSION. ~ F
     })],
 
     entry: {
@@ -36,8 +37,7 @@ module.exports = {
             require.resolve('sugar-date'),
             './js/libraries/jquery.oembed.js'
         ],
-        'js/app': './js/app',
-        'js/config': '../config.js' // TODO: Add server version info to config.js ~ F
+        'js/app': './js/app'
     },
 
     output: {

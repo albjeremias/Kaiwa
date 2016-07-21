@@ -5,8 +5,7 @@
 
 /src/js/templates.js
 
-/dev_config.json
-/config.js
+/config.json
 
 *.log
 *.map

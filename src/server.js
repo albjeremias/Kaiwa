@@ -1,7 +1,7 @@
 var fs = require('fs');
 var express = require('express');
 
-var config = require('../config.js').SERVER_CONFIG;
+var config = require('../config.js').server;
 
 var app = express();
 var serveStatic = require('serve-static');

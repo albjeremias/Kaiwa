@@ -8,9 +8,9 @@
   "scripts": {
     "install": "typings install",
     "compile": "gulp compile",
-    "webpack": "webpack",
+    "webpack": "webpack -d",
     "start": "node ./src/server.js",
-    "devel": "concurrently \"webpack --watch\" \"node ./src/server.js\""
+    "devel": "concurrently \"webpack -d --watch\" \"node ./src/server.js\""
   },
   "dependencies": {
     "@lukekarrys/jade-runtime": "1.11.1",

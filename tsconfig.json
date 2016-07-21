@@ -7,7 +7,7 @@
   },
   "files": [
     "src/js/app.tsx",
-    "src/js/config.ts",
+    "src/js/config.d.ts",
     "src/js/views/login.tsx",
     "typings/index.d.ts"
   ]
