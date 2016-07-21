@@ -25,7 +25,7 @@ module.exports = {
         template: './html/layout.html',
         inject: false
     }), new webpack.DefinePlugin({
-        KAIWA_CONFIG: require('./config').client // TODO: Add KAIWA_VERSION. ~ F
+        KAIWA_CONFIG: JSON.stringify(require('./config').client) // TODO: Add KAIWA_VERSION. ~ F
     })],
 
     entry: {

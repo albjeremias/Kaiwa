@@ -61,11 +61,11 @@ export class Login extends Component<{}, {
 
         console.log(this, this.state);
 
-        if (window.KAIWA_CONFIG.domain && this.state.jid.indexOf('@') == -1)
-            this.state.jid += "@" + window.KAIWA_CONFIG.domain;
+        if (KAIWA_CONFIG.domain && this.state.jid.indexOf('@') == -1)
+            this.state.jid += "@" + KAIWA_CONFIG.domain;
 
-        if (window.KAIWA_CONFIG.wss)
-            this.state.connURL = window.KAIWA_CONFIG.wss;
+        if (KAIWA_CONFIG.wss)
+            this.state.connURL = KAIWA_CONFIG.wss;
 
         if (this.state.connURL.indexOf('http') === 0) {
             this.state.boshURL = this.state.connURL;
@@ -85,7 +85,7 @@ export class Login extends Component<{}, {
     }
 
     render () {
-        const showWssSelector = !window.KAIWA_CONFIG.wss;
+        const showWssSelector = !KAIWA_CONFIG.wss;
         return (
             <section className="loginbox content box">
                 <div className="head">
