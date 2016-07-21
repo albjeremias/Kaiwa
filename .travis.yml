@@ -7,5 +7,5 @@ node_js:
 # - "0.10" TODO: Disabled until #94 and #97 are resolved. ~ F
 sudo: false
 script:
-- cp dev_config.example.json dev_config.json
+- cp config.example.json config.json
 - npm run webpack
