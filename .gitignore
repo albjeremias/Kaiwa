@@ -1,8 +1,11 @@
-/node_modules/
-
 /build/
-/src/js/templates.js
+/node_modules/
 /public/
-/dev_config.json
+/typings/
+
+/src/js/templates.js
+
+/config.json
 
 *.log
+*.map

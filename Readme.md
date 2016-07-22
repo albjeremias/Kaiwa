@@ -20,11 +20,11 @@ application:
     $ git clone https://github.com/ForNeVeR/kaiwa.git
     $ cd kaiwa
     $ npm install
-    $ cp dev_config.example.json dev_config.json # and edit the file
+    $ cp config.example.json config.json # and edit the file
 
 After that compile the application:
 
-    $ npm run compile
+    $ npm run webpack
 
 And start the server:
 
@@ -32,7 +32,7 @@ And start the server:
 
 For the development purposes you may use
 
-    $ npm run devel-nix # or devel-win for Windows environment
+    $ npm run devel
 
 It will continously monitor the `src` directory for changes and recompile
 application on any change.
@@ -51,21 +51,23 @@ be made. After that, the Kaiwa client should connect fine.
 
 ## Configuration
 
-Application configuration is taken from `dev_config.json` file.
+Application configuration is taken from `config.json` file. Server configuration
+is an object stored in the `server` property; correspondingly, the configuration
+accessible from the cliens side goes to the `client` property.
 
-`server.sasl` is optional parameter that can be used to configure the
-authentication scheme. It can be a single string or a priority list. The default
-priorities as defined by [stanza.io][] are `['external', 'scram-sha-1',
-'digest-md5', 'plain', 'anonymous']`.
+`sasl` is optional parameter that can be used to configure the authentication
+scheme. It can be a single string or a priority list. The default priorities as
+defined by [stanza.io][] are `['external', 'scram-sha-1', 'digest-md5', 'plain',
+'anonymous']`.
 
-You may enable XMPP pings by setting the `server.keepalive.interval` (time
-between ping attempts) and `server.keepalive.timeout` (timeout to close the
-connection if pong was not received); both of these are in seconds. If
-`server.keepalive` is not defined, then XMPP ping will use the default settings
-(with interval of 5 minutes).
+You may enable XMPP pings by setting the `keepalive.interval` (time between ping
+attempts) and `server.keepalive.timeout` (timeout to close the connection if
+pong was not received); both of these are in seconds. If `server.keepalive` is
+not defined, then XMPP ping will use the default settings (with interval of 5
+minutes).
 
-Set `server.securePasswordStorage` to `false` if you want the users to save
-their *passwords* in the browser local storage. In secure mode with SCRAM
+Set `securePasswordStorage` to `false` if you want the users to save their
+*passwords* in the browser local storage. In secure mode with SCRAM
 authentication enabled Kaiwa will try to save only salted data. The secure mode
 *will not work* with `digest-md5` authentication.
 

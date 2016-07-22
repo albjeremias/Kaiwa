@@ -17,8 +17,7 @@ var webpack = require("webpack-stream");
 var gutil = require("gulp-util");
 
 function getConfig() {
-    var config = fs.readFileSync('./dev_config.json');
-    return JSON.parse(config);
+    return require('./config.js').SERVER_CONFIG;
 }
 
 gulp.task('compile', ['resources', 'client', 'config', 'manifest']);
@@ -27,7 +26,7 @@ gulp.task('watch', function () {
     watch([
         './src/**',
         '!./src/js/templates.js',
-        './dev_config.json'
+        './config.js'
     ], batch(function (events, done) {
         console.log('==> Recompiling Kaiwa');
         gulp.start('compile', done);
@@ -40,25 +39,22 @@ gulp.task('resources', function () {
 });
 
 gulp.task('client', ['jade-templates', 'jade-views'], function (cb) {
-    webpack(Object.assign({
-            plugins: []
-        }, require('./webpack.config.js')), null, function(err, stats) {
-            if(err) return cb(JSON.stringify(err));
-            gutil.log("[webpack]", stats.toString());
-            return stats;
-        })
-        .pipe(gulp.dest('./public/js'))
-        .on('end', cb);
+    var cfg = require('./webpack.config.js');
+
+    webpack(cfg, null, function(err, stats) {
+        if(err) return cb(JSON.stringify(err));
+        gutil.log("[webpack]", stats.toString());
+        return stats;
+    }).pipe(gulp.dest('./public/js')).on('end', cb);
 });
 
 gulp.task('config', function (cb) {
     var config = getConfig();
     gitrev.short(function (commit) {
-        config.server.softwareVersion = {
-            "name": config.server.name,
+        config.softwareVersion = {
+            "name": config.name,
             "version": commit
-        }
-        config.server.baseUrl = config.http.baseUrl
+        };
         mkdirp('./public', function (error) {
             if (error) {
                 cb(error);
@@ -66,7 +62,7 @@ gulp.task('config', function (cb) {
             }
             fs.writeFile(
                 './public/config.js',
-                'var SERVER_CONFIG = ' + JSON.stringify(config.server) + ';',
+                'var SERVER_CONFIG = ' + JSON.stringify(config) + ';',
                 cb);
         });
     })
@@ -100,6 +96,7 @@ gulp.task('jade-templates', function (cb) {
     templatizer('./src/jade/templates', './src/js/templates.js', cb);
 });
 
+/*
 gulp.task('jade-views', ['css'], function () {
     var config = getConfig();
     return gulp.src([
@@ -113,6 +110,7 @@ gulp.task('jade-views', ['css'], function () {
         }))
         .pipe(gulp.dest('./public/'));
 });
+*/
 
 gulp.task('css', ['stylus'], function () {
     return gulp.src([

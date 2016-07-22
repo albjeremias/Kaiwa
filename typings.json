@@ -1,0 +1,24 @@
+{
+  "name": "kaiwa.im",
+  "version": false,
+  "globalDependencies": {
+    "async": "github:DefinitelyTyped/DefinitelyTyped/async/async.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "classnames": "github:DefinitelyTyped/DefinitelyTyped/classnames/classnames.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#c3ab375b371b7b4204adee3b1209baecd81cec02",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#17dd34132c2a1a4d6a8bf1816effcff3ec922034",
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react": "github:DefinitelyTyped/DefinitelyTyped/react/react.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-create-fragment": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-create-fragment.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-css-transition-group": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-css-transition-group.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-linked-state-mixin": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-linked-state-mixin.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-perf": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-perf.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-pure-render-mixin": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-pure-render-mixin.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-test-utils": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-test-utils.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-transition-group": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-transition-group.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-addons-update": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-update.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-dom": "github:DefinitelyTyped/DefinitelyTyped/react/react-dom.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-global": "github:DefinitelyTyped/DefinitelyTyped/react/react-global.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-router": "registry:dt/react-router#2.0.0+20160501155536",
+    "react-router/history": "registry:dt/react-router/history#2.0.0+20160316155526"
+  }
+}

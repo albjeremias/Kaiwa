@@ -1,33 +1,51 @@
-var path = require('path')
+var path = require('path');
+
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var webpack = require('webpack');
 
 module.exports = {
-    debug: true,
-    devtool: 'cheap-source-map',
     resolve: {
-        extensions: ['', '.ts', '.js', '.json', '.jade', '.html', '.less', '.css', '.json']
+        extensions: [
+            '',
+            '.styl',
+            '.ts',
+            '.tsx',
+            '.js',
+            '.jade',
+            '.html',
+            '.less',
+            '.css',
+            '.json'
+        ]
     },
-    
-    context: path.join(__dirname, 'src', 'js'),
+
+    context: path.join(__dirname, 'src'),
+
+    plugins: [new HtmlWebpackPlugin({
+        template: './html/layout.html',
+        inject: false
+    }), new webpack.DefinePlugin({
+        KAIWA_CONFIG: JSON.stringify(require('./config').client) // TODO: Add KAIWA_VERSION. ~ F
+    })],
 
     entry: {
-        "0-babel-polyfill": 'babel-polyfill',
-        "1-vendor": 
+        'js/1-vendor':
         [
             require.resolve('jquery'),
-            './libraries/resampler.js',
+            './js/libraries/resampler.js',
             require.resolve('indexeddbshim'),
             require.resolve('sugar-date'),
-            './libraries/jquery.oembed.js'
+            './js/libraries/jquery.oembed.js'
         ],
-        "app": "./app.ts"
+        'js/app': './js/app'
     },
 
     output: {
-        path: path.join(__dirname, 'public', 'js'),
+        path: path.join(__dirname, 'public'),
         filename: '[name].js',
         chunkFilename: '[name].js'
     },
-    
+
     stats: {
         colors: true,
         reasons: true
@@ -35,17 +53,33 @@ module.exports = {
 
     module: {
         loaders: [
-            { 
+            {
                 test: require.resolve('jquery'),
                 loader: "expose?$!expose?jQuery"
             },
             {
+                test: /react\.js$/,
+                loader: "expose?React"
+            },
+            {
               test: /resampler\.js$/,
-              loader: 'expose?Resample!imports?this=>window!exports?Resample'  
+              loader: 'expose?Resample!imports?this=>window!exports?Resample'
             },
             {
               test: /jquery\.oembed\.js$/,
-              loader: 'imports?jQuery=jquery'  
+              loader: 'imports?jQuery=jquery'
+            },
+            {
+                test: /\.html$/,
+                loader: 'html-loader?attrs=img:src link:href'
+            },
+            {
+                test: /\.png$/,
+                loader: "file?name=images/[hash].[ext]"
+            },
+            {
+                test: /\.styl$/,
+                loader: 'file?name=/css/[hash].css!stylus'
             },
             {
                 test: /\.ts(x?)$/,
@@ -76,5 +110,4 @@ module.exports = {
     externals: {
         jquery: 'jQuery'
     }
-    
 };
