@@ -12,6 +12,12 @@ Kaiwa is a fork of [Otalk][otalk], a prototype application created by &yet.
 
 ![Screenshot](http://getkaiwa.com/assets/img/header.png)
 
+## Warning
+
+**We're rewriting project in React and TypeScript right now. It's not in a
+usable state yet. If you want a stable version, please use the [master][]
+branch.**
+
 ## Installing
 
 First of all, clone the repository, install the dependencies and configure the
@@ -103,5 +109,6 @@ Working with someone in a different timezone? If the other person is using Kaiwa
 [fornever-email]: mailto:friedrich@fornever.me
 [fornever-xmpp]: xmpp:fornever@codingteam.org.ru
 [issues]: https://github.com/ForNeVeR/kaiwa/issues
+[master]: https://github.com/ForNeVeR/kaiwa/tree/master
 [otalk]: https://github.com/otalk
 [stanza.io]: https://github.com/otalk/stanza.io
