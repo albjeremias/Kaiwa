@@ -96,7 +96,7 @@ export default class Message {
         return this._mucMine || me.isMe(this.from);
     }
 
-    get sender() {
+    get sender(): any {
         if (this.mine) {
             return me;
         } else {

@@ -1,20 +1,24 @@
 const getUserMedia = require('getusermedia');
 const fetchAvatar = require('../helpers/fetchAvatar');
 const crypto = require('crypto');
+const Resample = require('../libraries/resampler');
 const StanzaIo = require('stanza.io');
 
 import App from './app';
 
 declare const app: App;
+declare const client: any;
 
 import Contacts from './contacts';
 import Calls from './calls';
 import Contact from './contact';
 import MUCs from './mucs';
-import MUC from './muc';
 import ContactRequests from './contactRequests';
 
 export default class Me {
+    bind: (event: string, handler: () => void, instance: Me) => void;
+    show: () => void;
+
     constructor(opts) {
         this.setAvatar(opts ? opts.avatarID : null);
 
@@ -90,9 +94,9 @@ export default class Me {
         this.soundEnabled = enable;
     }
 
-    getContact (jid, alt?: string) {
+    getContact (jid, alt?: string): any {
         if (typeof jid === 'string') {
-            if (SERVER_CONFIG.domain && jid.indexOf('@') === -1) jid += '@' + SERVER_CONFIG.domain;
+            if (KAIWA_CONFIG.domain && jid.indexOf('@') === -1) jid += '@' + KAIWA_CONFIG.domain;
             jid = new StanzaIo.JID(jid);
         }
         if (typeof alt === 'string') alt = new StanzaIo.JID(alt);
@@ -109,7 +113,7 @@ export default class Me {
     }
 
     setContact (data, create) {
-        const contact = this.getContact(data.jid);
+        let contact = this.getContact(data.jid);
         data.jid = data.jid.bare;
 
         if (contact) {
@@ -153,7 +157,7 @@ export default class Me {
                     contact = new Contact(contact);
                     contact.owner = self.jid.bare;
                     contact.inRoster = true;
-                    if (contact.jid.indexOf('@' + SERVER_CONFIG.domain) > -1)
+                    if (contact.jid.indexOf('@' + KAIWA_CONFIG.domain) > -1)
                       contact.persistent = true;
                     contact.save();
                     self.contacts.add(contact);
@@ -198,7 +202,7 @@ export default class Me {
 
     updateUnreadCount () {
         const unreadCounts = this.contacts.pluck('unreadCount');
-        const count = unreadCounts.reduce(function (a, b) { return a + b; });
+        let count = unreadCounts.reduce(function (a, b) { return a + b; });
         if (count === 0) {
             count = '';
         }
@@ -254,10 +258,10 @@ export default class Me {
     shouldAskForAlertsPermission: boolean = false;
     hasFocus: boolean = false;
     private _activeContact: string = '';
-    stream: Object = null;
+    stream: any = null;
     soundEnabled: boolean = true;
 
-    jid: {bare; local} = null;
+    jid: any = null;
     status: string = '';
     avatarID: string = '';
     rosterVer: string = '';
@@ -286,6 +290,6 @@ export default class Me {
     }
 
     get isAdmin() {
-        return this.jid.local === SERVER_CONFIG.admin ? 'meIsAdmin' : '';
+        return this.jid.local === KAIWA_CONFIG.admin ? 'meIsAdmin' : '';
     }
 }

@@ -1,8 +1,11 @@
 export default class Collection<T> extends Array<T> {
-    parent: any;
-    trigger: (event: string) => void;
-    bind: (events: string, handler: () => void) => void;
+    bind: (events: string, handler: () => void, instance?: any) => void;
+    once: (event: string, handler: () => void);
+    pluck: (key: string) => any;
     reset: () => void;
+    trigger: (event: string) => void;
+
+    parent: any;
 
     first() {
         return this[0];
@@ -26,5 +29,13 @@ export default class Collection<T> extends Array<T> {
 
     sort() {
         return super.sort(this.comparator);
+    }
+
+    findWhere(property: string, value: T): T {
+        return super.some((v) => (v as any)[property] === value);
+    }
+
+    remove(value: T) {
+        this.splice(this.indexOf(T), 1);
     }
 }

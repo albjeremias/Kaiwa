@@ -31,7 +31,7 @@ export default class MUC {
     getName (jid) {
         const nickname = jid.split('/')[1];
         let name = nickname;
-        const xmppContact = me.getContact(nickname);
+        const xmppContact = me.getContact(nickname) as any;
         if (xmppContact) {
             name = xmppContact.displayName;
         }
