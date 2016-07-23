@@ -1,8 +1,11 @@
 import App from './app';
+import Calls from './calls';
 
 declare const app: App;
 
 export default class Call {
+    collection: Calls;
+
     constructor() {
         this.contact.onCall = true;
         // temporary, this won't stay here
