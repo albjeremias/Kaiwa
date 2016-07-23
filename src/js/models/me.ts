@@ -69,7 +69,7 @@ export default class Me {
         });
     }
 
-    publishAvatar (data) {
+    publishAvatar (data?: string) {
         if (!data) data = this.avatar;
         if (!data || data.indexOf('https://') !== -1) return;
 
