@@ -17,7 +17,7 @@
     "react-addons-transition-group": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-transition-group.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
     "react-addons-update": "github:DefinitelyTyped/DefinitelyTyped/react/react-addons-update.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
     "react-dom": "github:DefinitelyTyped/DefinitelyTyped/react/react-dom.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
-    "react-global": "github:DefinitelyTyped/DefinitelyTyped/react/react-global.d.ts#8ea42cd8bb11863ed6f242d67c502288ebc45a7b",
+    "react-global": "registry:dt/react-global#0.14.0+20160316155526",
     "react-redux": "registry:dt/react-redux#4.4.0+20160720003245",
     "react-router": "registry:dt/react-router#2.0.0+20160501155536",
     "react-router/history": "registry:dt/react-router/history#2.0.0+20160316155526",
