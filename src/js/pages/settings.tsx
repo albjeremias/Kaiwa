@@ -1,12 +1,9 @@
-/*global app, me, client, Resample*/
-"use strict";
+import App from '../models/app';
 
-import App from '../models/app'
+declare const app: App;
 
-declare const app: App
-
-import {Page, PageMixIn} from './base'
-import {Component} from 'react'
+import {Page, PageMixIn} from './base';
+import {Component} from 'react';
 
 export interface SettingsPageProperties {
 
@@ -21,12 +18,12 @@ export default class SettingsPage
     implements Page {
 
     constructor(props?: SettingsPageProperties, context?: any) {
-        super(props, context)
-        _.extend(this, PageMixIn.call(this))
+        super(props, context);
+        _.extend(this, PageMixIn.call(this));
     }
 
     componentDidMount() {
-        this.setState({} as SettingsPageState)
+        this.setState({} as SettingsPageState);
     }
 
     enableAlerts () {
@@ -34,7 +31,7 @@ export default class SettingsPage
             app.notifications.requestPermission(function (perm) {
                 if (perm === 'granted') {
                     app.notifications.create('Ok, sweet!', {
-                        body: "You'll now be notified of stuff that happens."
+                        body: 'You\'ll now be notified of stuff that happens.';
                     });
                 }
             });
@@ -54,7 +51,7 @@ export default class SettingsPage
     }
 
     handleAvatarChange (e) {
-        var file;
+        let file;
 
         e.preventDefault();
 
@@ -67,7 +64,7 @@ export default class SettingsPage
         }
 
         if (file.type.match('image.*')) {
-            var fileTracker = new FileReader();
+            const fileTracker = new FileReader();
             fileTracker.onload = function () {
                 app.me.publishAvatar(this.result);
             };
@@ -80,43 +77,41 @@ export default class SettingsPage
         return false;
     }
 
-
     handleDisconnect (e) {
         client.disconnect();
     }
 
     render() {
         return (
-            <section className="page main" onDrop={this.handleAvatarChange} onDragOver={this.handleAvatarChangeDragOver}>
-                <h1 id="title">Settings</h1>
-                <div id="avatarChanger">
+            <section className='page main' onDrop={this.handleAvatarChange} onDragOver={this.handleAvatarChangeDragOver}>
+                <h1 id='title'>Settings</h1>
+                <div id='avatarChanger'>
                     <h4>Change Avatar</h4>
-                    <div className="uploadRegion">
+                    <div className='uploadRegion'>
                         <p>Drag and drop a new avatar here</p>
-                        <img src="" />
+                        <img src='' />
                         <form>
-                            <input id="uploader" type="file" onChange={this.handleAvatarChange} />
+                            <input id='uploader' type='file' onChange={this.handleAvatarChange} />
                         </form>
                     </div>
                 </div>
                 <div>
                     <h4>Desktop Integration</h4>
-                    <button className="enableAlerts" onClick={this.enableAlerts}></button>
-                    <button className="primary installFirefox" onClick={this.installFirefox}>Install app</button>
-                    <button className="soundNotifs">sound notifications</button>
+                    <button className='enableAlerts' onClick={this.enableAlerts}></button>
+                    <button className='primary installFirefox' onClick={this.installFirefox}>Install app</button>
+                    <button className='soundNotifs'>sound notifications</button>
                 </div>
                 <div>
-                    <button className="disconnect" onClick={this.handleDisconnect}>Disconnect</button>
-                    <button className="primary logout">Logout</button>
+                    <button className='disconnect' onClick={this.handleDisconnect}>Disconnect</button>
+                    <button className='primary logout'>Logout</button>
                 </div>
             </section>
-        )
+        );
     }
 
-    show
-    hide
+    show;
+    hide;
 }
-
 
 // module.exports = BasePage.extend({
 //     template: templates.pages.settings,
