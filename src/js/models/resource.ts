@@ -1,10 +1,14 @@
 const fetchAvatar = require('../helpers/fetchAvatar');
 
-import App from './models/app';
+import App from './app';
 
 declare const app: App;
 
 export default class Resource {
+    constructor (values: { id: string }) {
+        this.id = values.id;
+    }
+
     fetchTimezone () {
         const self = this;
 

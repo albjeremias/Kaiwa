@@ -90,7 +90,7 @@ export default class Me {
         this.soundEnabled = enable;
     }
 
-    getContact (jid, alt) {
+    getContact (jid, alt?: string) {
         if (typeof jid === 'string') {
             if (SERVER_CONFIG.domain && jid.indexOf('@') === -1) jid += '@' + SERVER_CONFIG.domain;
             jid = new StanzaIo.JID(jid);

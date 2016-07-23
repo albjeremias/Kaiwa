@@ -1,6 +1,7 @@
 import App from './app';
 
 declare const app: App;
+declare const client: any;
 
 import Collection from './baseCollection';
 import MUC from './muc';
@@ -28,7 +29,7 @@ export default class MUCs extends Collection<MUC> {
                 mucs.forEach(function (muc: MUC) {
                     self.add(muc);
                     if (muc.autoJoin) {
-                        self.get(muc.jid).join();
+                        self.get(muc.jid.jid).join();
                     }
                 });
 

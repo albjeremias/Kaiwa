@@ -1,5 +1,8 @@
 export default class Collection<T> extends Array<T> {
     parent: any;
+    trigger: (event: string) => void;
+    bind: (events: string, handler: () => void) => void;
+    reset: () => void;
 
     first() {
         return this[0];

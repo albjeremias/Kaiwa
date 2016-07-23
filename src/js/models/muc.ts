@@ -1,6 +1,9 @@
 import App from './app';
+import Me from './me';
 
 declare const app: App;
+declare const me: Me;
+declare const client: any;
 
 const async = require('async');
 const uuid = require('node-uuid');
@@ -12,6 +15,9 @@ import Messages from './messages';
 import Message from './message';
 
 export default class MUC {
+    avatar: any;
+    trigger: (event: string) => void;
+
     constructor(attrs) {
         if (attrs.jid) {
             this.id = attrs.jid.full;
@@ -24,7 +30,7 @@ export default class MUC {
 
     getName (jid) {
         const nickname = jid.split('/')[1];
-        const name = nickname;
+        let name = nickname;
         const xmppContact = me.getContact(nickname);
         if (xmppContact) {
             name = xmppContact.displayName;
@@ -51,7 +57,7 @@ export default class MUC {
         const self = this;
 
         const mentions = [];
-        const toMe = false;
+        let toMe = false;
         if (message.body.toLowerCase().indexOf(self.nick) >= 0) {
             mentions.push(self.nick);
             toMe = true;
@@ -74,7 +80,7 @@ export default class MUC {
                     body: message.body,
                     icon: this.avatar,
                     tag: this.id,
-                    onclick: _.bind(app.navigate, app, '/groupchat/' + encodeURIComponent(this.jid))
+                    onclick: _.bind(app.navigate, app, '/groupchat/' + encodeURIComponent(this.jid.jid))
                 });
                 if (me.soundEnabled)
                     app.soundManager.play('threetone-alert');
@@ -105,7 +111,7 @@ export default class MUC {
         }
     }
 
-    join (manual) {
+    join (manual?: boolean) {
         if (!this.nick) {
             this.nick = me.jid.local;
         }
@@ -144,9 +150,9 @@ export default class MUC {
                 if (err) return;
             });
 
-            if (SERVER_CONFIG.domain && SERVER_CONFIG.admin) {
+            if (KAIWA_CONFIG.domain && KAIWA_CONFIG.admin) {
                 const self = this;
-                client.setRoomAffiliation(this.jid, SERVER_CONFIG.admin + '@' + SERVER_CONFIG.domain, 'owner', 'administration', function(err, resp) {
+                client.setRoomAffiliation(this.jid, KAIWA_CONFIG.admin + '@' + KAIWA_CONFIG.domain, 'owner', 'administration', function(err, resp) {
                     if (err) return;
                     client.setRoomAffiliation(self.jid, me.jid, 'none', 'administration');
                 });
@@ -165,7 +171,7 @@ export default class MUC {
     fetchHistory(allInterval) {
         const self = this;
         app.whenConnected(function () {
-            const filter = {
+            const filter: any = {
                 'to': self.jid,
                 rsm: {
                     max: 40,
@@ -247,7 +253,7 @@ export default class MUC {
     jid: {jid} = null;
 
     get displayName() {
-        const disp = this.name;
+        let disp = this.name;
         if (!disp) disp = this.jid.jid;
         return disp.split('@')[0];
     }
