@@ -2,6 +2,7 @@ var path = require('path');
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
+var WebpackFailPlugin = require('webpack-fail-plugin');
 
 module.exports = {
     resolve: {
@@ -26,7 +27,8 @@ module.exports = {
         inject: false
     }), new webpack.DefinePlugin({
         KAIWA_CONFIG: JSON.stringify(require('./config').client) // TODO: Add KAIWA_VERSION. ~ F
-    })],
+    }),
+    WebpackFailPlugin],
 
     entry: {
         'js/1-vendor':
