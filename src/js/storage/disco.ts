@@ -1,8 +1,6 @@
-"use strict";
-
 export default class DiscoStorage {
     constructor (public storage) {}
-    
+
     setup (db) {
         if (db.objectStoreNames.contains('disco')) {
             db.deleteObjectStore('disco');
@@ -11,33 +9,33 @@ export default class DiscoStorage {
             keyPath: 'ver'
         });
     }
-    
+
     transaction (mode) {
-        var trans = this.storage.db.transaction('disco', mode);
+        const trans = this.storage.db.transaction('disco', mode);
         return trans.objectStore('disco');
     }
-    
+
     add (ver, disco, cb) {
         cb = cb || function () {};
-        var data = {
+        const data = {
             ver: ver,
             disco: disco
         };
-        var request = this.transaction('readwrite').put(data);
+        const request = this.transaction('readwrite').put(data);
         request.onsuccess = function () {
             cb(false, data);
         };
         request.onerror = cb;
     }
-    
+
     get (ver, cb) {
         cb = cb || function () {};
         if (!ver) {
             return cb('not-found');
         }
-        var request = this.transaction('readonly').get(ver);
+        const request = this.transaction('readonly').get(ver);
         request.onsuccess = function (e) {
-            var res = request.result;
+            const res = request.result;
             if (res === undefined) {
                 return cb('not-found');
             }
@@ -45,6 +43,6 @@ export default class DiscoStorage {
         };
         request.onerror = cb;
     }
-    
-    value = DiscoStorage
+
+    value = DiscoStorage;
 }

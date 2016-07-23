@@ -1,6 +1,3 @@
-/*global, IDBKeyRange*/
-"use strict";
-
 // SCHEMA
 //    jid: string
 //    name: string
@@ -8,42 +5,41 @@
 //    groups: array
 //    rosterID: string
 
-
-export default class RosterStorage{
+export default class RosterStorage {
     constructor(public storage) {}
-    
+
     setup (db) {
         if (db.objectStoreNames.contains('roster')) {
             db.deleteObjectStore('roster');
         }
-        var store = db.createObjectStore('roster', {
+        const store = db.createObjectStore('roster', {
             keyPath: 'storageId'
         });
-        store.createIndex("owner", "owner", {unique: false});
+        store.createIndex('owner', 'owner', {unique: false});
     }
-    
+
     transaction (mode) {
-        var trans = this.storage.db.transaction('roster', mode);
+        const trans = this.storage.db.transaction('roster', mode);
         return trans.objectStore('roster');
     }
-    
+
     add (contact, cb) {
         cb = cb || function () {};
-        var request = this.transaction('readwrite').put(contact);
+        const request = this.transaction('readwrite').put(contact);
         request.onsuccess = function () {
             cb(false, contact);
         };
         request.onerror = cb;
     }
-    
+
     get (id, cb) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
         }
-        var request = this.transaction('readonly').get(id);
+        const request = this.transaction('readonly').get(id);
         request.onsuccess = function (e) {
-            var res = request.result;
+            const res = request.result;
             if (res === undefined) {
                 return cb('not-found');
             }
@@ -51,15 +47,15 @@ export default class RosterStorage{
         };
         request.onerror = cb;
     }
-    
+
     getAll (owner, cb) {
         cb = cb || function () {};
-        var results = [];
+        const results = [];
 
-        var store = this.transaction('readonly');
-        var request = store.index('owner').openCursor(IDBKeyRange.only(owner));
+        const store = this.transaction('readonly');
+        const request = store.index('owner').openCursor(IDBKeyRange.only(owner));
         request.onsuccess = function (e) {
-            var cursor = e.target.result;
+            const cursor = e.target.result;
             if (cursor) {
                 results.push(cursor.value);
                 cursor.continue();
@@ -69,24 +65,24 @@ export default class RosterStorage{
         };
         request.onerror = cb;
     }
-    
+
     remove (id, cb) {
         cb = cb || function () {};
-        var request = this.transaction('readwrite')['delete'](id);
+        const request = this.transaction('readwrite')['delete'](id);
         request.onsuccess = function (e) {
             cb(false, request.result);
         };
         request.onerror = cb;
     }
-    
+
     clear (cb) {
         cb = cb || function () {};
-        var request = this.transaction('readwrite').clear();
+        const request = this.transaction('readwrite').clear();
         request.onsuccess = function () {
             cb(false, request.result);
         };
         request.onerror = cb;
     }
-    
-    value = RosterStorage
+
+    value = RosterStorage;
 }

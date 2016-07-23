@@ -1,6 +1,3 @@
-/*global, IDBKeyRange*/
-"use strict";
-
 // SCHEMA
 //    jid: string
 //    name: string
@@ -8,41 +5,40 @@
 //    status: string
 //    rosterVer: string
 
-
 export default class ProfileStorage {
     constructor(public storage) {}
-    
+
     setup (db) {
         if (db.objectStoreNames.contains('profiles')) {
             db.deleteObjectStore('profiles');
         }
-        var store = db.createObjectStore('profiles', {
+        const store = db.createObjectStore('profiles', {
             keyPath: 'jid'
         });
     }
-    
+
     transaction (mode) {
-        var trans = this.storage.db.transaction('profiles', mode);
+        const trans = this.storage.db.transaction('profiles', mode);
         return trans.objectStore('profiles');
     }
-    
+
     set (profile, cb) {
         cb = cb || function () {};
-        var request = this.transaction('readwrite').put(profile);
+        const request = this.transaction('readwrite').put(profile);
         request.onsuccess = function () {
             cb(false, profile);
         };
         request.onerror = cb;
     }
-    
+
     get (id, cb) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
         }
-        var request = this.transaction('readonly').get(id);
+        const request = this.transaction('readonly').get(id);
         request.onsuccess = function (e) {
-            var res = request.result;
+            const res = request.result;
             if (res === undefined) {
                 return cb('not-found');
             }
@@ -50,15 +46,15 @@ export default class ProfileStorage {
         };
         request.onerror = cb;
     }
-    
+
     remove (id, cb) {
         cb = cb || function () {};
-        var request = this.transaction('readwrite')['delete'](id);
+        const request = this.transaction('readwrite')['delete'](id);
         request.onsuccess = function (e) {
             cb(false, request.result);
         };
         request.onerror = cb;
     }
-    
-    value = ProfileStorage
+
+    value = ProfileStorage;
 }

@@ -1,41 +1,38 @@
-/*global, IDBKeyRange*/
-"use strict";
-
 export default class ArchiveStorage {
     constructor (public storage) {}
-    
+
     setup (db) {
         if (db.objectStoreNames.contains('archive')) {
             db.deleteObjectStore('archive');
         }
-        var store = db.createObjectStore('archive', {
+        const store = db.createObjectStore('archive', {
             keyPath: 'archivedId'
         });
-        store.createIndex("owner", "owner", {unique: false});
+        store.createIndex('owner', 'owner', {unique: false});
     }
-    
+
     transaction (mode) {
-        var trans = this.storage.db.transaction('archive', mode);
+        const trans = this.storage.db.transaction('archive', mode);
         return trans.objectStore('archive');
     }
-    
+
     add (message, cb) {
         cb = cb || function () {};
-        var request = this.transaction('readwrite').put(message);
+        const request = this.transaction('readwrite').put(message);
         request.onsuccess = function () {
             cb(false, message);
         };
         request.onerror = cb;
     }
-    
+
     get (id, cb) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
         }
-        var request = this.transaction('readonly').get(id);
+        const request = this.transaction('readonly').get(id);
         request.onsuccess = function (e) {
-            var res = request.result;
+            const res = request.result;
             if (res === undefined) {
                 return cb('not-found');
             }
@@ -44,15 +41,15 @@ export default class ArchiveStorage {
         };
         request.onerror = cb;
     }
-    
+
     getAll (owner, cb) {
         cb = cb || function () {};
-        var results = [];
+        const results = [];
 
-        var store = this.transaction('readonly');
-        var request = store.index('owner').openCursor(IDBKeyRange.only(owner));
+        const store = this.transaction('readonly');
+        const request = store.index('owner').openCursor(IDBKeyRange.only(owner));
         request.onsuccess = function (e) {
-            var cursor = e.target.result;
+            const cursor = e.target.result;
             if (cursor) {
                 cursor.value.acked = true;
                 results.push(cursor.value);
@@ -63,6 +60,6 @@ export default class ArchiveStorage {
         };
         request.onerror = cb;
     }
-    
-    value = ArchiveStorage
+
+    value = ArchiveStorage;
 }

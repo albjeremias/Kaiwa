@@ -1,13 +1,10 @@
-"use strict";
-
 // SCHEMA
 //    jid: 'string',
 //    ver: 'string'
 
-
 export default class RosterVerStorage {
     constructor(public storage) {}
-    
+
     setup (db) {
         if (db.objectStoreNames.contains('rosterver')) {
             db.deleteObjectStore('rosterver');
@@ -16,33 +13,33 @@ export default class RosterVerStorage {
             keyPath: 'jid'
         });
     }
-    
+
     transaction (mode) {
-        var trans = this.storage.db.transaction('rosterver', mode);
+        const trans = this.storage.db.transaction('rosterver', mode);
         return trans.objectStore('rosterver');
     }
-    
+
     set (jid, ver, cb) {
         cb = cb || function () {};
-        var data = {
+        const data = {
             jid: jid,
             ver: ver
         };
-        var request = this.transaction('readwrite').put(data);
+        const request = this.transaction('readwrite').put(data);
         request.onsuccess = function () {
             cb(false, data);
         };
         request.onerror = cb;
     }
-    
+
     get (jid, cb) {
         cb = cb || function () {};
         if (!jid) {
             return cb('not-found');
         }
-        var request = this.transaction('readonly').get(jid);
+        const request = this.transaction('readonly').get(jid);
         request.onsuccess = function (e) {
-            var res = request.result;
+            const res = request.result;
             if (res === undefined) {
                 return cb('not-found');
             }
@@ -50,15 +47,15 @@ export default class RosterVerStorage {
         };
         request.onerror = cb;
     }
-    
+
     remove (jid, cb) {
         cb = cb || function () {};
-        var request = this.transaction('readwrite')['delete'](jid);
+        const request = this.transaction('readwrite')['delete'](jid);
         request.onsuccess = function (e) {
             cb(false, request.result);
         };
         request.onerror = cb;
     }
-    
-    value = RosterVerStorage
+
+    value = RosterVerStorage;
 }
