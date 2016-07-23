@@ -8,6 +8,7 @@
   "scripts": {
     "install": "typings install",
     "compile": "gulp compile",
+    "lint": "tslint src/**/*.ts src/**/*.tsx",
     "webpack": "webpack -d",
     "start": "node ./src/server.js",
     "devel": "concurrently \"webpack -d --watch\" \"node ./src/server.js\""
@@ -85,6 +86,7 @@
     "react-router": "^2.4.0",
     "stylus-loader": "^2.0.0",
     "ts-loader": "^0.7.2",
+    "tslint": "^3.13.0",
     "typescript": "^1.8.10",
     "typings": "^1.0.4",
     "vinyl-buffer": "^1.0.0",
