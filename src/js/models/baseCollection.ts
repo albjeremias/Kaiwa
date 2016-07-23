@@ -1,6 +1,6 @@
 export default class Collection<T> extends Array<T> {
     bind: (events: string, handler: () => void, instance?: any) => void;
-    once: (event: string, handler: () => void);
+    once: (event: string, handler: () => void) => void;
     pluck: (key: string) => any;
     reset: () => void;
     trigger: (event: string) => void;
@@ -32,11 +32,11 @@ export default class Collection<T> extends Array<T> {
     }
 
     findWhere(property: string, value: any): T {
-        return super.some((v) => v[property] === value);
+        return this.where(property, value)[0];
     }
 
     remove(value: T) {
-        this.splice(this.indexOf(T), 1);
+        this.splice(this.indexOf(value), 1);
     }
 
     where(property: string, value: any): T[] {
