@@ -1,6 +1,5 @@
 import Me from './me';
 
-declare const SERVER_CONFIG: any;
 declare const client: any;
 declare const me: Me;
 
@@ -47,8 +46,8 @@ export default class App {
         app.config = this.parseConfig(config);
         app.config.useStreamManagement = false; // Temporary solution because this feature is bugged on node 4.0
 
-        if (SERVER_CONFIG.sasl) {
-            app.config.sasl = SERVER_CONFIG.sasl;
+        if (KAIWA_CONFIG.sasl) {
+            app.config.sasl = KAIWA_CONFIG.sasl;
         }
 
         // _.extend(this, Backbone.Events)
@@ -126,10 +125,10 @@ export default class App {
 
                 function start() {
                     // start our router and show the appropriate page
-                    const baseUrl = url.parse(SERVER_CONFIG.baseUrl);
+                    const baseUrl = url.parse(KAIWA_CONFIG.baseUrl);
                     app.history.start({pushState: false, root: baseUrl.pathname});
-                    if (app.history.fragment === '' && SERVER_CONFIG.startup)
-                        app.navigate(SERVER_CONFIG.startup);
+                    if (app.history.fragment === '' && KAIWA_CONFIG.startup)
+                        app.navigate(KAIWA_CONFIG.startup);
 
                     return resolve();
                 }
@@ -201,7 +200,7 @@ export default class App {
         view.show(animation);
     }
     serverConfig() {
-        return SERVER_CONFIG;
+        return KAIWA_CONFIG;
     }
     // TODO: add typings
     private view: any;
