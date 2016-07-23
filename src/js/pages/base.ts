@@ -10,6 +10,18 @@ export interface Page {
 }
 
 export class PageMixIn implements Page {
+    $: JQueryStatic;
+
+    animateRemove: () => void;
+    render: () => void;
+    trigger: (event) => void;
+
+    $el: JQuery;
+    cache: boolean;
+    detached: boolean;
+    el: Element;
+    model: any;
+
     show (animation) {
         const self = this;
 
@@ -36,6 +48,7 @@ export class PageMixIn implements Page {
 
         return this;
     }
+
     hide () {
         const self = this;
 
