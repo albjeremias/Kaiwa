@@ -1,10 +1,9 @@
-import {ISession} from './Session';
+import {combineReducers} from 'redux';
+
+import {ISession, reducer as session} from './Session';
 
 export interface IApplicationState {
     session: ISession;
 }
 
-export function kaiwa(state: IApplicationState, action: any): IApplicationState {
-    console.log(state, action);
-    return state;
-}
+export const kaiwa = combineReducers({session});

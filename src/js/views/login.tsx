@@ -1,7 +1,6 @@
 import {Component} from 'react';
 import update = require('react-addons-update');
 import {connect} from 'react-redux';
-import {browserHistory} from 'react-router';
 
 import {IApplicationState} from '../redux/Application';
 import {ISession, login} from '../redux/Session';
@@ -62,31 +61,12 @@ class LoginView extends Component<LoginProps, ISession> {
 
     handleSubmit(event) {
         event.preventDefault();
-
-        console.log(this, this.state);
-
-        // if (KAIWA_CONFIG.domain && this.state.jid.indexOf('@') === -1)
-        //     this.state.jid += '@' + KAIWA_CONFIG.domain;
-        //
-        // if (KAIWA_CONFIG.wss)
-        //     this.state.connURL = KAIWA_CONFIG.wss;
-        //
-        // if (this.state.connURL.indexOf('http') === 0) {
-        //     this.state.boshURL = this.state.connURL;
-        //     this.state.transport = 'bosh';
-        // } else if (this.state.connURL.indexOf('ws') === 0) {
-        //     this.state.wsURL = this.state.connURL;
-        //     this.state.transport = 'websocket';
-        // }
-
-        localStorage.setItem('session', JSON.stringify(this.state));
-
-        browserHistory.push('/');
+        this.props.onLogin(this.state);
     }
 
     handleChange(event) {
         const {session} = this.props;
-        const newState = update(session, { $set: { [event.target.id]: event.target.value } });
+        const newState = update(session, {$set: {[event.target.id]: event.target.value}});
         this.setState(newState);
     }
 
