@@ -1,3 +1,4 @@
+import Calls from './calls';
 import Me from './me';
 
 declare const client: any;
@@ -29,6 +30,8 @@ const url = require('url');
 const SoundEffectManager = require('sound-effect-manager');
 
 export default class App {
+    calls = new Calls();
+
     async launch(): Promise<App|Error> {
         let app: App = this as App;
 

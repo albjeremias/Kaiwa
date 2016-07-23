@@ -31,11 +31,15 @@ export default class Collection<T> extends Array<T> {
         return super.sort(this.comparator);
     }
 
-    findWhere(property: string, value: T): T {
-        return super.some((v) => (v as any)[property] === value);
+    findWhere(property: string, value: any): T {
+        return super.some((v) => v[property] === value);
     }
 
     remove(value: T) {
         this.splice(this.indexOf(T), 1);
+    }
+
+    where(property: string, value: any): T[] {
+        return super.filter((v) => v[property] === value);
     }
 }

@@ -16,9 +16,14 @@ import Message from './message';
 import Messages from './messages';
 
 declare const app: App;
+declare const client: any;
 declare const me: Me;
 
 export default class Contact {
+    bind: (events: string, handler: () => void, instance: Contact) => void;
+    summarizeResources: () => void;
+    trigger: (event: string) => void;
+
     constructor(attrs) {
         if (attrs.jid) {
             this.id = attrs.jid;
@@ -115,7 +120,7 @@ export default class Contact {
     fetchHistory (onlyLastMessages, allInterval?) {
         const self = this;
         app.whenConnected(function () {
-            const filter = {
+            const filter: any = {
                 'with': self.jid,
                 rsm: {
                     max: !!onlyLastMessages && !allInterval ? 50 : 40
@@ -258,7 +263,7 @@ export default class Contact {
         const remoteTime = new Date(Date.now() + diff * 60000);
 
         const day = remoteTime.getDate();
-        const hour = remoteTime.getHours();
+        let hour = remoteTime.getHours();
         const minutes = remoteTime.getMinutes();
 
         const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
