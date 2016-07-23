@@ -1,6 +1,9 @@
 import App from './app';
+import Me from './me';
 
 declare const app: App;
+declare const me: Me;
+declare const templates: any;
 
 const _ = require('underscore');
 const uuid = require('node-uuid');
@@ -11,6 +14,12 @@ const ID_CACHE = {};
 export default class Message {
     constructor(attrs) {
         this._created = new Date(Date.now() + app.timeInterval);
+    }
+
+    set (attrs: any) {
+        for (const key of attrs) {
+            (this as any)[key] = attrs[key];
+        }
     }
 
     correct (msg) {
@@ -29,9 +38,9 @@ export default class Message {
 
     bareMessageTemplate (firstEl) {
         if (this.type === 'groupchat') {
-            return templates.includes.mucBareMessage({message: this, messageDate: Date.create(this.timestamp), firstEl: firstEl});
+            return templates.includes.mucBareMessage({message: this, messageDate: new Date(this.timestamp), firstEl: firstEl});
         } else {
-            return templates.includes.bareMessage({message: this, messageDate: Date.create(this.timestamp), firstEl: firstEl});
+            return templates.includes.bareMessage({message: this, messageDate: new Date(this.timestamp), firstEl: firstEl});
         }
     }
 
@@ -145,12 +154,12 @@ export default class Message {
     }
 
     get processedBody() {
-        const body = this.body;
+        let body = this.body;
         if (this.meAction) {
             body = body.substr(4);
         }
         body = htmlify.toHTML(body);
-        for (const i = 0; i < this.mentions.length; i++) {
+        for (let i = 0; i < this.mentions.length; i++) {
             const existing = htmlify.toHTML(this.mentions[i]);
             const parts = body.split(existing);
             body = parts.join('<span class="mention">' + existing + '</span>');
@@ -164,9 +173,9 @@ export default class Message {
 
     get templateHtml() {
         if (this.type === 'groupchat') {
-            return templates.includes.mucWrappedMessage({message: this, messageDate: Date.create(this.timestamp), firstEl: true});
+            return templates.includes.mucWrappedMessage({message: this, messageDate: new Date(this.timestamp), firstEl: true});
         } else {
-            return templates.includes.wrappedMessage({message: this, messageDate: Date.create(this.timestamp), firstEl: true});
+            return templates.includes.wrappedMessage({message: this, messageDate: new Date(this.timestamp), firstEl: true});
         }
     }
 
