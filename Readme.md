@@ -98,7 +98,7 @@ be made. After that, the Kaiwa client should connect fine.
 
 Application configuration is taken from `config.json` file. Server configuration
 is an object stored in the `server` property; correspondingly, the configuration
-accessible from the cliens side goes to the `client` property.
+accessible from the client side goes to the `client` property.
 
 `sasl` is optional parameter that can be used to configure the authentication
 scheme. It can be a single string or a priority list. The default priorities as
