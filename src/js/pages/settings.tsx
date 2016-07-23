@@ -6,7 +6,6 @@ import {Page, PageMixIn} from './base';
 import {Component} from 'react';
 
 export interface SettingsPageProperties {
-
 }
 
 export interface SettingsPageState {
@@ -31,7 +30,7 @@ export default class SettingsPage
             app.notifications.requestPermission(function (perm) {
                 if (perm === 'granted') {
                     app.notifications.create('Ok, sweet!', {
-                        body: 'You\'ll now be notified of stuff that happens.';
+                        body: 'You\'ll now be notified of stuff that happens.'
                     });
                 }
             });
@@ -78,7 +77,7 @@ export default class SettingsPage
     }
 
     handleDisconnect (e) {
-        client.disconnect();
+        app.api.disconnect();
     }
 
     render() {
