@@ -3,6 +3,7 @@ const fetchAvatar = require('../helpers/fetchAvatar');
 import App from './app';
 
 declare const app: App;
+declare const client: any;
 
 export default class Resource {
     constructor (values: { id: string }) {
