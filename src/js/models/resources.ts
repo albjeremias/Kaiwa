@@ -1,5 +1,8 @@
-import Resource from './models/resource';
-import Collection from './models/baseCollection';
+import Collection from './baseCollection';
+import Me from './me';
+import Resource from './resource';
+
+declare const me: Me;
 
 export default class Resources extends Collection<Resource> {
     comparator(res1, res2): number {
@@ -14,13 +17,13 @@ export default class Resources extends Collection<Resource> {
 
         const collection = this;
         if (addAll) {
-            const resource = new Resource({this.parent.jid.bare + '/all'});
+            const resource = new Resource({id: this.parent.jid.bare + '/all'});
             collection.push(resource);
         }
 
         const pattern = new RegExp('^' + letters + '.*$', 'i');
         const filtered = collection.filter(function(data) {
-            const nick = data.get('mucDisplayName');
+            const nick = data.mucDisplayName;
             if (nick === me.nick) return false;
             return pattern.test(nick);
         });

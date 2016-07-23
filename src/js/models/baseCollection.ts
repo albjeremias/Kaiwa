@@ -1,4 +1,6 @@
 export default class Collection<T> extends Array<T> {
+    parent: any;
+
     first() {
         return this[0];
     }
