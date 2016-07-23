@@ -1,140 +1,140 @@
-'use strict';
+import Me from './me';
 
-import Me from './me'
-
-declare const SERVER_CONFIG: any
-declare const client: any
-declare const me: Me
+declare const SERVER_CONFIG: any;
+declare const client: any;
+declare const me: Me;
 
 interface Storage {}
 interface StorageConstructor {
-    new(): Storage
-    prototype: Storage
+    new(): Storage;
+    prototype: Storage;
 }
 
-var $: JQueryStatic = require('jquery')
-var _: _.LoDashStatic = require('lodash')
+const $: JQueryStatic = require('jquery');
+const _: _.LoDashStatic = require('lodash');
 
+const asyncjs: Async = require('async');
+const StanzaIO = require('stanza.io');
 
-const asyncjs: Async = require('async')
-var StanzaIO = require('stanza.io')
+const AppState = require('./state');
+const MainView = require('../views/main');
+const Router = require('../router');
+const Storage: StorageConstructor = require('../storage');
+const xmppEventHandlers = require('../helpers/xmppEventHandlers');
+const pushNotifications = require('../helpers/pushNotifications');
+const Notify = require('notify.js');
+const Desktop = require('../helpers/desktop');
+const AppCache = require('../helpers/cache');
+const url = require('url');
 
-var AppState = require('./state')
-const MainView = require('../views/main')
-var Router = require('../router')
-var Storage: StorageConstructor = require('../storage')
-var xmppEventHandlers = require('../helpers/xmppEventHandlers')
-var pushNotifications = require('../helpers/pushNotifications')
-const Notify = require('notify.js')
-var Desktop = require('../helpers/desktop')
-var AppCache = require('../helpers/cache')
-const url = require('url')
-
-var SoundEffectManager = require('sound-effect-manager')
+const SoundEffectManager = require('sound-effect-manager');
 
 export default class App {
     async launch(): Promise<App|Error> {
-        let app: App = this as App
-        
-        window['app'] = app
-        
-        var config = localStorage['config']
+        let app: App = this as App;
+
+        window['app'] = app;
+
+        const config = localStorage['config'];
 
         if (!config) {
-            console.log('missing config')
-            window.location = 'login.html' as any
-            const error = new Error("no config")
-            return Promise.reject<Error>(error)
+            console.log('missing config');
+            window.location = 'login.html' as any;
+            const error = new Error('no config');
+            return Promise.reject<Error>(error);
         }
 
-        app.config = this.parseConfig(config)
-        app.config.useStreamManagement = false // Temporary solution because this feature is bugged on node 4.0
+        app.config = this.parseConfig(config);
+        app.config.useStreamManagement = false; // Temporary solution because this feature is bugged on node 4.0
 
         if (SERVER_CONFIG.sasl) {
-            app.config.sasl = SERVER_CONFIG.sasl
+            app.config.sasl = SERVER_CONFIG.sasl;
         }
 
-        //_.extend(this, Backbone.Events)
+        // _.extend(this, Backbone.Events)
 
-        var profile = {}
-        
+        let profile = {};
+
         try {
-            app = await (async() => new Promise<App>((resolve, reject)=> {
-                app.notifications = new Notify()
-                app.soundManager = new SoundEffectManager()
-                app.desktop = new Desktop()
-                app.cache = new AppCache()
-                app.storage = new Storage()
-                app.storage.open(() => resolve(app))
-                app.composing = {}
-                app.timeInterval = 0
-                app.mucInfos = []
-            }))()
-            
+            app = await (async() => new Promise<App>((resolve, reject) => {
+                app.notifications = new Notify();
+                app.soundManager = new SoundEffectManager();
+                app.desktop = new Desktop();
+                app.cache = new AppCache();
+                app.storage = new Storage();
+                app.storage.open(() => resolve(app));
+                app.composing = {};
+                app.timeInterval = 0;
+                app.mucInfos = [];
+            }))();
+
             app = await (async() => new Promise<App>((resolve, reject) => {
                 app.storage.profiles.get(app.config.jid, function (err, res) {
                     if (res) {
-                        profile = res
-                        profile['jid'] = {full: app.config.jid, bare: app.config.jid}
-                        app.config.rosterVer = res.rosterVer
+                        profile = res;
+                        profile['jid'] = {
+                            full: app.config.jid,
+                             bare: app.config.jid
+                        };
+                        app.config.rosterVer = res.rosterVer;
                     }
-                    return resolve(app)
-                })
-            }))()
-           
+                    return resolve(app);
+                });
+            }))();
+
             app = await (async() => new Promise<App>((resolve, reject) => {
-                app.state = new AppState()
-                app.me = window['me'] = new Me(profile)
+                app.state = new AppState();
+                app.me = window['me'] = new Me(profile);
 
                 window.onbeforeunload = function () {
                     if (app.api.sessionStarted) {
-                        app.api.disconnect()
+                        app.api.disconnect();
                     }
-                }
+                };
 
-                app.api = window['client'] = StanzaIO.createClient(app.config)
-                client.use(pushNotifications)
-                xmppEventHandlers(app.api, app)
+                app.api = window['client'] = StanzaIO.createClient(app.config);
+                client.use(pushNotifications);
+                xmppEventHandlers(app.api, app);
 
                 app.api.once('session:started', function () {
-                    app.state.hasConnected = true
-                    return resolve(app)
-                })
-                app.api.connect()
-            }))()
-            
-            app.soundManager.loadFile('sounds/ding.wav', 'ding')
-            app.soundManager.loadFile('sounds/threetone-alert.wav', 'threetone-alert')
-            
+                    app.state.hasConnected = true;
+                    return resolve(app);
+                });
+                app.api.connect();
+            }))();
+
+            app.soundManager.loadFile('sounds/ding.wav', 'ding');
+            app.soundManager.loadFile('sounds/threetone-alert.wav', 'threetone-alert');
+
             app.whenConnected(function () {
                 function getInterval() {
                     if (client.sessionStarted) {
                         client.getTime(app.id, function (err, res) {
-                            if (err) return
-                            app.timeInterval = res.time.utc - Date.now()
-                        })
-                        setTimeout(getInterval, 600000)
+                            if (err) return;
+                            app.timeInterval = res.time.utc - Date.now();
+                        });
+                        setTimeout(getInterval, 600000);
                     }
                 }
-                getInterval()
-            })
-            
+                getInterval();
+            });
+
             app = await (async() => new Promise<App>((resolve, reject) => {
                 app.whenConnected(function () {
-                    me.publishAvatar()
-                })
+                    me.publishAvatar();
+                });
 
                 function start() {
                     // start our router and show the appropriate page
-                    var baseUrl = url.parse(SERVER_CONFIG.baseUrl) 
-                    app.history.start({pushState: false, root: baseUrl.pathname})
-                    if (app.history.fragment == '' && SERVER_CONFIG.startup)
-                        app.navigate(SERVER_CONFIG.startup)
-                        
-                    return resolve()
+                    const baseUrl = url.parse(SERVER_CONFIG.baseUrl);
+                    app.history.start({pushState: false, root: baseUrl.pathname});
+                    if (app.history.fragment === '' && SERVER_CONFIG.startup)
+                        app.navigate(SERVER_CONFIG.startup);
+
+                    return resolve();
                 }
 
-                new Router()
+                new Router();
                 // app.history = Backbone.history
                 // app.history.on("route", function(route, params) {
                 //     app.state.pageChanged = params
@@ -143,83 +143,83 @@ export default class App {
                 app.view = new MainView({
                     model: app.state,
                     el: document.body
-                })
-                app.view.render()
+                });
+                app.view.render();
 
                 if (me.contacts.length) {
-                    start()
+                    start();
                 } else {
-                    me.contacts.once('loaded', start)
+                    me.contacts.once('loaded', start);
                 }
-            }))()
-            
-            return app
+            }))();
+
+            return app;
         } catch (e) {
-            this.error = e
-            return Promise.reject<Error>(e)
+            this.error = e;
+            return Promise.reject<Error>(e);
         }
     }
-    
+
     private parseConfig(json) {
-        var config = JSON.parse(json)
-        var credentials = config.credentials
-        if (!credentials) return config
+        const config = JSON.parse(json);
+        const credentials = config.credentials;
+        if (!credentials) return config;
 
-        for (var property in credentials) {
-            if (!credentials.hasOwnProperty(property)) continue
+        for (const property in credentials) {
+            if (!credentials.hasOwnProperty(property)) continue;
 
-            var value = credentials[property]
+            const value = credentials[property];
             if (value.type === 'Buffer') {
-                credentials[property] = new Buffer(value)
+                credentials[property] = new Buffer(value);
             }
         }
 
-        return config
+        return config;
     }
-    
+
     whenConnected(func) {
         if (this.api.sessionStarted) {
-            func()
+            func();
         } else {
-            this.api.once('session:started', func)
+            this.api.once('session:started', func);
         }
     }
     navigate(page) {
-        var url = (page.charAt(0) === '/') ? page.slice(1) : page
-        this.state.markActive()
-        this.history.navigate(url, true)
+        const url = (page.charAt(0) === '/') ? page.slice(1) : page;
+        this.state.markActive();
+        this.history.navigate(url, true);
     }
     renderPage(view, animation) {
-        var container = $('#pages')
+        const container = $('#pages');
 
         if (this.currentPage) {
-            this.currentPage.hide(animation)
+            this.currentPage.hide(animation);
         }
         // we call render, but if animation is none, we want to tell the view
         // to start with the active class already before appending to DOM.
-        container.append(view.render(animation === 'none').el)
-        view.show(animation)
+        container.append(view.render(animation === 'none').el);
+        view.show(animation);
     }
     serverConfig() {
-        return SERVER_CONFIG
+        return SERVER_CONFIG;
     }
     // TODO: add typings
-    private view: any
-    api: any
-    private id: any
-    timeInterval: any
-    currentPage: any
-    state: any
-    history: any
-    config: any
-    soundManager: any
-    me: Me
-    storage: any
-    notifications: any
-    desktop: any
-    cache: any
-    mucInfos: any
-    composing: any
-    
-    error: Error = null
-} 
+    private view: any;
+    api: any;
+    private id: any;
+    timeInterval: any;
+    currentPage: any;
+    state: any;
+    history: any;
+    config: any;
+    soundManager: any;
+    me: Me;
+    storage: any;
+    notifications: any;
+    desktop: any;
+    cache: any;
+    mucInfos: any;
+    composing: any;
+
+    error: Error = null;
+}

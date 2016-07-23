@@ -2,7 +2,9 @@
     "rules": {
         "class-name": true,
         "comment-format": [true, "check-space"],
+        "eofline": true,
         "indent": [true, "spaces"],
+        "no-consecutive-blank-lines": true,
         "no-duplicate-variable": true,
         "no-eval": true,
         "no-internal-module": true,

@@ -1,15 +1,12 @@
-/*global app, client*/
-"use strict";
-
 const fetchAvatar = require('../helpers/fetchAvatar');
 
-import App from './models/app'
+import App from './models/app';
 
-declare const app: App
+declare const app: App;
 
 export default class Resource {
     fetchTimezone () {
-        var self = this;
+        const self = this;
 
         if (self.timezoneOffset) return;
 
@@ -20,9 +17,9 @@ export default class Resource {
             });
         });
     }
-    
+
     fetchDisco () {
-        var self = this;
+        const self = this;
 
         if (self.discoInfo) return;
 
@@ -33,53 +30,53 @@ export default class Resource {
             });
         });
     }
-    
+
     setAvatar (id, type, source) {
-        var self = this;
+        const self = this;
         fetchAvatar(this.id, id, type, source, function (avatar) {
-            if (source == 'vcard' && self.avatarSource == 'pubsub') return;
+            if (source === 'vcard' && self.avatarSource === 'pubsub') return;
             self.avatarID = avatar.id;
             self.avatar = avatar.uri;
             self.avatarSource = source;
         });
     }
-    
-    id: string = ""
-    status: string = ""
-    show: string = ""
-    priority: number = 0
-    chatState: string = "gone"
-    idleSince: Date = null
-    discoInfo: {features} = null
-    timezoneOffset: number = 0
-    avatar: string = ""
-    avatarSource: string = ""
-    
-    avatarID: string = ""
-    
+
+    id: string = '';
+    status: string = '';
+    show: string = '';
+    priority: number = 0;
+    chatState: string = 'gone';
+    idleSince: Date = null;
+    discoInfo: {features} = null;
+    timezoneOffset: number = 0;
+    avatar: string = '';
+    avatarSource: string = '';
+
+    avatarID: string = '';
+
     get mucDisplayName() {
-        return this.id.split('/')[1] || ''
+        return this.id.split('/')[1] || '';
     }
-    
+
     get idle() {
         return this.idleSince && !isNaN(this.idleSince.valueOf());
     }
-    
+
     get supportsReceipts() {
         if (!this.discoInfo) return false;
-        var features = this.discoInfo.features || [];
+        const features = this.discoInfo.features || [];
         return features.indexOf('urn:xmpp:receipts') >= 0;
     }
-    
+
     get supportsChatStates() {
         if (!this.discoInfo) return false;
-        var features = this.discoInfo.features || [];
+        const features = this.discoInfo.features || [];
         return features.indexOf('http://jabber.org/protocol/chatstate') >= 0;
     }
-    
+
     get supportsJingleMedia() {
         if (!this.discoInfo) return false;
-        var features = this.discoInfo.features || [];
+        const features = this.discoInfo.features || [];
         if (features.indexOf('urn:xmpp:jingle:1') === -1) {
             return false;
         }
@@ -98,10 +95,10 @@ export default class Resource {
 
         return true;
     }
-    
+
     get supportsJingleFiletransfer() {
         if (!this.discoInfo) return false;
-        var features = this.discoInfo.features || [];
+        const features = this.discoInfo.features || [];
         if (features.indexOf('urn:xmpp:jingle:1') === -1) {
             return false;
         }

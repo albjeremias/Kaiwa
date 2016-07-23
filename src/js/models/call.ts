@@ -1,9 +1,6 @@
-/*global app, me, client*/
-"use strict";
+import App from './app';
 
-import App from './app'
-
-declare const app: App
+declare const app: App;
 
 export default class Call {
     constructor() {
@@ -11,18 +8,18 @@ export default class Call {
         // temporary, this won't stay here
         app.navigate('/chat/' + encodeURIComponent(this.contact.jid));
     }
-    
+
     end (reasonForEnding) {
-        var reason = reasonForEnding || 'success';
+        const reason = reasonForEnding || 'success';
         this.contact.onCall = false;
         if (this.jingleSession) {
             this.jingleSession.end(reasonForEnding);
         }
         this.collection.remove(this);
     }
-    
-    contact: {onCall; jid} = null
-    jingleSession: {end} = null
-    state: string = 'inactive'
-    multiUser: boolean = false
+
+    contact: {onCall; jid} = null;
+    jingleSession: {end} = null;
+    state: string = 'inactive';
+    multiUser: boolean = false;
 }

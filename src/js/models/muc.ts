@@ -1,60 +1,57 @@
-/*global app, me, client*/
-"use strict";
+import App from './app';
 
-import App from './app'
+declare const app: App;
 
-declare const app: App
+const async = require('async');
+const uuid = require('node-uuid');
+const htmlify = require('../helpers/htmlify');
+const fetchAvatar = require('../helpers/fetchAvatar');
 
-var async = require('async');
-var uuid = require('node-uuid');
-var htmlify = require('../helpers/htmlify');
-var fetchAvatar = require('../helpers/fetchAvatar');
-
-import Resources from './resources'
-import Messages from './messages'
-import Message from './message'
+import Resources from './resources';
+import Messages from './messages';
+import Message from './message';
 
 export default class MUC {
     constructor(attrs) {
         if (attrs.jid) {
             this.id = attrs.jid.full;
         }
-        var self = this;
-        this.resources.bind("add remove reset", function(){
+        const self = this;
+        this.resources.bind('add remove reset', function(){
             self.membersCount = self.resources.length;
         });
     }
-    
+
     getName (jid) {
-        var nickname = jid.split('/')[1];
-        var name = nickname;
-        var xmppContact = me.getContact(nickname);
+        const nickname = jid.split('/')[1];
+        const name = nickname;
+        const xmppContact = me.getContact(nickname);
         if (xmppContact) {
             name = xmppContact.displayName;
         }
-        return name != '' ? name : nickname;
+        return name !== '' ? name : nickname;
     }
-    
+
     getNickname (jid) {
-        var nickname = jid.split('/')[1];
-        return nickname != this.getName(jid) ? nickname : '';
+        const nickname = jid.split('/')[1];
+        return nickname !== this.getName(jid) ? nickname : '';
     }
-    
+
     getAvatar (jid) {
-        var resource = this.resources.get(jid);
+        const resource = this.resources.get(jid);
         if (resource && resource.avatar) {
             return resource.avatar;
         }
-        return "https://www.gravatar.com/avatar/00000000000000000000000000000000?s=80&d=mm"
+        return 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=80&d=mm';
     }
-    
+
     addMessage (message, notify) {
         message.owner = me.jid.bare;
 
-        var self = this;
+        const self = this;
 
-        var mentions = [];
-        var toMe = false;
+        const mentions = [];
+        const toMe = false;
         if (message.body.toLowerCase().indexOf(self.nick) >= 0) {
             mentions.push(self.nick);
             toMe = true;
@@ -64,7 +61,7 @@ export default class MUC {
         }
         message.mentions = mentions;
 
-        var mine = message.from.resource === this.nick;
+        const mine = message.from.resource === this.nick;
 
         if (mine) {
             message._mucMine = true;
@@ -81,9 +78,7 @@ export default class MUC {
                 });
                 if (me.soundEnabled)
                     app.soundManager.play('threetone-alert');
-            }
-            else
-            {
+            } else {
                 if (me.soundEnabled)
                     app.soundManager.play('ding');
             }
@@ -95,7 +90,7 @@ export default class MUC {
             this.lastSentMessage = message;
         }
 
-        var existing = Message.idLookup(message.from['full'], message.mid);
+        const existing = Message.idLookup(message.from['full'], message.mid);
         if (existing) {
             existing.set(message);
             existing.save();
@@ -104,12 +99,12 @@ export default class MUC {
             message.save();
         }
 
-        var newInteraction = new Date(message.created);
+        const newInteraction = new Date(message.created);
         if (!this.lastInteraction || this.lastInteraction < newInteraction) {
             this.lastInteraction = newInteraction;
         }
     }
-    
+
     join (manual) {
         if (!this.nick) {
             this.nick = me.jid.local;
@@ -126,7 +121,7 @@ export default class MUC {
         });
 
         if (manual) {
-            var form = {
+            const form = {
                 fields: [
                     {
                       type: 'hidden',
@@ -150,7 +145,7 @@ export default class MUC {
             });
 
             if (SERVER_CONFIG.domain && SERVER_CONFIG.admin) {
-                var self = this;
+                const self = this;
                 client.setRoomAffiliation(this.jid, SERVER_CONFIG.admin + '@' + SERVER_CONFIG.domain, 'owner', 'administration', function(err, resp) {
                     if (err) return;
                     client.setRoomAffiliation(self.jid, me.jid, 'none', 'administration');
@@ -158,7 +153,7 @@ export default class MUC {
             }
         }
 
-        var self = this;
+        const self = this;
         // After a reconnection
         client.on('muc:join', function (pres) {
             if (self.messages.length) {
@@ -166,11 +161,11 @@ export default class MUC {
             }
         });
     }
-    
+
     fetchHistory(allInterval) {
-        var self = this;
+        const self = this;
         app.whenConnected(function () {
-            var filter = {
+            const filter = {
                 'to': self.jid,
                 rsm: {
                     max: 40,
@@ -179,15 +174,15 @@ export default class MUC {
             };
 
             if (allInterval) {
-                var lastMessage = self.messages.last();
+                const lastMessage = self.messages.last();
                 if (lastMessage && lastMessage.created) {
-                    var start = new Date(lastMessage.created);
+                    const start = new Date(lastMessage.created);
                     filter.start = start.toISOString();
                 }
             } else {
-                var firstMessage = self.messages.first();
+                const firstMessage = self.messages.first();
                 if (firstMessage && firstMessage.created) {
-                    var end = new Date(firstMessage.created);
+                    const end = new Date(firstMessage.created);
                     filter.end = end.toISOString();
                 }
             }
@@ -195,10 +190,10 @@ export default class MUC {
             client.searchHistory(filter, function (err, res) {
                 if (err) return;
 
-                var results = res.mamResult.items || [];
+                const results = res.mamResult.items || [];
 
                 results.forEach(function (result) {
-                    var msg = result.forwarded.message;
+                    const msg = result.forwarded.message;
 
                     msg.mid = msg.id;
                     delete msg.id;
@@ -208,14 +203,14 @@ export default class MUC {
                     }
 
                     if (msg.replace) {
-                        var original = Message.idLookup(msg.from[msg.type == 'groupchat' ? 'full' : 'bare'], msg.replace);
+                        const original = Message.idLookup(msg.from[msg.type === 'groupchat' ? 'full' : 'bare'], msg.replace);
                         // Drop the message if editing a previous, but
                         // keep it if it didn't actually change an
                         // existing message.
                         if (original && original.correct(msg)) return;
                     }
 
-                    var message = new Message(msg);
+                    const message = new Message(msg);
                     message.archivedId = result.id;
                     message.acked = true;
 
@@ -224,57 +219,57 @@ export default class MUC {
 
                 if (allInterval) {
                   self.trigger('refresh');
-                  if (results.length == 40)
+                  if (results.length === 40)
                       self.fetchHistory(true);
                 }
             });
         });
     }
-    
+
     leave () {
         this.resources.reset();
         client.leaveRoom(this.jid, this.nick);
     }
-    
-    subject: string = ""
-    activeContact: boolean = false
-    lastInteraction: Date = null
-    lastSentMessage: Object = null
-    unreadCount: number = 0
-    persistent: boolean = false
-    joined: boolean = false
-    membersCount: number = 0
-    
-    id: string = ""
-    name: string = ""
-    autoJoin: boolean = false
-    nick: string = ""
-    jid: {jid} = null
-    
+
+    subject: string = '';
+    activeContact: boolean = false;
+    lastInteraction: Date = null;
+    lastSentMessage: Object = null;
+    unreadCount: number = 0;
+    persistent: boolean = false;
+    joined: boolean = false;
+    membersCount: number = 0;
+
+    id: string = '';
+    name: string = '';
+    autoJoin: boolean = false;
+    nick: string = '';
+    jid: {jid} = null;
+
     get displayName() {
-        var disp = this.name;
+        const disp = this.name;
         if (!disp) disp = this.jid.jid;
         return disp.split('@')[0];
     }
-    
+
     get displayUnreadCount() {
         if (this.unreadCount > 0) {
             if (this.unreadCount < 100)
                 return this.unreadCount.toString();
             else
-                return '99+'
+                return '99+';
         }
         return '';
     }
-    
+
     get displaySubject() {
         return htmlify.toHTML(this.subject);
     }
-    
+
     get hasUnread() {
         return this.unreadCount > 0;
     }
-    
-    resources: Resources
-    messages: Messages
+
+    resources: Resources;
+    messages: Messages;
 }

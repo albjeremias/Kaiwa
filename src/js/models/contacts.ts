@@ -1,16 +1,13 @@
-/*global app*/
-"use strict";
-
-import Collection from './baseCollection'
-import Contact from './contact'
+import Collection from './baseCollection';
+import Contact from './contact';
 
 export default class Contacts extends Collection<Contact> {
-    comparator(model1,model2){
-        var show1 = model1.show;
-        var show2 = model2.show;
+    comparator (model1, model2) {
+        const show1 = model1.show;
+        const show2 = model2.show;
 
-        var name1 = model1.displayName.toLowerCase();
-        var name2 = model2.displayName.toLowerCase();
+        const name1 = model1.displayName.toLowerCase();
+        const name2 = model2.displayName.toLowerCase();
 
         if (show1 === show2) {
 
