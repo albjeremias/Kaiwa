@@ -10,13 +10,52 @@ server**).
 
 Kaiwa is a fork of [Otalk][otalk], a prototype application created by &yet.
 
-![Screenshot](http://getkaiwa.com/assets/img/header.png)
-
 ## Warning
 
 **We're rewriting project in React and TypeScript right now. It's not in a
 usable state yet. If you want a stable version, please use the [master][]
 branch.**
+
+## Features
+
+![Screenshot](http://getkaiwa.com/assets/img/header.png)
+
+Kaiwa comes with support for:
+
+### Message History Syncing
+
+Using Message Archive Management (MAM,
+[XEP-0313](http://xmpp.org/extensions/xep-0313.html)), your conversations can be
+archived by your server and pulled down by the Kaiwa client on demand.
+
+### Active Chat Syncing
+
+Ever used multiple IM clients at once, or swapped clients, and end up with
+disjointed conversations? Using Message Carbons
+[(XEP-0280)](http://xmpp.org/extensions/xep-0280.html) all of your active
+conversations will be synced to your Kaiwa client (and vice versa if you other
+clients support carbons too).
+
+### Reliable Connections
+
+Sometimes you just lose your Internet connection, but with Stream Mangagement
+[XEP-0198](http://xmpp.org/extensions/xep-0198.html) your current session can be
+instantly resumed and caught up once you regain connection. Your messages will
+show as gray until they've been confirmed as received by your server.
+
+### Message Correction
+
+Made a typo in a message? Using Message Correction
+[XEP-0308](http://xmpp.org/extensions/xep-0308.html) you can just double tap the
+up arrow to edit and send a corrected version. In other clients that support
+correction, your last message will be updated in place and marked as edited.
+
+### Timezone Indications
+
+Working with someone in a different timezone? If the other person is using Kaiwa
+or another client that supports Entity Time
+([XEP-0202](http://xmpp.org/extensions/xep-0202.html)) you'll see a reminder
+that they're 9 hours away where it's 4am and they're not likely to respond.
 
 ## Installing
 
@@ -82,29 +121,10 @@ authentication enabled Kaiwa will try to save only salted data. The secure mode
 Feel free to [report an issue][issues] or contact the maintainer directly
 through [email][fornever-email] or [XMPP][fornever-xmpp].
 
-## What's included?
+## Contributing
 
-Kaiwa comes with support for:
-
-### Message History Syncing
-
-Using Message Archive Management (MAM, [XEP-0313](http://xmpp.org/extensions/xep-0313.html)), your conversations can be archived by your server and pulled down by the Kaiwa client on demand.
-
-### Active Chat Syncing
-
-Ever used multiple IM clients at once, or swapped clients, and end up with disjointed conversations? Using Message Carbons [(XEP-0280)](http://xmpp.org/extensions/xep-0280.html) all of your active conversations will be synced to your Kaiwa client (and vice versa if you other clients support carbons too).
-
-### Reliable Connections
-
-Sometimes you just lose your Internet connection, but with Stream Mangagement [XEP-0198](http://xmpp.org/extensions/xep-0198.html) your current session can be instantly resumed and caught up once you regain connection. Your messages will show as gray until they've been confirmed as received by your server.
-
-### Message Correction
-
-Made a typo in a message? Using Message Correction [XEP-0308](http://xmpp.org/extensions/xep-0308.html) you can just double tap the up arrow to edit and send a corrected version. In other clients that support correction, your last message will be updated in place and marked as edited.
-
-### Timezone Indications
-
-Working with someone in a different timezone? If the other person is using Kaiwa or another client that supports Entity Time ([XEP-0202](http://xmpp.org/extensions/xep-0202.html)) you'll see a reminder that they're 9 hours away where it's 4am and they're not likely to respond.
+Please note that we're using [tslint][] here. All the contributions should pass
+the lint. Execute `npm run lint` to check current code.
 
 [fornever-email]: mailto:friedrich@fornever.me
 [fornever-xmpp]: xmpp:fornever@codingteam.org.ru
