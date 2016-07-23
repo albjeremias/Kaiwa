@@ -1,20 +1,17 @@
-/*global $, app, me*/
-"use strict";
+import App from '../models/app';
+import Me from '../models/me';
 
-import App from '../models/app'
-import Me from '../models/me'
-
-declare const app: App
-declare const me: Me
+declare const app: App;
+declare const me: Me;
 
 export interface Page {
-    show(animation)
-    hide()
+    show(animation);
+    hide();
 }
 
 export class PageMixIn implements Page {
     show (animation) {
-        var self = this;
+        const self = this;
 
         $('body').scrollTop(0);
 
@@ -40,7 +37,7 @@ export class PageMixIn implements Page {
         return this;
     }
     hide () {
-        var self = this;
+        const self = this;
 
         this.$el.removeClass('active');
 
