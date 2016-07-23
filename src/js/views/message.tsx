@@ -1,29 +1,25 @@
-"use strict";
-
-import {Component} from 'react'
+import {Component} from 'react';
 
 export interface MessageProperties {
-    message: any
+    message: any;
 }
 
 export default class Message extends Component<MessageProperties, {}> {
     render() {
         return (
             <li>
-                <div className="message">
-                    <span className="timestamp">{this.props.message.timestamp}</span>
-                    <p className="body">{this.props.message.body}</p>
+                <div className='message'>
+                    <span className='timestamp'>{this.props.message.timestamp}</span>
+                    <p className='body'>{this.props.message.body}</p>
                 </div>
             </li>
-        )
+        );
     }
-} 
-
+}
 
 // var _ = require('underscore');
 // var HumanView = require('human-view');
 // var templates = require('../templates');
-
 
 // module.exports = HumanView.extend({
 //     template: templates.includes.message,

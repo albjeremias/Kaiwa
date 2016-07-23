@@ -1,30 +1,27 @@
-/*global $, app, me*/
-"use strict";
-
-import {Component} from 'react'
+import {Component} from 'react';
 
 export interface ContactListItemProperties {
-    contact: any
-    remove: () => Promise<any>
-    navigate: () => Promise<any>
+    contact: any;
+    remove: () => Promise<any>;
+    navigate: () => Promise<any>;
 }
 
-export default class ContactListItem extends Component<ContactListItemProperties,{}>{
+export default class ContactListItem extends Component<ContactListItemProperties, {}> {
     render() {
         return (
-            <li className="contact joined" onClick={this.props.navigate}>
-                <div className="wrap">
-                    <i className="remove fa fa-times-circle" onClick={this.props.remove} />
-                    <i className="presence fa fa-circle" />
-                    <div className="user">
-                        <img className="avatar" src={this.props.contact.avatar} />
-                        <span className="name">{this.props.contact.displayName}</span>
-                        <span className="idleTime">{this.props.contact.idleSince}</span>
+            <li className='contact joined' onClick={this.props.navigate}>
+                <div className='wrap'>
+                    <i className='remove fa fa-times-circle' onClick={this.props.remove} />
+                    <i className='presence fa fa-circle' />
+                    <div className='user'>
+                        <img className='avatar' src={this.props.contact.avatar} />
+                        <span className='name'>{this.props.contact.displayName}</span>
+                        <span className='idleTime'>{this.props.contact.idleSince}</span>
                     </div>
-                    <div className="unread">{this.props.contact.unreadCount}</div>
+                    <div className='unread'>{this.props.contact.unreadCount}</div>
                 </div>
             </li>
-        )
+        );
     }
 }
 
