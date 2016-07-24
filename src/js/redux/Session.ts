@@ -1,4 +1,4 @@
-import {browserHistory} from 'react-router';
+import {IAction, ISessionAction} from './Actions';
 
 import Action = Redux.Action;
 
@@ -10,15 +10,6 @@ export interface ISession {
     wsURL?: string;
     boshURL?: string;
     transport?: string;
-}
-
-interface ISessionAction extends Action {
-    type: 'LOGIN';
-    session: ISession;
-}
-
-export function login(session: ISession): ISessionAction {
-    return {type: 'LOGIN', session};
 }
 
 function getDefaultSession() {
@@ -37,17 +28,15 @@ function getDefaultSession() {
     return session;
 }
 
-const LOCAL_STORAGE_KEY = 'session';
-export function reducer(state: ISession, action: ISessionAction): ISession {
-    console.log(state, action);
+export const LOCAL_STORAGE_KEY = 'session';
+export function reducer(state: ISession, action: IAction): ISession {
     if (state === undefined) {
         return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || getDefaultSession();
     }
 
-    const {session} = action;
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(session));
+    switch (action.type) {
+        case 'LOGIN': return (action as ISessionAction).session;
+    }
 
-    browserHistory.push('/');
-
-    return session;
+    return state;
 }

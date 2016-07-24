@@ -1,13 +1,14 @@
-import {Component} from 'react';
+import React = require('react');
 import update = require('react-addons-update');
 import {connect} from 'react-redux';
 
+import {login} from '../redux/Actions';
 import {IApplicationState} from '../redux/Application';
-import {ISession, login} from '../redux/Session';
+import {ISession} from '../redux/Session';
 
 import Dispatch = Redux.Dispatch;
 
-class Field extends Component<{
+class Field extends React.Component<{
     type?: string;
     id: string;
     label?: string;
@@ -52,7 +53,7 @@ interface LoginProps {
     onLogin?: (session: ISession) => void;
 }
 
-class LoginView extends Component<LoginProps, ISession> {
+class LoginView extends React.Component<LoginProps, ISession> {
     constructor(props: LoginProps) {
         super();
         console.log(props);
