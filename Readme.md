@@ -69,7 +69,7 @@ application:
 
 After that compile the application:
 
-    $ npm run webpack
+    $ npm run webpack # or `npm run deploy` if you want optimized version
 
 And start the server:
 

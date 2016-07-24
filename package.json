@@ -6,12 +6,12 @@
     "crypto": "crypto-browserify"
   },
   "scripts": {
-    "install": "typings install",
-    "compile": "gulp compile",
-    "lint": "tslint src/**/*.ts src/**/*.tsx",
-    "webpack": "webpack -d",
-    "start": "node ./src/server.js",
+    "deploy": "webpack -p",
     "devel": "concurrently \"webpack -d --watch\" \"node ./src/server.js\""
+    "install": "typings install",
+    "lint": "tslint src/**/*.ts src/**/*.tsx",
+    "start": "node ./src/server.js",
+    "webpack": "webpack -d"
   },
   "dependencies": {
     "@lukekarrys/jade-runtime": "1.11.1",
