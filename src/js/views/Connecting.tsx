@@ -10,13 +10,14 @@ interface IConnectingProps {
 
 class ConnectingView extends React.Component<IConnectingProps, void> {
     render() {
+        const {jid} = this.props.session;
         return (
             <section className='content box'>
                 <div className='head'>
-                    <h2>Connecting</h2>
+                    <h2>Connecting...</h2>
                 </div>
                 <div className='content'>
-
+                    Connecting as {jid}
                 </div>
             </section>
         );

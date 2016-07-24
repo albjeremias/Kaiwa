@@ -1,11 +1,12 @@
+import update = require('react-addons-update');
+
 import {IAction, ISessionAction} from './Actions';
 
 import Action = Redux.Action;
 
 export interface ISession {
-    jid?: string;
-    password?: string;
-    server?: string;
+    jid: string;
+    password: string;
     connURL?: string;
     wsURL?: string;
     boshURL?: string;
@@ -15,7 +16,9 @@ export interface ISession {
 function getDefaultSession() {
     const {wss} = KAIWA_CONFIG;
     const session: ISession = {
-        connURL: wss
+        connURL: wss,
+        jid: '',
+        password: ''
     };
     if (wss && wss.indexOf('http') === 0) {
         session.boshURL = wss;
@@ -35,7 +38,14 @@ export function reducer(state: ISession, action: IAction): ISession {
     }
 
     switch (action.type) {
-        case 'LOGIN': return (action as ISessionAction).session;
+        case 'LOGIN':
+            let {session} = (action as ISessionAction);
+            if (KAIWA_CONFIG.domain && session.jid.indexOf('@') === -1) {
+                const jid = `${session.jid}@${KAIWA_CONFIG.domain}`;
+                session = update(session, {$set: {jid}});
+            }
+
+            return session;
     }
 
     return state;

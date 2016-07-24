@@ -56,7 +56,6 @@ interface LoginProps {
 class LoginView extends React.Component<LoginProps, ISession> {
     constructor(props: LoginProps) {
         super();
-        console.log(props);
         this.state = props.session;
     }
 
@@ -73,7 +72,7 @@ class LoginView extends React.Component<LoginProps, ISession> {
 
     render() {
         const showWssSelector = !KAIWA_CONFIG.wss;
-        const {session} = this.props;
+        const session = this.state;
         return (
             <section className='loginbox content box'>
                 <div className='head'>
