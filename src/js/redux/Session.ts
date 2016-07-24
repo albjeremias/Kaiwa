@@ -1,3 +1,5 @@
+import {browserHistory} from 'react-router';
+
 import Action = Redux.Action;
 
 export interface ISession {
@@ -44,5 +46,8 @@ export function reducer(state: ISession, action: ISessionAction): ISession {
 
     const {session} = action;
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(session));
-    return session; // TODO: Switch to "/" state ~ F
+
+    browserHistory.push('/');
+
+    return session;
 }
