@@ -30,7 +30,7 @@ module.exports = {
     WebpackFailPlugin],
 
     entry: {
-        'js/app': './js/app'
+        'js/app': './js/routes'
     },
 
     output: {
