@@ -1,4 +1,4 @@
-import App from './app';
+import App from './App';
 
 declare const app: App;
 declare const client: any;

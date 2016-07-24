@@ -1,5 +1,12 @@
+import {browserHistory} from 'react-router';
+
 import Calls from './calls';
 import Me from './me';
+import {connecting} from '../redux/Actions';
+import {IApplicationState} from '../redux/Application';
+import {ApplicationState} from '../redux/State';
+
+import Store = Redux.Store;
 
 declare const client: any;
 declare const me: Me;
@@ -11,14 +18,10 @@ interface StorageConstructor {
 }
 
 const $: JQueryStatic = require('jquery');
-const _: _.LoDashStatic = require('lodash');
 
-const asyncjs: Async = require('async');
 const StanzaIO = require('stanza.io');
 
 const AppState = require('./state');
-const MainView = require('../views/main');
-const Router = require('../router');
 const Storage: StorageConstructor = require('../storage');
 const xmppEventHandlers = require('../helpers/xmppEventHandlers');
 const pushNotifications = require('../helpers/pushNotifications');
@@ -31,6 +34,26 @@ const SoundEffectManager = require('sound-effect-manager');
 
 export default class App {
     calls = new Calls();
+
+    constructor(private store: Store<IApplicationState>) {
+        store.subscribe(() => this.onStoreChange(store.getState()));
+    }
+
+    onStoreChange(state: IApplicationState): void {
+        console.log('App.onStoreChange', state);
+        switch (state.state) {
+            case ApplicationState.Login:
+                console.log('Starting login sequence');
+                browserHistory.push('/connecting');
+                this.store.dispatch(connecting());
+                this.launch();
+                break;
+        }
+
+        // TODO: On successful connect:
+        // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(session));
+        // ~ F
+    }
 
     async launch(): Promise<App|Error> {
         let app: App = this as App;
@@ -48,6 +71,7 @@ export default class App {
 
         app.config = this.parseConfig(config);
         app.config.useStreamManagement = false; // Temporary solution because this feature is bugged on node 4.0
+        // TODO: Investigate this ^ ~ F
 
         if (KAIWA_CONFIG.sasl) {
             app.config.sasl = KAIWA_CONFIG.sasl;
@@ -136,18 +160,6 @@ export default class App {
                     return resolve();
                 }
 
-                new Router();
-                // app.history = Backbone.history
-                // app.history.on("route", function(route, params) {
-                //     app.state.pageChanged = params
-                // })
-
-                app.view = new MainView({
-                    model: app.state,
-                    el: document.body
-                });
-                app.view.render();
-
                 if (me.contacts.length) {
                     start();
                 } else {
@@ -206,7 +218,6 @@ export default class App {
         return KAIWA_CONFIG;
     }
     // TODO: add typings
-    private view: any;
     api: any;
     private id: any;
     timeInterval: any;

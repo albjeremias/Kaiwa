@@ -1,6 +1,6 @@
 import React = require('react');
 
-import App from '../models/app';
+import App from '../models/App';
 
 declare const app: App;
 

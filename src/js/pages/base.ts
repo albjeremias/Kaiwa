@@ -1,4 +1,4 @@
-import App from '../models/app';
+import App from '../models/App';
 import Me from '../models/me';
 
 declare const app: App;
