@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import React = require('react');
 
 export interface ContactListItemProperties {
     contact: any;
@@ -6,7 +6,7 @@ export interface ContactListItemProperties {
     navigate: () => Promise<any>;
 }
 
-export default class ContactListItem extends Component<ContactListItemProperties, {}> {
+export default class ContactListItem extends React.Component<ContactListItemProperties, {}> {
     render() {
         return (
             <li className='contact joined' onClick={this.props.navigate}>

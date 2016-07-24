@@ -1,9 +1,12 @@
+import React = require('react');
+
 import App from '../models/app';
 
 declare const app: App;
 
 import {Page, PageMixIn} from './base';
-import {Component} from 'react';
+
+import Component = React.Component;
 
 export interface SettingsPageProperties {
 }

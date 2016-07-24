@@ -1,10 +1,10 @@
-import {Component} from 'react';
+import React = require('react');
 
 export interface MessageProperties {
     message: any;
 }
 
-export default class Message extends Component<MessageProperties, {}> {
+export default class Message extends React.Component<MessageProperties, {}> {
     render() {
         return (
             <li>

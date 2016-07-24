@@ -1,11 +1,12 @@
-import {Component} from 'react';
+import React = require('react');
+
 import Resource from '../models/resource';
 
 export interface MucRosterItemProperties {
     resource: Resource;
 }
 
-export default class MucRosterItem extends Component<MucRosterItemProperties, {}> {
+export default class MucRosterItem extends React.Component<MucRosterItemProperties, {}> {
 
     handleClick() {
 //         this.parent.trigger('rosterItemClicked', this.model.mucDisplayName);

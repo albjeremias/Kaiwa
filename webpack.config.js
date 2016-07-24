@@ -12,7 +12,6 @@ module.exports = {
             '.ts',
             '.tsx',
             '.js',
-            '.jade',
             '.html',
             '.less',
             '.css',
@@ -31,14 +30,6 @@ module.exports = {
     WebpackFailPlugin],
 
     entry: {
-        'js/1-vendor':
-        [
-            require.resolve('jquery'),
-            './js/libraries/resampler.js',
-            require.resolve('indexeddbshim'),
-            require.resolve('sugar-date'),
-            './js/libraries/jquery.oembed.js'
-        ],
         'js/app': './js/app'
     },
 
@@ -55,22 +46,6 @@ module.exports = {
 
     module: {
         loaders: [
-            {
-                test: require.resolve('jquery'),
-                loader: "expose?$!expose?jQuery"
-            },
-            {
-                test: /react\.js$/,
-                loader: "expose?React"
-            },
-            {
-              test: /resampler\.js$/,
-              loader: 'expose?Resample!imports?this=>window!exports?Resample'
-            },
-            {
-              test: /jquery\.oembed\.js$/,
-              loader: 'imports?jQuery=jquery'
-            },
             {
                 test: /\.html$/,
                 loader: 'html-loader?attrs=img:src link:href'
@@ -94,10 +69,6 @@ module.exports = {
                 loader: 'babel'
             },
             {
-                test: /\.jade$/,
-                loader: 'jade-loader'
-            },
-            {
                 test: /\.json$/,
                 loader: 'json-loader'
             }
@@ -107,9 +78,6 @@ module.exports = {
         Buffer: true,
         console: true,
         global: true,
-        fs: "empty"
-    },
-    externals: {
-        jquery: 'jQuery'
+        fs: 'empty'
     }
 };

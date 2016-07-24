@@ -1,7 +1,9 @@
-import {Component, createClass} from 'react';
+import React = require('react');
 
 import App from '../models/app';
 import Settings from '../pages/settings';
+
+import Component = React.Component;
 
 export interface Properties {
     app: App;
@@ -10,7 +12,7 @@ export interface State {
     error: Error;
 }
 
-const ApplicationView = createClass<Properties, State>({
+const ApplicationView = React.createClass<Properties, State>({
     getInitialState() {
         return { } as State;
     },

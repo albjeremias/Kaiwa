@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import React = require('react');
 
 export interface MucListItemProperties {
     contact: any;
@@ -7,7 +7,7 @@ export interface MucListItemProperties {
     openRoom: () => Promise<any>;
 }
 
-export default class MucListItem extends Component<MucListItemProperties, {}> {
+export default class MucListItem extends React.Component<MucListItemProperties, {}> {
     render() {
         return (
             <li className='contact' onClick={this.props.openRoom}>

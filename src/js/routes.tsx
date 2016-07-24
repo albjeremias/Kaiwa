@@ -3,7 +3,8 @@ import {Provider} from 'react-redux';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {createStore} from 'redux';
 
-import {kaiwa} from './redux/Application';
+import {createApp, reducer} from './redux/Application';
+import Connecting from './views/Connecting';
 import {Utils} from './views/utils';
 import {Login} from './views/login';
 import {App} from './views/app';
@@ -13,12 +14,14 @@ import {Chat} from './views/chat';
 import {GroupChat} from './views/groupchat';
 import {Logout} from './views/logout';
 
-const store = createStore(kaiwa);
+const store = createStore(reducer);
+const app = createApp(store);
 
 render((
     <Provider store={store}>
         <Router history={browserHistory}>
             <Route path='/login' component={Login}/>
+            <Route path='/connecting' component={Connecting}/>
             <Route path='/' component={App} onEnter={Utils.requireAuth}>
                 <IndexRoute component={Home}/>
                 <Route path='settings' component={Settings}/>
