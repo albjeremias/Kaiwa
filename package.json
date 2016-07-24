@@ -7,7 +7,7 @@
   },
   "scripts": {
     "deploy": "webpack -p",
-    "devel": "concurrently \"webpack -d --watch\" \"node ./src/server.js\""
+    "devel": "concurrently \"webpack -d --watch\" \"node ./src/server.js\"",
     "install": "typings install",
     "lint": "tslint src/**/*.ts src/**/*.tsx",
     "start": "node ./src/server.js",
