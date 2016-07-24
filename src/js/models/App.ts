@@ -1,17 +1,19 @@
 import {browserHistory} from 'react-router';
 
-import Calls from './calls';
-import Me from './me';
 import {connecting} from '../redux/Actions';
 import {IApplicationState} from '../redux/Application';
+import {ISession, LOCAL_STORAGE_KEY} from '../redux/Session';
 import {ApplicationState} from '../redux/State';
+import Calls from './calls';
+import Me from './me';
 
 import Store = Redux.Store;
 
 declare const client: any;
 declare const me: Me;
 
-interface Storage {}
+interface Storage {
+}
 interface StorageConstructor {
     new(): Storage;
     prototype: Storage;
@@ -39,23 +41,22 @@ export default class App {
         store.subscribe(() => this.onStoreChange(store.getState()));
     }
 
-    onStoreChange(state: IApplicationState): void {
+    private onStoreChange(state: IApplicationState): void {
         console.log('App.onStoreChange', state);
         switch (state.state) {
             case ApplicationState.Login:
                 console.log('Starting login sequence');
                 browserHistory.push('/connecting');
+                let {session} = state;
                 this.store.dispatch(connecting());
-                this.launch();
+                this.launch(session).then(
+                    () => this.onConnected(session),
+                    error => this.onConnectionError(error));
                 break;
         }
-
-        // TODO: On successful connect:
-        // localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(session));
-        // ~ F
     }
 
-    async launch(): Promise<App|Error> {
+    private async launch(session: ISession): Promise<void> {
         let app: App = this as App;
 
         window['app'] = app;
@@ -65,8 +66,7 @@ export default class App {
         if (!config) {
             console.log('missing config');
             window.location = 'login.html' as any;
-            const error = new Error('no config');
-            return Promise.reject<Error>(error);
+            throw new Error('no config');
         }
 
         app.config = this.parseConfig(config);
@@ -81,97 +81,101 @@ export default class App {
 
         let profile = {};
 
-        try {
-            app = await (async() => new Promise<App>((resolve, reject) => {
-                app.notifications = new Notify();
-                app.soundManager = new SoundEffectManager();
-                app.desktop = new Desktop();
-                app.cache = new AppCache();
-                app.storage = new Storage();
-                app.storage.open(() => resolve(app));
-                app.composing = {};
-                app.timeInterval = 0;
-                app.mucInfos = [];
-            }))();
+        app = await (async() => new Promise<App>((resolve, reject) => {
+            app.notifications = new Notify();
+            app.soundManager = new SoundEffectManager();
+            app.desktop = new Desktop();
+            app.cache = new AppCache();
+            app.storage = new Storage();
+            app.storage.open(() => resolve(app));
+            app.composing = {};
+            app.timeInterval = 0;
+            app.mucInfos = [];
+        }))();
 
-            app = await (async() => new Promise<App>((resolve, reject) => {
-                app.storage.profiles.get(app.config.jid, function (err, res) {
-                    if (res) {
-                        profile = res;
-                        profile['jid'] = {
-                            full: app.config.jid,
-                             bare: app.config.jid
-                        };
-                        app.config.rosterVer = res.rosterVer;
-                    }
-                    return resolve(app);
-                });
-            }))();
-
-            app = await (async() => new Promise<App>((resolve, reject) => {
-                app.state = new AppState();
-                app.me = window['me'] = new Me(profile);
-
-                window.onbeforeunload = function () {
-                    if (app.api.sessionStarted) {
-                        app.api.disconnect();
-                    }
-                };
-
-                app.api = window['client'] = StanzaIO.createClient(app.config);
-                client.use(pushNotifications);
-                xmppEventHandlers(app.api, app);
-
-                app.api.once('session:started', function () {
-                    app.state.hasConnected = true;
-                    return resolve(app);
-                });
-                app.api.connect();
-            }))();
-
-            app.soundManager.loadFile('sounds/ding.wav', 'ding');
-            app.soundManager.loadFile('sounds/threetone-alert.wav', 'threetone-alert');
-
-            app.whenConnected(function () {
-                function getInterval() {
-                    if (client.sessionStarted) {
-                        client.getTime(app.id, function (err, res) {
-                            if (err) return;
-                            app.timeInterval = res.time.utc - Date.now();
-                        });
-                        setTimeout(getInterval, 600000);
-                    }
+        app = await (async() => new Promise<App>((resolve, reject) => {
+            app.storage.profiles.get(app.config.jid, function (err, res) {
+                if (res) {
+                    profile = res;
+                    profile['jid'] = {
+                        full: app.config.jid,
+                        bare: app.config.jid
+                    };
+                    app.config.rosterVer = res.rosterVer;
                 }
-                getInterval();
+                return resolve(app);
+            });
+        }))();
+
+        app = await (async() => new Promise<App>((resolve, reject) => {
+            app.state = new AppState();
+            app.me = window['me'] = new Me(profile);
+
+            window.onbeforeunload = function () {
+                if (app.api.sessionStarted) {
+                    app.api.disconnect();
+                }
+            };
+
+            app.api = window['client'] = StanzaIO.createClient(app.config);
+            client.use(pushNotifications);
+            xmppEventHandlers(app.api, app);
+
+            app.api.once('session:started', function () {
+                app.state.hasConnected = true;
+                return resolve(app);
+            });
+            app.api.connect();
+        }))();
+
+        app.soundManager.loadFile('sounds/ding.wav', 'ding');
+        app.soundManager.loadFile('sounds/threetone-alert.wav', 'threetone-alert');
+
+        app.whenConnected(function () {
+            function getInterval() {
+                if (client.sessionStarted) {
+                    client.getTime(app.id, function (err, res) {
+                        if (err) return;
+                        app.timeInterval = res.time.utc - Date.now();
+                    });
+                    setTimeout(getInterval, 600000);
+                }
+            }
+
+            getInterval();
+        });
+
+        app = await (async() => new Promise<App>((resolve, reject) => {
+            app.whenConnected(function () {
+                me.publishAvatar();
             });
 
-            app = await (async() => new Promise<App>((resolve, reject) => {
-                app.whenConnected(function () {
-                    me.publishAvatar();
-                });
+            function start() {
+                // start our router and show the appropriate page
+                const baseUrl = url.parse(KAIWA_CONFIG.baseUrl);
+                app.history.start({pushState: false, root: baseUrl.pathname});
+                if (app.history.fragment === '' && KAIWA_CONFIG.startup)
+                    app.navigate(KAIWA_CONFIG.startup);
 
-                function start() {
-                    // start our router and show the appropriate page
-                    const baseUrl = url.parse(KAIWA_CONFIG.baseUrl);
-                    app.history.start({pushState: false, root: baseUrl.pathname});
-                    if (app.history.fragment === '' && KAIWA_CONFIG.startup)
-                        app.navigate(KAIWA_CONFIG.startup);
+                return resolve();
+            }
 
-                    return resolve();
-                }
+            if (me.contacts.length) {
+                start();
+            } else {
+                me.contacts.once('loaded', start);
+            }
+        }))();
+    }
 
-                if (me.contacts.length) {
-                    start();
-                } else {
-                    me.contacts.once('loaded', start);
-                }
-            }))();
+    private onConnected(session: ISession) {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(session));
+        browserHistory.push('/');
+    }
 
-            return app;
-        } catch (e) {
-            this.error = e;
-            return Promise.reject<Error>(e);
-        }
+    private onConnectionError(error: any) {
+        console.error(error);
+        // TODO: Go back to the login page telling the user what the error is. ~ F
     }
 
     private parseConfig(json) {
@@ -198,11 +202,13 @@ export default class App {
             this.api.once('session:started', func);
         }
     }
+
     navigate(page) {
         const url = (page.charAt(0) === '/') ? page.slice(1) : page;
         this.state.markActive();
         this.history.navigate(url, true);
     }
+
     renderPage(view, animation) {
         const container = $('#pages');
 
@@ -214,9 +220,11 @@ export default class App {
         container.append(view.render(animation === 'none').el);
         view.show(animation);
     }
+
     serverConfig() {
         return KAIWA_CONFIG;
     }
+
     // TODO: add typings
     api: any;
     private id: any;
