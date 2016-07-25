@@ -38,10 +38,10 @@ clients support carbons too).
 
 ### Reliable Connections
 
-Sometimes you just lose your Internet connection, but with Stream Mangagement
-[XEP-0198](http://xmpp.org/extensions/xep-0198.html) your current session can be
-instantly resumed and caught up once you regain connection. Your messages will
-show as gray until they've been confirmed as received by your server.
+Sometimes you just lose your Internet connection, but with Stream Management
+[XEP-0198][xep-0198] your current session can be instantly resumed and caught up
+once you regain connection. Your messages will show as gray until they've been
+confirmed as received by your server.
 
 ### Message Correction
 
@@ -87,7 +87,7 @@ For the development purposes you may use
 $ npm run devel
 ```
 
-It will continously monitor the `src` directory for changes and recompile
+It will continuously monitor the `src` directory for changes and recompile
 application on any change.
 
 It you want to publish the compiled application somewhere else, feel free to
@@ -140,3 +140,5 @@ the lint. Execute `npm run lint` to check current code.
 [master]: https://github.com/ForNeVeR/kaiwa/tree/master
 [otalk]: https://github.com/otalk
 [stanza.io]: https://github.com/otalk/stanza.io
+[tslint]: https://palantir.github.io/tslint/
+[xep-0198]: http://xmpp.org/extensions/xep-0198.html
