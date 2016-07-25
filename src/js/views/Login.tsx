@@ -1,5 +1,4 @@
-import React = require('react');
-import update = require('react-addons-update');
+import * as React from 'react';
 import {connect} from 'react-redux';
 
 import {login} from '../redux/Actions';
@@ -65,9 +64,9 @@ class LoginView extends React.Component<LoginProps, ISession> {
     }
 
     handleChange(event) {
-        const {session} = this.props;
-        const newState = update(session, {$set: {[event.target.id]: event.target.value}});
-        this.setState(newState);
+        this.setState({
+            [event.target.id]: event.target.value
+        } as ISession);
     }
 
     render() {
