@@ -42,7 +42,7 @@ export function reducer(state: ISession, action: IAction): ISession {
             let {session} = (action as ISessionAction);
             if (KAIWA_CONFIG.domain && session.jid.indexOf('@') === -1) {
                 const jid = `${session.jid}@${KAIWA_CONFIG.domain}`;
-                session = update(session, {$set: {jid}});
+                session = update(session, {jid: {$set: jid}});
             }
 
             return session;
