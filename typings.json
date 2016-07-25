@@ -14,5 +14,8 @@
     "react-router": "registry:dt/react-router#2.0.0+20160501155536",
     "react-router/history": "registry:dt/react-router/history#2.0.0+20160316155526",
     "redux": "registry:dt/redux#3.5.2+20160703092728"
+  },
+  "dependencies": {
+    "tape": "registry:npm/tape#4.0.0+20160723033700"
   }
 }

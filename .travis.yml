@@ -8,5 +8,6 @@ node_js:
 sudo: false
 script:
 - cp config.example.json config.json
+- npm run test
 - npm run webpack
 - npm run lint

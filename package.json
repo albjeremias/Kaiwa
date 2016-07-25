@@ -11,6 +11,7 @@
     "install": "typings install",
     "lint": "tslint src/**/*.ts src/**/*.tsx",
     "start": "node ./src/server.js",
+    "test": "webpack -d --config tests.config.js && node ./test-output/test.js",
     "webpack": "webpack -d"
   },
   "dependencies": {
@@ -74,6 +75,8 @@
     "redux": "^3.5.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.1.1",
+    "tap-webpack-plugin": "^1.1.0",
+    "tape": "^4.6.0",
     "ts-loader": "^0.7.2",
     "tslint": "^3.13.0",
     "typescript": "^1.8.10",

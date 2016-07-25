@@ -74,6 +74,7 @@ module.exports = {
             }
         ]
     },
+
     node: {
         Buffer: true,
         console: true,
