@@ -13,10 +13,9 @@ test('reducer should return proper session after login', (t) => {
         session: initialSession
     };
 
-    KAIWA_CONFIG.domain = 'jabber.ru';
     const result = session(initialSession, action);
     t.deepEqual(result, {
-        jid: 'foo@jabber.ru',
+        jid: `foo@${KAIWA_CONFIG.domain}`,
         password: 'x'
     });
 
