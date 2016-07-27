@@ -39,7 +39,7 @@ export function reducer(state: ISession, action: IAction): ISession {
 
     switch (action.type) {
         case 'LOGIN':
-            let {session} = (action as ISessionAction);
+            let {session} = action as ISessionAction;
             if (KAIWA_CONFIG.domain && session.jid.indexOf('@') === -1) {
                 const jid = `${session.jid}@${KAIWA_CONFIG.domain}`;
                 session = update(session, {jid: {$set: jid}});
