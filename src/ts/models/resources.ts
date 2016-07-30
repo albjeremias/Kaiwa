@@ -1,5 +1,5 @@
-import Collection from './baseCollection';
-import Me from './me';
+import Collection from './Collection';
+import Me from './Me';
 import Resource from './resource';
 
 declare const me: Me;
@@ -18,7 +18,7 @@ export default class Resources extends Collection<Resource> {
         const collection = this;
         if (addAll) {
             const resource = new Resource({id: this.parent.jid.bare + '/all'});
-            collection.push(resource);
+            collection.add(resource);
         }
 
         const pattern = new RegExp('^' + letters + '.*$', 'i');

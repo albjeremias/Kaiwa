@@ -1,5 +1,5 @@
 import App from '../models/App';
-import Me from '../models/me';
+import Me from '../models/Me';
 
 declare const app: App;
 declare const me: Me;

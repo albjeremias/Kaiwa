@@ -1,5 +1,5 @@
 import App from './App';
-import Me from './me';
+import Me from './Me';
 
 declare const app: App;
 declare const me: Me;

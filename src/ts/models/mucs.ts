@@ -3,7 +3,7 @@ import App from './App';
 declare const app: App;
 declare const client: any;
 
-import Collection from './baseCollection';
+import Collection from './Collection';
 import MUC from './muc';
 
 export default class MUCs extends Collection<MUC> {
@@ -25,7 +25,7 @@ export default class MUCs extends Collection<MUC> {
             client.getBookmarks(function (err, res) {
                 if (err) return;
 
-                const mucs = res.privateStorage.bookmarks.conferences || [] as MUCs;
+                const mucs = res.privateStorage.bookmarks.conferences || new MUCs();
                 mucs.forEach(function (muc: MUC) {
                     self.add(muc);
                     if (muc.autoJoin) {

@@ -16,10 +16,9 @@ import MUCs from './mucs';
 import ContactRequests from './contactRequests';
 
 export default class Me {
-    bind: (event: string, handler: () => void, instance: Me) => void;
     show: () => void;
 
-    constructor(opts) {
+    constructor(public calls: Calls, opts: { avatarID?: string }) {
         this.setAvatar(opts ? opts.avatarID : null);
 
         this.bind('change:jid', this.load, this);
@@ -267,10 +266,9 @@ export default class Me {
     rosterVer: string = '';
     nick: string = '';
 
-    contacts: Contacts;
+    contacts = new Contacts();
     contactsRequests: ContactRequests;
     mucs: MUCs;
-    calls: Calls;
 
     get displayName() {
         return this.nick || this.jid.bare;
@@ -291,5 +289,10 @@ export default class Me {
 
     get isAdmin() {
         return this.jid.local === KAIWA_CONFIG.admin ? 'meIsAdmin' : '';
+    }
+
+    private bind(event: string, handler: () => void, instance: Me) {
+        console.warn(`TODO: Binding event ${event} on Me object`);
+        // TOOD: Really this method should never be called. ~ F
     }
 }

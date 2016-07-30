@@ -1,4 +1,4 @@
-import Collection from './baseCollection';
+import Collection from './Collection';
 import Contact from './contact';
 
 export default class Contacts extends Collection<Contact> {

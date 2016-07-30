@@ -7,7 +7,7 @@ const logger = require('andlog');
 const fetchAvatar = require('../../js/helpers/fetchAvatar');
 
 import App from './App';
-import Me from './me';
+import Me from './Me';
 
 import Resources from './resources';
 import Resource from './resource';
@@ -107,7 +107,7 @@ export default class Contact {
             existing.set(message);
             existing.save();
         } else {
-            this.messages.push(message);
+            this.messages.add(message);
             message.save();
         }
 

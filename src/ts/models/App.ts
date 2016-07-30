@@ -6,7 +6,7 @@ import {ISession, LOCAL_STORAGE_KEY} from '../redux/Session';
 import {ApplicationState} from '../redux/State';
 import Storage from '../storage';
 import Calls from './calls';
-import Me from './me';
+import Me from './Me';
 
 import Store = Redux.Store;
 
@@ -102,7 +102,7 @@ export default class App {
 
         app = await (async() => new Promise<App>((resolve, reject) => {
             app.state = new AppState();
-            app.me = window['me'] = new Me(profile);
+            app.me = window['me'] = new Me(this.calls, profile);
 
             window.onbeforeunload = function () {
                 if (app.api.sessionStarted) {

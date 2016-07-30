@@ -1,4 +1,4 @@
-import Collection from './baseCollection';
+import Collection from './Collection';
 import Message from './message';
 
 export default class Messages extends Collection<Message> {
