@@ -4,7 +4,7 @@ import DiscoStorage from './disco';
 import ArchiveStorage from './archive';
 import ProfileStorage from './profile';
 
-export class Storage {
+export default class Storage {
     open (cb) {
         cb = cb || function () {};
 
