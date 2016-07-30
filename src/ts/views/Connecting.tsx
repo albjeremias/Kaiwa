@@ -17,7 +17,7 @@ class ConnectingView extends React.Component<IConnectingProps, void> {
                     <h2>Connecting...</h2>
                 </div>
                 <div className='content'>
-                    Connecting as {jid}
+                    Connecting as {jid} {/* TODO: Add cancel button. ~ F */}
                 </div>
             </section>
         );
