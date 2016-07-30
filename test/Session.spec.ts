@@ -1,7 +1,7 @@
 import * as test from 'tape';
 
-import {reducer as session, ISession} from '../src/js/redux/Session';
-import {ISessionAction} from "../src/js/redux/Actions";
+import {reducer as session, ISession} from '../src/ts/redux/Session';
+import {ISessionAction} from '../src/ts/redux/Actions';
 
 test('reducer should return proper session after login', (t) => {
     const initialSession: ISession = {

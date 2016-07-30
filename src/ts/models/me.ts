@@ -1,7 +1,7 @@
 const getUserMedia = require('getusermedia');
-const fetchAvatar = require('../helpers/fetchAvatar');
+const fetchAvatar = require('../../js/helpers/fetchAvatar');
 const crypto = require('crypto');
-const Resample = require('../libraries/resampler');
+const Resample = require('../../js/libraries/resampler');
 const StanzaIo = require('stanza.io');
 
 import App from './App';

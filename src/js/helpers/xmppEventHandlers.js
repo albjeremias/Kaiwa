@@ -7,10 +7,10 @@ var crypto = require('crypto');
 var bows = require('bows');
 var uuid = require('node-uuid');
 var HumanModel = require('human-model');
-var Contact = require('../models/contact');
-var Resource = require('../models/resource');
-var Message = require('../models/message');
-var Call = require('../models/call');
+var Contact = require('../../ts/models/contact');
+var Resource = require('../../ts/models/resource');
+var Message = require('../../ts/models/message');
+var Call = require('../../ts/models/call');
 var StanzaIo = require('stanza.io');
 
 var log = bows('Otalk');

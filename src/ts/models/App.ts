@@ -23,13 +23,13 @@ const $: JQueryStatic = require('jquery');
 
 const StanzaIO = require('stanza.io');
 
-const AppState = require('./state');
+const AppState = require('../../js/models/state');
 const Storage: StorageConstructor = require('../storage');
-const xmppEventHandlers = require('../helpers/xmppEventHandlers');
-const pushNotifications = require('../helpers/pushNotifications');
+const xmppEventHandlers = require('../../js/helpers/xmppEventHandlers');
+const pushNotifications = require('../../js/helpers/pushNotifications');
 const Notify = require('notify.js');
-const Desktop = require('../helpers/desktop');
-const AppCache = require('../helpers/cache');
+const Desktop = require('../../js/helpers/desktop');
+const AppCache = require('../../js/helpers/cache');
 const url = require('url');
 
 const SoundEffectManager = require('sound-effect-manager');

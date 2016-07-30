@@ -1,4 +1,4 @@
-const fetchAvatar = require('../helpers/fetchAvatar');
+const fetchAvatar = require('../../js/helpers/fetchAvatar');
 
 import App from './App';
 

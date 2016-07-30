@@ -7,7 +7,7 @@ declare const templates: any;
 
 const _ = require('underscore');
 const uuid = require('node-uuid');
-const htmlify = require('../helpers/htmlify');
+const htmlify = require('../../js/helpers/htmlify');
 
 const ID_CACHE = {};
 

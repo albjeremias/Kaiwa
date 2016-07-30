@@ -4,7 +4,7 @@ const async = require('async');
 const uuid = require('node-uuid');
 const logger = require('andlog');
 
-const fetchAvatar = require('../helpers/fetchAvatar');
+const fetchAvatar = require('../../js/helpers/fetchAvatar');
 
 import App from './App';
 import Me from './me';
