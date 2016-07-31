@@ -12,9 +12,6 @@ import Message from '../models/message';
 import Resource from '../models/resource';
 import {LOCAL_STORAGE_KEY} from '../redux/Session';
 
-//const HumanModel = require('human-model');
-//
-
 const log = bows('Otalk');
 const ioLogIn = bows('<< in');
 const ioLogOut = bows('>> out');
@@ -321,7 +318,7 @@ export = function (client: any, app: App): void {
             const localTime = new Date(Date.now() + app.timeInterval).getTime();
             const notify = Math.round((localTime - message.created) / 1000) < 5;
             contact.addMessage(message, notify);
-            if (msg.from.bare == contact.jid.bare) {
+            if (msg.from.bare === contact.jid.bare) {
                 contact.lockedResource = msg.from.full;
             }
         }
@@ -435,7 +432,7 @@ export = function (client: any, app: App): void {
         contact.callState = '';
         contact.jingleCall = null;
         contact.onCall = false;
-        if (me.calls.length == 1) { // this is the last call
+        if (me.calls.length === 1) { // this is the last call
             client.jingle.stopLocalMedia();
             client.jingle.localStream = null;
         }
