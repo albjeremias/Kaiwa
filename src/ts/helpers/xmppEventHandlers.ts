@@ -12,7 +12,6 @@ import Message from '../models/message';
 import Resource from '../models/resource';
 import {LOCAL_STORAGE_KEY} from '../redux/Session';
 
-const log = bows('Otalk');
 const ioLogIn = bows('<< in');
 const ioLogOut = bows('>> out');
 
@@ -30,7 +29,7 @@ function createDiscoCapsQueue(app: App, me: Me, client: any) {
         const jid = pres.from;
         const caps = pres.caps;
 
-        log.info('Checking storage for ' + caps.ver);
+        console.info('Checking storage for ' + caps.ver);
 
         const contact = me.getContact(jid);
         let resource = null;
@@ -40,25 +39,25 @@ function createDiscoCapsQueue(app: App, me: Me, client: any) {
 
         app.storage.disco.get(caps.ver, function (err, existing) {
             if (existing) {
-                log.info('Already found info for ' + caps.ver);
+                console.info('Already found info for ' + caps.ver);
                 if (resource) resource.discoInfo = existing;
                 return cb();
             }
-            log.info('getting info for ' + caps.ver + ' from ' + jid);
+            console.info('getting info for ' + caps.ver + ' from ' + jid);
             client.getDiscoInfo(jid, caps.node + '#' + caps.ver, function (err, result) {
                 if (err || !result.discoInfo.features) {
-                    log.info('Couldnt get info for ' + caps.ver);
+                    console.info('Couldnt get info for ' + caps.ver);
                     return cb();
                 }
                 if (client.verifyVerString(result.discoInfo, caps.hash, caps.ver)) {
-                    log.info('Saving info for ' + caps.ver);
+                    console.info('Saving info for ' + caps.ver);
                     const data = result.discoInfo;
                     app.storage.disco.add(caps.ver, data, function () {
                         if (resource) resource.discoInfo = data;
                         cb();
                     });
                 } else {
-                    log.info('Couldnt verify info for ' + caps.ver + ' from ' + jid);
+                    console.info('Couldnt verify info for ' + caps.ver + ' from ' + jid);
                     cb();
                 }
             });
@@ -114,7 +113,7 @@ export = function (client: any, app: App): void {
             console.error(err);
         }
         if (!app.state.hasConnected) {
-            console.warn('Disconnected event')
+            console.warn('Disconnected event received')
             window.location.href = 'login';
         }
     });
@@ -381,7 +380,7 @@ export = function (client: any, app: App): void {
 
     client.on('disco:caps', function (pres) {
         if (pres.caps.hash) {
-            log.info('Caps from ' + pres.from + ' ver: ' + pres.caps.ver);
+            console.info('Caps from ' + pres.from + ' ver: ' + pres.caps.ver);
             discoCapsQueue.push(pres);
         }
     });

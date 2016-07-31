@@ -129,6 +129,17 @@ authentication enabled Kaiwa will try to save only salted data. The secure mode
 Feel free to [report an issue][issues] or contact the maintainer directly
 through [email][fornever-email] or [XMPP][fornever-xmpp].
 
+### Debug logging
+
+To debug issues related with XMPP, please enable XMPP logging in your browser
+console while having Kaiwa page open:
+
+```javascript
+localStorage.debug = true;
+```
+
+After that you'll see all XMPP traffic in your console.
+
 ## Contributing
 
 Please note that we're using [tslint][] here. All the contributions should pass
