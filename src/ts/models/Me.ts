@@ -1,22 +1,23 @@
-const getUserMedia = require('getusermedia');
-const fetchAvatar = require('../../js/helpers/fetchAvatar');
 const crypto = require('crypto');
-const Resample = require('../../js/libraries/resampler');
+const getUserMedia = require('getusermedia');
 const StanzaIo = require('stanza.io');
 
+const fetchAvatar = require('../../js/helpers/fetchAvatar');
+const Resample = require('../../js/libraries/resampler');
 import App from './App';
-
-declare const app: App;
-declare const client: any;
-
+import Collection from './Collection';
 import Contacts from './contacts';
 import Calls from './calls';
 import Contact from './contact';
 import MUCs from './mucs';
 import ContactRequests from './contactRequests';
 
+declare const app: App;
+declare const client: any;
+
 export default class Me {
     show: () => void;
+    contactRequests = new Collection<any>();
 
     constructor(public calls: Calls, opts: { avatarID?: string }) {
         this.setAvatar(opts ? opts.avatarID : null);

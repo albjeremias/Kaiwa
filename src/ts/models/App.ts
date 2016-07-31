@@ -1,5 +1,6 @@
 import {browserHistory} from 'react-router';
 
+import xmppEventHandlers = require('../helpers/xmppEventHandlers');
 import {connecting} from '../redux/Actions';
 import {IApplicationState} from '../redux/Application';
 import {ISession, LOCAL_STORAGE_KEY} from '../redux/Session';
@@ -18,7 +19,6 @@ const $: JQueryStatic = require('jquery');
 const StanzaIO = require('stanza.io');
 
 const AppState = require('../../js/models/state');
-const xmppEventHandlers = require('../../js/helpers/xmppEventHandlers');
 const pushNotifications = require('../../js/helpers/pushNotifications');
 const Notify = require('notify.js');
 const Desktop = require('../../js/helpers/desktop');
