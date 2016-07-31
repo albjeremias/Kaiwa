@@ -114,12 +114,13 @@ export = function (client: any, app: App): void {
             console.error(err);
         }
         if (!app.state.hasConnected) {
+            console.warn('Disconnected event')
             window.location.href = 'login';
         }
     });
 
     client.on('auth:failed', function () {
-        log.warn('auth failed');
+        console.warn('Authentication failed');
         window.location.href = 'login';
     });
 
