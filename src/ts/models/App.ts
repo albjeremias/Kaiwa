@@ -1,4 +1,5 @@
 import {browserHistory} from 'react-router';
+import update = require('react-addons-update');
 
 import xmppEventHandlers = require('../helpers/xmppEventHandlers');
 import {connecting} from '../redux/Actions';
@@ -27,8 +28,15 @@ const url = require('url');
 
 const SoundEffectManager = require('sound-effect-manager');
 
+interface IConfig extends ISession {
+    useStreamManagement?: boolean;
+    sasl?: string|string[];
+    rosterVer?: string;
+}
+
 export default class App {
     calls = new Calls();
+    config: IConfig;
 
     constructor(private store: Store<IApplicationState>) {
         store.subscribe(() => this.onStoreChange(store.getState()));
@@ -54,17 +62,9 @@ export default class App {
 
         window['app'] = app;
 
-        const config = localStorage['config'];
-
-        if (!config) {
-            console.log('missing config');
-            window.location = 'login.html' as any;
-            throw new Error('no config');
-        }
-
-        app.config = this.parseConfig(config);
-        app.config.useStreamManagement = false; // Temporary solution because this feature is bugged on node 4.0
-        // TODO: Investigate this ^ ~ F
+        app.config = update(session, {useStreamManagement: {$set: false}});
+        // TODO: Disabling useStreamManagement is a temporary solution because
+        // this feature is bugged on node 4.0. Need to investigate. ~ F
 
         if (KAIWA_CONFIG.sasl) {
             app.config.sasl = KAIWA_CONFIG.sasl;
@@ -171,23 +171,6 @@ export default class App {
         // TODO: Go back to the login page telling the user what the error is. ~ F
     }
 
-    private parseConfig(json) {
-        const config = JSON.parse(json);
-        const credentials = config.credentials;
-        if (!credentials) return config;
-
-        for (const property in credentials) {
-            if (!credentials.hasOwnProperty(property)) continue;
-
-            const value = credentials[property];
-            if (value.type === 'Buffer') {
-                credentials[property] = new Buffer(value);
-            }
-        }
-
-        return config;
-    }
-
     whenConnected(func) {
         if (this.api.sessionStarted) {
             func();
@@ -225,7 +208,6 @@ export default class App {
     currentPage: any;
     state: any;
     history: any;
-    config: any;
     soundManager: any;
     me: Me;
     storage: any;
