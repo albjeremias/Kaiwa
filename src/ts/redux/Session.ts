@@ -1,9 +1,5 @@
 import update = require('react-addons-update');
 
-import {IAction, ISessionAction} from './Actions';
-
-import Action = Redux.Action;
-
 export interface ISession {
     jid: string;
     password: string;
@@ -13,9 +9,16 @@ export interface ISession {
     transport?: string;
 }
 
-function getDefaultSession() {
+export const LOCAL_STORAGE_KEY = 'session';
+
+export function getInitialSession(): ISession {
+    let session = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) as ISession;
+    if (session !== undefined) {
+        return session;
+    }
+
     const {wss} = KAIWA_CONFIG;
-    const session: ISession = {
+    session = {
         connURL: wss,
         jid: '',
         password: ''
@@ -29,24 +32,4 @@ function getDefaultSession() {
     }
 
     return session;
-}
-
-export const LOCAL_STORAGE_KEY = 'session';
-export function reducer(state: ISession, action: IAction): ISession {
-    if (state === undefined) {
-        return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || getDefaultSession();
-    }
-
-    switch (action.type) {
-        case 'LOGIN':
-            let {session} = action as ISessionAction;
-            if (KAIWA_CONFIG.domain && session.jid.indexOf('@') === -1) {
-                const jid = `${session.jid}@${KAIWA_CONFIG.domain}`;
-                session = update(session, {jid: {$set: jid}});
-            }
-
-            return session;
-    }
-
-    return state;
 }

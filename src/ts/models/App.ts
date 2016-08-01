@@ -1,7 +1,6 @@
 import {browserHistory} from 'react-router';
 import update = require('react-addons-update');
 
-import xmppEventHandlers = require('../helpers/xmppEventHandlers');
 import {connecting} from '../redux/Actions';
 import {IApplicationState} from '../redux/Application';
 import {ISession, LOCAL_STORAGE_KEY} from '../redux/Session';
@@ -20,7 +19,6 @@ const $: JQueryStatic = require('jquery');
 const StanzaIO = require('stanza.io');
 
 const AppState = require('../../js/models/state');
-const pushNotifications = require('../../js/helpers/pushNotifications');
 const Notify = require('notify.js');
 const Desktop = require('../../js/helpers/desktop');
 const AppCache = require('../../js/helpers/cache');
@@ -62,16 +60,6 @@ export default class App {
 
         window['app'] = app;
 
-        app.config = update(session, {useStreamManagement: {$set: false}});
-        // TODO: Disabling useStreamManagement is a temporary solution because
-        // this feature is bugged on node 4.0. Need to investigate. ~ F
-
-        if (KAIWA_CONFIG.sasl) {
-            app.config.sasl = KAIWA_CONFIG.sasl;
-        }
-
-        // _.extend(this, Backbone.Events)
-
         let profile = {};
 
         app = await (async() => new Promise<App>((resolve, reject) => {
@@ -109,10 +97,6 @@ export default class App {
                     app.api.disconnect();
                 }
             };
-
-            app.api = window['client'] = StanzaIO.createClient(app.config);
-            client.use(pushNotifications);
-            xmppEventHandlers(app.api, app);
 
             app.api.once('session:started', function () {
                 app.state.hasConnected = true;

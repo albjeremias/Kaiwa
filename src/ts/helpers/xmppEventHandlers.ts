@@ -10,6 +10,7 @@ import Contact from '../models/contact';
 import Me from '../models/Me';
 import Message from '../models/message';
 import Resource from '../models/resource';
+import {IApplicationState} from '../redux/State';
 import {LOCAL_STORAGE_KEY} from '../redux/Session';
 
 const ioLogIn = bows('<< in');
@@ -65,9 +66,9 @@ function createDiscoCapsQueue(app: App, me: Me, client: any) {
     });
 }
 
-export = function (client: any, app: App): void {
-    const {api, me} = app;
-    const discoCapsQueue = createDiscoCapsQueue(app, me, api);
+export = function (client: XMPP.Client, dispatch: Redux.Dispatch<IApplicationState>): void {
+    //const {api, me} = app;
+    //const discoCapsQueue = createDiscoCapsQueue(app, me, api);
 
     client.on('*', function (name, data) {
         if (name === 'raw:incoming') {

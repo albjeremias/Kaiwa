@@ -1,21 +1,21 @@
-import {IAction} from './Actions';
+import {ISession, getInitialSession} from './Session';
 
-export enum ApplicationState {
-    Started,
-    Login,
+export enum ConnectionState {
+    Disconnected,
     Connecting,
     Connected
 }
 
-export function reducer(state: ApplicationState, action: IAction): ApplicationState {
-    if (state === undefined) {
-        return ApplicationState.Started;
-    }
+export interface IApplicationState {
+    connectionState: ConnectionState;
+    session: ISession;
+    stateMessage?: string;
+    client?: XMPP.Client;
+}
 
-    switch (action.type) {
-        case 'LOGIN': return ApplicationState.Login;
-        case 'CONNECTING': return ApplicationState.Connecting;
-    }
-
-    return state;
+export function getInitialState(): IApplicationState {
+    return {
+        connectionState: ConnectionState.Disconnected,
+        session: getInitialSession()
+    };
 }

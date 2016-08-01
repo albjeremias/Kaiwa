@@ -1,4 +1,5 @@
 import * as React from 'react';
+import update = require('react-addons-update');
 import {connect} from 'react-redux';
 
 import {login} from '../redux/Actions';
@@ -60,7 +61,13 @@ class LoginView extends React.Component<LoginProps, ISession> {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.props.onLogin(this.state);
+        let session = this.state;
+        if (KAIWA_CONFIG.domain && session.jid.indexOf('@') === -1) {
+            const jid = `${session.jid}@${KAIWA_CONFIG.domain}`;
+            session = update(session, {jid: {$set: jid}});
+        }
+
+        this.props.onLogin(session);
     }
 
     handleChange(event) {
