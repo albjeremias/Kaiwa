@@ -80,7 +80,7 @@ export default class MUC {
                     body: message.body,
                     icon: this.avatar,
                     tag: this.id,
-                    onclick: _.bind(app.navigate, app, '/groupchat/' + encodeURIComponent(this.jid.jid))
+                    onclick: _.bind(app.navigate, app, '/groupchat/' + encodeURIComponent(this.jid.bare))
                 });
                 if (me.soundEnabled)
                     app.soundManager.play('threetone-alert');
@@ -250,11 +250,13 @@ export default class MUC {
     name: string = '';
     autoJoin: boolean = false;
     nick: string = '';
-    jid: {jid} = null;
+    jid: {
+        bare: string;
+    } = null;
 
     get displayName() {
         let disp = this.name;
-        if (!disp) disp = this.jid.jid;
+        if (!disp) disp = this.jid.bare;
         return disp.split('@')[0];
     }
 
