@@ -113,7 +113,7 @@ export = function (client: any, app: App): void {
             console.error(err);
         }
         if (!app.state.hasConnected) {
-            console.warn('Disconnected event received')
+            console.warn('Disconnected event received');
             window.location.href = 'login';
         }
     });
