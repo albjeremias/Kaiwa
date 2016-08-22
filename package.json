@@ -9,7 +9,7 @@
     "deploy": "webpack -p",
     "devel": "concurrently \"webpack -d --watch\" \"node ./src/server.js\"",
     "install": "typings install",
-    "lint": "tslint src/**/*.ts src/**/*.tsx",
+    "lint": "tslint src/ts/**/*.*",
     "start": "node ./src/server.js",
     "test": "webpack -d --config tests.config.js && node ./test-output/test.js",
     "webpack": "webpack -d"
