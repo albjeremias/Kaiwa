@@ -1,0 +1,23 @@
+environment:
+    matrix:
+        - nodejsVersion: "6.7"
+        - nodejsVersion: "4.6"
+        - nodejsVersion: "0.12"
+        - nodejsVersion: "0.11"
+        - nodejsVersion: "0.10"
+
+install:
+    - ps: Install-Product node $env:nodejsVersion
+    - ps: ./scripts/appveyor.updateNpm.ps1
+
+    - node --version
+    - npm --version
+    - npm install
+
+test_script:
+    - ps: cp config.example.json config.json
+    - npm run test
+    - npm run webpack
+    - npm run lint
+
+build: off
