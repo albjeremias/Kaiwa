@@ -1,4 +1,4 @@
-Kaiwa [![Build Status](https://travis-ci.org/ForNeVeR/kaiwa.svg?branch=develop)](https://travis-ci.org/ForNeVeR/kaiwa)
+Kaiwa [![Travis build status][badge-travis]][build-travis] [![Appveyor build status][badge-appveyor]][build-appveyor]
 =====
 Kaiwa is an open source web client for XMPP.  
 
@@ -156,6 +156,8 @@ After that you'll see all XMPP traffic in your console.
 Please note that we're using [tslint][] here. All the contributions should pass
 the lint. Execute `npm run lint` to check current code.
 
+[build-travis]: https://travis-ci.org/ForNeVeR/kaiwa
+[build-appveyor]: https://ci.appveyor.com/project/ForNeVeR/kaiwa/branch/develop
 [fornever-email]: mailto:friedrich@fornever.me
 [fornever-xmpp]: xmpp:fornever@codingteam.org.ru
 [issues]: https://github.com/ForNeVeR/kaiwa/issues
@@ -166,3 +168,6 @@ the lint. Execute `npm run lint` to check current code.
 [stanza.io]: https://github.com/otalk/stanza.io
 [tslint]: https://palantir.github.io/tslint/
 [xep-0198]: http://xmpp.org/extensions/xep-0198.html
+
+[badge-appveyor]: https://ci.appveyor.com/api/projects/status/tmut55d6yfoe8x3x/branch/develop?svg=true
+[badge-travis]: https://travis-ci.org/ForNeVeR/kaiwa.svg?branch=develop
