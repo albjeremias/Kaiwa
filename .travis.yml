@@ -7,7 +7,7 @@ node_js:
     - "0.10"
 sudo: false
 before_install:
-    - bash ./scripts/travis_before_install.sh
+    - bash ./scripts/travis.updateNpm.sh
 script:
     - cp config.example.json config.json
     - npm run test
