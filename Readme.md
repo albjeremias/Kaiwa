@@ -57,6 +57,17 @@ or another client that supports Entity Time
 ([XEP-0202](http://xmpp.org/extensions/xep-0202.html)) you'll see a reminder
 that they're 9 hours away where it's 4am and they're not likely to respond.
 
+## Prerequisites to build
+
+You'll need [Node.js][node-js] 0.10+ and [npm][] 3+.
+
+Please note that Node.js distributions older than 6 uses older versions of npm
+by default; you may update your npm by running the following from your terminal:
+
+```console
+$ npm install npm@^3
+```
+
 ## Installing
 
 First of all, clone the repository, install the dependencies and configure the
@@ -149,6 +160,8 @@ the lint. Execute `npm run lint` to check current code.
 [fornever-xmpp]: xmpp:fornever@codingteam.org.ru
 [issues]: https://github.com/ForNeVeR/kaiwa/issues
 [master]: https://github.com/ForNeVeR/kaiwa/tree/master
+[node-js]: https://nodejs.org/
+[npm]: https://www.npmjs.com/
 [otalk]: https://github.com/otalk
 [stanza.io]: https://github.com/otalk/stanza.io
 [tslint]: https://palantir.github.io/tslint/
