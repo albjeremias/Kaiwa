@@ -1,3 +1,5 @@
+import $ = require('jquery');
+
 import App from '../models/App';
 import Me from '../models/Me';
 

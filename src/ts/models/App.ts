@@ -1,5 +1,6 @@
 import {browserHistory} from 'react-router';
 import update = require('react-addons-update');
+import Redux = require('redux');
 
 import xmppEventHandlers = require('../helpers/xmppEventHandlers');
 import {connecting} from '../redux/Actions';

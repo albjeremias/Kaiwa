@@ -1,3 +1,4 @@
+import classNames = require('classnames');
 import React = require('react');
 
 import Resource from '../models/resource';

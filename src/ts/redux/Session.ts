@@ -1,4 +1,5 @@
 import update = require('react-addons-update');
+import Redux = require('redux');
 
 import {IAction, ISessionAction} from './Actions';
 

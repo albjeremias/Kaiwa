@@ -1,3 +1,5 @@
+import Redux = require('redux');
+
 import {ISession} from './Session';
 
 import Action = Redux.Action;
