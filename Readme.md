@@ -156,7 +156,7 @@ After that you'll see all XMPP traffic in your console.
 Please note that we're using [tslint][] here. All the contributions should pass
 the lint. Execute `npm run lint` to check current code.
 
-[build-travis]: https://travis-ci.org/ForNeVeR/kaiwa
+[build-travis]: https://travis-ci.org/ForNeVeR/Kaiwa
 [build-appveyor]: https://ci.appveyor.com/project/ForNeVeR/kaiwa/branch/develop
 [fornever-email]: mailto:friedrich@fornever.me
 [fornever-xmpp]: xmpp:fornever@codingteam.org.ru
@@ -170,4 +170,4 @@ the lint. Execute `npm run lint` to check current code.
 [xep-0198]: http://xmpp.org/extensions/xep-0198.html
 
 [badge-appveyor]: https://ci.appveyor.com/api/projects/status/tmut55d6yfoe8x3x/branch/develop?svg=true
-[badge-travis]: https://travis-ci.org/ForNeVeR/kaiwa.svg?branch=develop
+[badge-travis]: https://travis-ci.org/ForNeVeR/Kaiwa.svg?branch=develop
