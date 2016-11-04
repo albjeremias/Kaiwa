@@ -1,3 +1,4 @@
+import _ = require('lodash');
 import React = require('react');
 
 import App from '../models/App';

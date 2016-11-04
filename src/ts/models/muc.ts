@@ -1,3 +1,5 @@
+import _ = require('lodash');
+
 import App from './App';
 import Me from './Me';
 

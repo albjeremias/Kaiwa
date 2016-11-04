@@ -1,4 +1,5 @@
 import $ = require('jquery');
+import _ = require('lodash');
 
 import App from '../models/App';
 import Me from '../models/Me';
