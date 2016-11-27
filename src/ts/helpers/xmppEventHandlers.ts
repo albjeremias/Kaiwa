@@ -25,7 +25,7 @@ interface IPresence {
 }
 
 function createDiscoCapsQueue(app: App, me: Me, client: any) {
-    return async.queue<IPresence>(function (pres, cb) {
+    return async.queue<IPresence, void>(function (pres, cb) {
         const jid = pres.from;
         const caps = pres.caps;
 
