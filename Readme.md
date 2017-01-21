@@ -1,6 +1,6 @@
 Kaiwa [![Travis build status][badge-travis]][build-travis] [![Appveyor build status][badge-appveyor]][build-appveyor]
 =====
-Kaiwa is an open source web client for XMPP.  
+Kaiwa is an open source web client for XMPP.
 
 Our production server is http://chat.jabber.ru
 
@@ -59,7 +59,7 @@ that they're 9 hours away where it's 4am and they're not likely to respond.
 
 ## Prerequisites to build
 
-You'll need [Node.js][node-js] 0.12+ and [npm][] 3+.
+You'll need [Node.js][node-js] 4.0+ and [npm][] 3+.
 
 Please note that Node.js distributions older than 6 uses older versions of npm
 by default; you may update your npm by running the following from your terminal:
