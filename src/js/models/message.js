@@ -19,7 +19,7 @@ var Message = module.exports = HumanModel.define({
         owner: 'string',
         to: 'object',
         from: 'object',
-        body: 'string',
+        body: ['string', false, ''],
         type: ['string', false, 'normal'],
         acked: ['bool', false, false],
         requestReceipt: ['bool', false, false],
