@@ -32,6 +32,7 @@ export default class Me {
         this.bind('change:rosterVer', this.save, this);
         this.bind('change:soundEnabled', this.save, this);
         this.contacts.bind('change:unreadCount', this.updateUnreadCount, this);
+        this.mucs.bind('change:unreadHlCount', this.updateUnreadCount, this);
         app.state.bind('change:active', this.updateIdlePresence, this);
         app.state.bind('change:deviceIDReady', this.registerDevice, this);
     }
@@ -45,6 +46,8 @@ export default class Me {
         if (curr) {
             curr.activeContact = true;
             curr.unreadCount = 0;
+            if ("unreadHlCount" in curr)
+                curr.unreadHlCount = 0;
             this._activeContact = curr.id;
         }
     }
@@ -200,13 +203,20 @@ export default class Me {
         app.api.sendPresence(update);
     }
 
-    updateUnreadCount () {
-        const unreadCounts = this.contacts.pluck('unreadCount');
-        let count = unreadCounts.reduce(function (a, b) { return a + b; });
-        if (count === 0) {
-            count = '';
-        }
-        app.state.badge = '' + count;
+    updateUnreadCount() {
+        var sum = function (a, b) {
+            return a + b;
+        };
+
+        var pmCount = this.contacts.pluck('unreadCount')
+            .reduce(sum);
+        pmCount = pmCount ? pmCount + ' • ' : '';
+
+        var hlCount = this.mucs.pluck('unreadHlCount')
+            .reduce(sum);
+        hlCount = hlCount ? 'H' + hlCount + ' • ' : '';
+
+        app.state.badge = pmCount + hlCount;
     }
 
     updateActiveCalls () {

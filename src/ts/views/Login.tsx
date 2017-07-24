@@ -78,6 +78,13 @@ class LoginView extends React.Component<LoginProps, ISession> {
                 <div className='head'>
                     <h2>Log in</h2>
                 </div>
+
+                {localStorage.getItem('auth-failed') ? (
+                        <section className="aith-failed content box">
+                            <h2>Incorrect username/password pair</h2>
+                        </section>
+                    ) : undefined}
+
                 <div className='content'>
                     <form id='login-form' onSubmit={e => this.handleSubmit(e)}>
                         <Field id='jid'

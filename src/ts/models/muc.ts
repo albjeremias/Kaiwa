@@ -19,6 +19,7 @@ import Message from './message';
 export default class MUC {
     avatar: any;
     trigger: (event: string) => void;
+    unreadHlCount = 0;
 
     constructor(attrs) {
         if (attrs.jid) {
@@ -34,6 +35,7 @@ export default class MUC {
         const nickname = jid.split('/')[1];
         let name = nickname;
         const xmppContact = me.getContact(nickname) as any;
+
         if (xmppContact) {
             name = xmppContact.displayName;
         }
@@ -78,6 +80,7 @@ export default class MUC {
         if (notify && (!this.activeContact || (this.activeContact && !app.state.focused)) && !mine) {
             this.unreadCount++;
             if (toMe) {
+                this.unreadHlCount += 1;
                 app.notifications.create(this.displayName, {
                     body: message.body,
                     icon: this.avatar,

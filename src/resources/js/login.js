@@ -1,3 +1,8 @@
+if (localStorage.authFailed) {
+    document.getElementById('auth-failed').style.display = 'block';
+    localStorage.removeItem('authFailed');
+}
+
 document.getElementById('login-form').addEventListener('submit', function (e) {
     function value(id) {
         return document.getElementById(id).value;

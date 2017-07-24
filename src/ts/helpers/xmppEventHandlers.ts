@@ -120,6 +120,7 @@ export = function (client: any, app: App): void {
 
     client.on('auth:failed', function () {
         console.warn('Authentication failed');
+        localStorage.setItem('authFailed', 'true');
         window.location.href = 'login';
     });
 
