@@ -2,9 +2,10 @@
   "compileOnSave": false,
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es6",
+    "target": "es5",
     "sourceMap": true,
-    "jsx": "react"
+    "jsx": "react",
+    "lib": [ "dom", "es5", "es2015.promise" ]
   },
   "exclude": ["node_modules"]
 }
