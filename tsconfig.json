@@ -5,7 +5,8 @@
     "target": "es5",
     "sourceMap": true,
     "jsx": "react",
-    "lib": [ "dom", "es5", "es2015.promise" ]
+    "lib": [ "dom", "es5", "es2015.promise" ],
+    "strict": true
   },
   "exclude": ["node_modules"]
 }
