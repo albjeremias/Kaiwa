@@ -8,7 +8,7 @@ interface IConnectingProps {
     session: ISession;
 }
 
-class ConnectingView extends React.Component<IConnectingProps, void> {
+class ConnectingView extends React.Component<IConnectingProps> {
     render() {
         const {jid} = this.props.session;
         return (
@@ -28,4 +28,4 @@ function stateToProps(state: IApplicationState): IConnectingProps {
     return {session: state.session};
 }
 
-export default connect(stateToProps)(ConnectingView);
+export default connect(stateToProps, {})(ConnectingView);
