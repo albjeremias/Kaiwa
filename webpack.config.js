@@ -60,13 +60,8 @@ module.exports = {
             },
             {
                 test: /\.ts(x?)$/,
-                exclude: /(node_modules|bower_components|libraries)/,
-                loader: 'babel!ts-loader'
-            },
-            {
-                test: /\.js(x?)$/,
-                exclude: /(node_modules|bower_components|libraries)/,
-                loader: 'babel'
+                exclude: /node_modules/,
+                loader: 'ts-loader'
             },
             {
                 test: /\.json$/,

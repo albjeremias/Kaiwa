@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import React = require('react');
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
