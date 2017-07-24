@@ -46,7 +46,7 @@ export default class Me {
         if (curr) {
             curr.activeContact = true;
             curr.unreadCount = 0;
-            if ("unreadHlCount" in curr)
+            if ('unreadHlCount' in curr)
                 curr.unreadHlCount = 0;
             this._activeContact = curr.id;
         }
@@ -204,15 +204,15 @@ export default class Me {
     }
 
     updateUnreadCount() {
-        var sum = function (a, b) {
+        const sum = function (a, b) {
             return a + b;
         };
 
-        var pmCount = this.contacts.pluck('unreadCount')
+        let pmCount = this.contacts.pluck('unreadCount')
             .reduce(sum);
         pmCount = pmCount ? pmCount + ' • ' : '';
 
-        var hlCount = this.mucs.pluck('unreadHlCount')
+        let hlCount = this.mucs.pluck('unreadHlCount')
             .reduce(sum);
         hlCount = hlCount ? 'H' + hlCount + ' • ' : '';
 

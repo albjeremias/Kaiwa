@@ -80,7 +80,7 @@ class LoginView extends React.Component<LoginProps, ISession> {
                 </div>
 
                 {localStorage.getItem('auth-failed') ? (
-                        <section className="aith-failed content box">
+                        <section className='aith-failed content box'>
                             <h2>Incorrect username/password pair</h2>
                         </section>
                     ) : undefined}
