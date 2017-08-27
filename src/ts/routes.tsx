@@ -8,7 +8,7 @@ import App from './models/App';
 import {reducer} from './redux/Application';
 import Connecting from './views/Connecting';
 import {Utils} from './views/utils';
-import {Login} from './views/Login';
+import Login from './views/Login';
 import {App as AppView} from './views/app';
 import {Home} from './views/home';
 import {Settings} from './views/settings';

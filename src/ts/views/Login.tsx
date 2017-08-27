@@ -134,4 +134,4 @@ function dispatchToProps(dispatch: Dispatch<IApplicationState>): Partial<LoginPr
     };
 }
 
-export const Login = connect(stateToProps, dispatchToProps)(LoginView);
+export default connect(stateToProps, dispatchToProps)(LoginView);
