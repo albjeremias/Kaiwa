@@ -1,11 +1,9 @@
-import {browserHistory} from 'react-router';
 import update = require('react-addons-update');
 import Redux = require('redux');
 
 import xmppEventHandlers = require('../helpers/xmppEventHandlers');
-import {connecting} from '../redux/Actions';
 import {IApplicationState} from '../redux/Application';
-import {ISession, LOCAL_STORAGE_KEY} from '../redux/Session';
+import {ISession} from '../redux/Session';
 import {ApplicationState} from '../redux/State';
 import Storage from '../storage';
 import Calls from './calls';
@@ -39,26 +37,7 @@ export default class App {
     calls = new Calls();
     config: IConfig;
 
-    constructor(private store: Store<IApplicationState>) {
-        store.subscribe(() => this.onStoreChange(store.getState()));
-    }
-
-    private onStoreChange(state: IApplicationState): void {
-        console.log('App.onStoreChange', state);
-        switch (state.state) {
-            case ApplicationState.Login:
-                console.log('Starting login sequence');
-                browserHistory.push('/connecting');
-                let {session} = state;
-                this.store.dispatch(connecting());
-                this.launch(session).then(
-                    () => this.onConnected(session),
-                    error => this.onConnectionError(error));
-                break;
-        }
-    }
-
-    private async launch(session: ISession): Promise<void> {
+    public async launch(session: ISession): Promise<void> {
         let app: App = this as App;
 
         (window as any)['app'] = app;
@@ -160,11 +139,6 @@ export default class App {
                 me.contacts.once('loaded', start);
             }
         }))();
-    }
-
-    private onConnected(session: ISession) {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(session));
-        browserHistory.push('/');
     }
 
     private onConnectionError(error: any) {

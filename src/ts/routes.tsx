@@ -17,7 +17,6 @@ import {GroupChat} from './views/groupchat';
 import {Logout} from './views/logout';
 
 const store = createStore(reducer);
-const app = new App(store);
 
 render((
     <Provider store={store}>

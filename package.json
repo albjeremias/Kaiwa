@@ -75,6 +75,7 @@
     "react-redux": "^5.0.5",
     "react-router": "^3.0.5",
     "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "stanza.io": "^8.4.3",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.1.1",

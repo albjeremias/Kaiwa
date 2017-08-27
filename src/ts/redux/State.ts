@@ -1,10 +1,10 @@
-import {IAction} from './Actions';
+import {IAction, ISessionAction} from './Actions';
 
 export enum ApplicationState {
     Started,
-    Login,
     Connecting,
-    Connected
+    Connected,
+    ConnectionError
 }
 
 export function reducer(state: ApplicationState, action: IAction): ApplicationState {
@@ -13,8 +13,9 @@ export function reducer(state: ApplicationState, action: IAction): ApplicationSt
     }
 
     switch (action.type) {
-        case 'LOGIN': return ApplicationState.Login;
-        case 'CONNECTING': return ApplicationState.Connecting;
+        case 'LOGIN': return ApplicationState.Connecting;
+        case 'CONNECTED': return ApplicationState.Connected;
+        case 'CONNECTION_ERROR': return ApplicationState.ConnectionError;
     }
 
     return state;

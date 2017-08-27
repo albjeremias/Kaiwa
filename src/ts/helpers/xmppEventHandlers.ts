@@ -10,7 +10,8 @@ import Contact from '../models/contact';
 import Me from '../models/Me';
 import Message from '../models/message';
 import Resource from '../models/resource';
-import {LOCAL_STORAGE_KEY} from '../redux/Session';
+import {ISession} from '../redux/Session';
+import * as localStorage from '../storage/localStorage';
 
 const ioLogIn = bows('<< in');
 const ioLogOut = bows('>> out');
@@ -80,7 +81,7 @@ export = function (client: any, app: App): void {
     client.on('credentials:update', function (creds: any) {
         client.config.credentials = creds;
         if (!client.config.saveCredentials) {
-            localStorage.removeItem(LOCAL_STORAGE_KEY);
+            localStorage.removeSession();
             return;
         }
 
@@ -97,14 +98,14 @@ export = function (client: any, app: App): void {
             };
         }
 
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({
+        localStorage.writeSession({
             jid: client.config.jid.bare,
             server: client.config.server,
             wsURL: client.config.wsURL,
             transports: client.config.transports,
             saveCredentials: client.config.saveCredentials,
             credentials: creds
-        }));
+        } as any as ISession);
     });
 
     client.on('disconnected', function (err: any) {
@@ -120,7 +121,6 @@ export = function (client: any, app: App): void {
 
     client.on('auth:failed', function () {
         console.warn('Authentication failed');
-        localStorage.setItem('authFailed', 'true');
         window.location.href = 'login';
     });
 

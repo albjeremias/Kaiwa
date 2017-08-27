@@ -1,6 +1,7 @@
 import update = require('react-addons-update');
-import Redux = require('redux');
+import * as Redux from 'redux';
 
+import {readSession} from '../storage/localStorage';
 import {IAction, ISessionAction} from './Actions';
 
 import Action = Redux.Action;
@@ -32,11 +33,9 @@ function getDefaultSession() {
     return session;
 }
 
-export const LOCAL_STORAGE_KEY = 'session';
 export function reducer(state: ISession, action: IAction): ISession {
     if (state === undefined) {
-        const session = localStorage.getItem(LOCAL_STORAGE_KEY);
-        return session ? JSON.parse(session) : getDefaultSession();
+        return readSession() || getDefaultSession();
     }
 
     switch (action.type) {
