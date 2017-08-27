@@ -31,7 +31,7 @@ export default class SettingsPage
 
     enableAlerts () {
         if (app.notifications.permissionNeeded()) {
-            app.notifications.requestPermission(function (perm) {
+            app.notifications.requestPermission(function (perm: any) {
                 if (perm === 'granted') {
                     app.notifications.create('Ok, sweet!', {
                         body: 'You\'ll now be notified of stuff that happens.'
@@ -49,21 +49,21 @@ export default class SettingsPage
         }
     }
 
-    handleSoundNotifs (e) {
-        app.me.setSoundNotification(!app.me.soundEnabled);
-    }
-
-    handleAvatarChange (e) {
+    handleAvatarChange(e: React.SyntheticEvent<HTMLElement>) {
         let file;
 
         e.preventDefault();
 
-        if (e.dataTransfer) {
-            file = e.dataTransfer.files[0];
-        } else if (e.target.files) {
-            file = e.target.files[0];
+        const dragEvent = e as React.DragEvent<HTMLElement>;
+        if (dragEvent.dataTransfer) {
+            file = dragEvent.dataTransfer.files[0];
         } else {
-            return;
+            const input = e.target as HTMLInputElement;
+            if (input.files) {
+                file = input.files[0];
+            } else {
+                return;
+            }
         }
 
         if (file.type.match('image.*')) {
@@ -75,12 +75,12 @@ export default class SettingsPage
         }
     }
 
-    handleAvatarChangeDragOver (e) {
+    handleAvatarChangeDragOver(e: React.DragEvent<HTMLElement>) {
         e.preventDefault();
         return false;
     }
 
-    handleDisconnect (e) {
+    handleDisconnect(e: React.MouseEvent<HTMLButtonElement>) {
         app.api.disconnect();
     }
 
@@ -112,8 +112,8 @@ export default class SettingsPage
         );
     }
 
-    show;
-    hide;
+    show: any;
+    hide: any;
 }
 
 // module.exports = BasePage.extend({

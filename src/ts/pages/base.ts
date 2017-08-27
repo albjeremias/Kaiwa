@@ -8,8 +8,8 @@ declare const app: App;
 declare const me: Me;
 
 export interface Page {
-    show(animation);
-    hide();
+    show(animation: any): Page;
+    hide(): Page;
 }
 
 export class PageMixIn implements Page {
@@ -17,7 +17,7 @@ export class PageMixIn implements Page {
 
     animateRemove: () => void;
     render: () => void;
-    trigger: (event) => void;
+    trigger: (event: string) => void;
 
     $el: JQuery;
     cache: boolean;
@@ -25,7 +25,7 @@ export class PageMixIn implements Page {
     el: Element;
     model: any;
 
-    show (animation) {
+    show(animation: any) {
         const self = this;
 
         $('body').scrollTop(0);
@@ -52,7 +52,7 @@ export class PageMixIn implements Page {
         return this;
     }
 
-    hide () {
+    hide() {
         const self = this;
 
         this.$el.removeClass('active');
