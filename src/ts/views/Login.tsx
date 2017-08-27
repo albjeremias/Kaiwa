@@ -3,6 +3,7 @@ import * as Redux from 'redux';
 import {connect} from 'react-redux';
 
 import {login} from '../redux/Actions';
+import {ApplicationStateType, IApplicationState as IAppState, IApplicationErrorState} from '../redux/State';
 import {IApplicationState} from '../redux/Application';
 import {ISession} from '../redux/Session';
 
@@ -50,6 +51,7 @@ class Field extends React.Component<{
 
 interface LoginProps {
     session: ISession;
+    appState: IAppState;
     onLogin: (session: ISession) => void;
 }
 
@@ -74,15 +76,18 @@ class LoginView extends React.Component<LoginProps, ISession> {
     render() {
         const showWssSelector = !KAIWA_CONFIG.wss;
         const session = this.state;
+        const errorMessage = this.props.appState.type === ApplicationStateType.ConnectionError
+            ? (this.props.appState as IApplicationErrorState).error
+            : undefined;
         return (
             <section className='loginbox content box'>
                 <div className='head'>
                     <h2>Log in</h2>
                 </div>
 
-                {localStorage.getItem('auth-failed') ? (
-                        <section className='aith-failed content box'>
-                            <h2>Incorrect username/password pair</h2>
+                { errorMessage !== undefined ? (
+                        <section className='auth-failed content box'>
+                            <h2>Connection error: {errorMessage}</h2>
                         </section>
                     ) : undefined}
 
@@ -125,7 +130,7 @@ class LoginView extends React.Component<LoginProps, ISession> {
 }
 
 function stateToProps(state: IApplicationState): Partial<LoginProps> {
-    return {session: state.session};
+    return {session: state.session, appState: state.state};
 }
 
 function dispatchToProps(dispatch: Dispatch<IApplicationState>): Partial<LoginProps> {

@@ -12,20 +12,34 @@ export interface IAction extends Action {
 }
 
 export interface ISessionAction extends IAction {
-    type: 'LOGIN' | 'CONNECTED' | 'CONNECTION_ERROR';
+    type: 'CONNECTING' | 'CONNECTED' | 'CONNECTION_ERROR';
     session: ISession;
 }
 
+export interface ISessionErrorAction extends ISessionAction {
+    type: 'CONNECTION_ERROR';
+    error: string;
+}
+
+const connecting = (session: ISession): ISessionAction => ({type: 'CONNECTING', session});
+const connected = (session: ISession): ISessionAction => ({type: 'CONNECTED', session});
+const connectionError = (session: ISession, error: string): ISessionErrorAction => ({
+    type: 'CONNECTION_ERROR',
+    session,
+    error
+});
+
 export function login(session: ISession) {
     return async (dispatch: Redux.Dispatch<ISession>) => {
-        dispatch({type: 'CONNECTING', session});
+        dispatch(connecting(session));
         try {
             const app = new App();
             await app.launch(session);
             writeSession(session);
-            dispatch({type: 'CONNECTED', session});
+            dispatch(connected(session));
         } catch (e) {
-            dispatch({type: 'CONNECTION_ERROR', session});
+            console.error(e);
+            dispatch(connectionError(session, e.toString()));
         }
     };
 }

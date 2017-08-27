@@ -4,7 +4,6 @@ import Redux = require('redux');
 import xmppEventHandlers = require('../helpers/xmppEventHandlers');
 import {IApplicationState} from '../redux/Application';
 import {ISession} from '../redux/Session';
-import {ApplicationState} from '../redux/State';
 import Storage from '../storage';
 import Calls from './calls';
 import Me from './Me';

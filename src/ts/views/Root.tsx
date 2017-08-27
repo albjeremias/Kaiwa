@@ -2,26 +2,27 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 
 import {IApplicationState} from '../redux/Application';
-import {ApplicationState} from '../redux/State';
+import {ApplicationStateType} from '../redux/State';
 import Connecting from './Connecting';
 import Login from './Login';
 import Main from './Main';
 
 interface Props {
-    state: ApplicationState;
+    state: ApplicationStateType;
 }
 
 const view = ({ state }: Props) => {
     switch (state) {
-        case ApplicationState.Started:
+        case ApplicationStateType.Started:
+        case ApplicationStateType.ConnectionError:
             return <Login />;
-        case ApplicationState.Connecting:
+        case ApplicationStateType.Connecting:
             return <Connecting />;
-        case ApplicationState.Connected:
+        case ApplicationStateType.Connected:
             return <Main />;
         default:
             throw new Error('Invalid state: ' + state);
     }
 };
 
-export default connect((state: IApplicationState) => ({ state: state.state }))(view);
+export default connect((state: IApplicationState) => ({ state: state.state.type }))(view);

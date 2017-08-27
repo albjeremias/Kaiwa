@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
 
 import {ISession, reducer as session} from './Session';
-import {ApplicationState, reducer as state} from './State';
+import {IApplicationState, reducer as state} from './State';
 
 export interface IApplicationState {
-    state: ApplicationState;
+    state: IApplicationState;
     session: ISession;
 }
 

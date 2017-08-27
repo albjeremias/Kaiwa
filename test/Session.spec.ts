@@ -9,7 +9,7 @@ test('reducer should return proper session after login', (t) => {
         password: 'x'
     };
     const action: ISessionAction = {
-        type: 'LOGIN',
+        type: 'CONNECTING',
         session: initialSession
     };
 
