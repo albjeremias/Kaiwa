@@ -8,7 +8,10 @@ export class App extends Component<{}, any> {
 
         console.log('Init App');
 
-        this.state.session = JSON.parse(localStorage.getItem('session'));
+        const session = localStorage.getItem('session');
+        if (session) {
+            this.state.session = JSON.parse(session);
+        }
     }
 
     render () {

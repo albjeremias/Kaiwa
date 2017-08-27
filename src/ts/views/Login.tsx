@@ -17,7 +17,7 @@ class Field extends React.Component<{
     autoFocus?: boolean;
     title?: string;
     value?: any;
-    onChange?: any;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }, {}> {
     static defaultProps = {
         id: '',
@@ -49,8 +49,8 @@ class Field extends React.Component<{
 }
 
 interface LoginProps {
-    session?: ISession;
-    onLogin?: (session: ISession) => void;
+    session: ISession;
+    onLogin: (session: ISession) => void;
 }
 
 class LoginView extends React.Component<LoginProps, ISession> {
@@ -59,15 +59,16 @@ class LoginView extends React.Component<LoginProps, ISession> {
         this.state = props.session;
     }
 
-    handleSubmit(event) {
+    handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         this.props.onLogin(this.state);
     }
 
-    handleChange(event) {
+    handleChange(event: React.FormEvent<HTMLInputElement>) {
+        const target = event.currentTarget;
         this.setState({
-            [event.target.id]: event.target.value
-        } as ISession);
+            [target.id]: target.value
+        } as Pick<ISession, keyof ISession>);
     }
 
     render() {
@@ -123,11 +124,11 @@ class LoginView extends React.Component<LoginProps, ISession> {
     }
 }
 
-function stateToProps(state: IApplicationState): LoginProps {
+function stateToProps(state: IApplicationState): Partial<LoginProps> {
     return {session: state.session};
 }
 
-function dispatchToProps(dispatch: Dispatch<IApplicationState>): LoginProps {
+function dispatchToProps(dispatch: Dispatch<IApplicationState>): Partial<LoginProps> {
     return {
         onLogin: (session) => dispatch(login(session))
     };
