@@ -32,19 +32,19 @@ function createDiscoCapsQueue(app: App, me: Me, client: any) {
         console.info('Checking storage for ' + caps.ver);
 
         const contact = me.getContact(jid);
-        let resource = null;
+        let resource: any = null;
         if (contact) {
             resource = contact.resources.get(jid);
         }
 
-        app.storage.disco.get(caps.ver, function (err, existing) {
+        app.storage.disco.get(caps.ver, function (err: any, existing: boolean) {
             if (existing) {
                 console.info('Already found info for ' + caps.ver);
                 if (resource) resource.discoInfo = existing;
                 return cb();
             }
             console.info('getting info for ' + caps.ver + ' from ' + jid);
-            client.getDiscoInfo(jid, caps.node + '#' + caps.ver, function (err, result) {
+            client.getDiscoInfo(jid, caps.node + '#' + caps.ver, function (err: any, result: any) {
                 if (err || !result.discoInfo.features) {
                     console.info('Couldnt get info for ' + caps.ver);
                     return cb();
@@ -69,7 +69,7 @@ export = function (client: any, app: App): void {
     const {api, me} = app;
     const discoCapsQueue = createDiscoCapsQueue(app, me, api);
 
-    client.on('*', function (name, data) {
+    client.on('*', function (name: string, data: any) {
         if (name === 'raw:incoming') {
             ioLogIn.debug(data.toString());
         } else if (name === 'raw:outgoing') {
@@ -77,7 +77,7 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('credentials:update', function (creds) {
+    client.on('credentials:update', function (creds: any) {
         client.config.credentials = creds;
         if (!client.config.saveCredentials) {
             localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -107,7 +107,7 @@ export = function (client: any, app: App): void {
         }));
     });
 
-    client.on('disconnected', function (err) {
+    client.on('disconnected', function (err: any) {
         app.state.connected = false;
         if (err) {
             console.error(err);
@@ -128,12 +128,12 @@ export = function (client: any, app: App): void {
         app.state.connected = true;
     });
 
-    client.on('session:started', function (jid) {
+    client.on('session:started', function (jid: any) {
         me.updateJid(jid);
 
         app.state.connected = true;
 
-        client.getRoster(function (err, resp) {
+        client.getRoster(function (err: any, resp: any) {
             if (resp.roster && resp.roster.items && resp.roster.items.length) {
                 app.storage.roster.clear(function () {
                     me.contacts.reset();
@@ -163,7 +163,7 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('roster:update', function (iq) {
+    client.on('roster:update', function (iq: any) {
         const items = iq.roster.items;
 
         me.rosterVer = iq.roster.ver;
@@ -182,13 +182,13 @@ export = function (client: any, app: App): void {
         });
     });
 
-    client.on('subscribe', function (pres) {
+    client.on('subscribe', function (pres: any) {
         me.contactRequests.add({
             jid: pres.from.bare
         });
     });
 
-    client.on('available', function (pres) {
+    client.on('available', function (pres: any) {
         const contact = me.getContact(pres.from);
         if (contact) {
             delete pres.id;
@@ -223,7 +223,7 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('unavailable', function (pres) {
+    client.on('unavailable', function (pres: any) {
         const contact = me.getContact(pres.from);
         if (contact) {
             const resource = contact.resources.get(pres.from.full);
@@ -245,7 +245,7 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('avatar', function (info) {
+    client.on('avatar', function (info: any) {
         let contact = me.getContact(info.jid);
         if (!contact) {
             if (me.isMe(info.jid)) {
@@ -274,7 +274,7 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('chatState', function (info) {
+    client.on('chatState', function (info: any) {
         let contact = me.getContact(info.from);
         if (contact) {
             const resource = contact.resources.get(info.from.full);
@@ -296,16 +296,16 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('chat', function (msg) {
+    client.on('chat', function (msg: any) {
         msg.mid = msg.id;
         delete msg.id;
 
         const contact = me.getContact(msg.from, msg.to);
         if (contact && !msg.replace) {
-            const message = new Message(msg);
+            const message = new Message();
 
             if (msg.archived) {
-                msg.archived.forEach(function (archived) {
+                msg.archived.forEach(function (archived: any) {
                     if (me.isMe(archived.by)) {
                         message.archivedId = archived.id;
                     }
@@ -325,13 +325,13 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('groupchat', function (msg) {
+    client.on('groupchat', function (msg: any) {
         msg.mid = msg.id;
         delete msg.id;
 
         const contact = me.getContact(msg.from, msg.to);
         if (contact && !msg.replace) {
-            const message = new Message(msg);
+            const message = new Message();
             message.acked = true;
             const localTime = new Date(Date.now() + app.timeInterval).getTime();
             const notify = Math.round((localTime - message.created) / 1000) < 5;
@@ -339,14 +339,14 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('muc:subject', function (msg) {
+    client.on('muc:subject', function (msg: any) {
         const contact = me.getContact(msg.from, msg.to);
         if (contact) {
             contact.subject = msg.subject === 'true' ? '' : msg.subject;
         }
     });
 
-    client.on('replace', function (msg) {
+    client.on('replace', function (msg: any) {
         msg.mid = msg.id;
         delete msg.id;
 
@@ -360,7 +360,7 @@ export = function (client: any, app: App): void {
         original.correct(msg);
     });
 
-    client.on('receipt', function (msg) {
+    client.on('receipt', function (msg: any) {
         const contact = me.getContact(msg.from, msg.to);
         if (!contact) return;
 
@@ -371,7 +371,7 @@ export = function (client: any, app: App): void {
         original.receiptReceived = true;
     });
 
-    client.on('message:sent', function (msg) {
+    client.on('message:sent', function (msg: any) {
         if (msg.carbon) {
             msg.delay.stamp = new Date(Date.now() + app.timeInterval);
 
@@ -379,14 +379,14 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('disco:caps', function (pres) {
+    client.on('disco:caps', function (pres: any) {
         if (pres.caps.hash) {
             console.info('Caps from ' + pres.from + ' ver: ' + pres.caps.ver);
             discoCapsQueue.push(pres);
         }
     });
 
-    client.on('stanza:acked', function (stanza) {
+    client.on('stanza:acked', function (stanza: any) {
         if (stanza.body) {
             const contact = me.getContact(stanza.to, stanza.from);
             if (contact) {
@@ -398,10 +398,10 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('jingle:incoming', function (session) {
+    client.on('jingle:incoming', function (session: any) {
         let contact = me.getContact(session.peer);
         if (!contact) {
-            contact = new Contact({ jid: new StanzaIo.JID(session.peer).bare });
+            contact = new Contact({ jid: new StanzaIo.JID(session.peer).bare as string });
             contact.resources.add({id: session.peer});
             me.contacts.add(contact);
         }
@@ -417,7 +417,7 @@ export = function (client: any, app: App): void {
         // FIXME: send directed presence if not on roster
     });
 
-    client.on('jingle:outgoing', function (session) {
+    client.on('jingle:outgoing', function (session: any) {
         const contact = me.getContact(session.peer);
         const call = new Call({
             contact: contact,
@@ -428,7 +428,7 @@ export = function (client: any, app: App): void {
         me.calls.add(call);
     });
 
-    client.on('jingle:terminated', function (session) {
+    client.on('jingle:terminated', function (session: any) {
         const contact = me.getContact(session.peer);
         contact.callState = '';
         contact.jingleCall = null;
@@ -439,13 +439,13 @@ export = function (client: any, app: App): void {
         }
     });
 
-    client.on('jingle:accepted', function (session) {
+    client.on('jingle:accepted', function (session: any) {
         const contact = me.getContact(session.peer);
         contact.callState = 'activeCall';
         contact.onCall = true;
     });
 
-    client.on('jingle:localstream:added', function (stream) {
+    client.on('jingle:localstream:added', function (stream: any) {
         me.stream = stream;
     });
 
@@ -453,7 +453,7 @@ export = function (client: any, app: App): void {
         me.stream = null;
     });
 
-    client.on('jingle:remotestream:added', function (session) {
+    client.on('jingle:remotestream:added', function (session: any) {
         const contact = me.getContact(session.peer);
         if (!contact) {
             contact.resources.add({id: session.peer});
@@ -462,12 +462,12 @@ export = function (client: any, app: App): void {
         contact.stream = session.streams[0];
     });
 
-    client.on('jingle:remotestream:removed', function (session) {
+    client.on('jingle:remotestream:removed', function (session: any) {
         const contact = me.getContact(session.peer);
         contact.stream = null;
     });
 
-    client.on('jingle:ringing', function (session) {
+    client.on('jingle:ringing', function (session: any) {
         const contact = me.getContact(session.peer);
         contact.callState = 'ringing';
     });
