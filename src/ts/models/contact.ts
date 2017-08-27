@@ -24,7 +24,7 @@ export default class Contact {
     summarizeResources: () => void;
     trigger: (event: string) => void;
 
-    constructor(attrs) {
+    constructor(attrs: { jid: string; avatarID?: string; }) {
         if (attrs.jid) {
             this.id = attrs.jid;
         }
@@ -44,9 +44,9 @@ export default class Contact {
         });
     }
 
-    call () {
+    call() {
         if (this.jingleResources.length) {
-            const peer = this.jingleResources[0];
+            const peer = this.jingleResources.first();
             this.callState = 'starting';
             app.api.call(peer.id);
         } else {
@@ -54,9 +54,9 @@ export default class Contact {
         }
     }
 
-    setAvatar (id, type?, source?) {
+    setAvatar(id: any, type?: any, source?: any) {
         const self = this;
-        fetchAvatar(this.jid, id, type, source, function (avatar) {
+        fetchAvatar(this.jid, id, type, source, function (avatar: any) {
             if (source === 'vcard' && self.avatarSource === 'pubsub') return;
             self.avatarID = avatar.id;
             self.avatar = avatar.uri;
@@ -87,7 +87,7 @@ export default class Contact {
         this.lockedResource = undefined;
     }
 
-    addMessage (message, notify) {
+    addMessage(message: Message, notify: boolean) {
         message.owner = me.jid.bare;
 
         if (notify && (!this.activeContact || (this.activeContact && !app.state.focused)) && message.from.bare === this.jid) {
@@ -117,7 +117,7 @@ export default class Contact {
         }
     }
 
-    fetchHistory (onlyLastMessages, allInterval?) {
+    fetchHistory(onlyLastMessages: boolean, allInterval?: boolean) {
         const self = this;
         app.whenConnected(function () {
             const filter: any = {
@@ -136,7 +136,7 @@ export default class Contact {
                     filter.rsm.before = true;
 
                     if (self.lastHistoryFetch && !isNaN(self.lastHistoryFetch.valueOf())) {
-                        if (self.lastInteraction > self.lastHistoryFetch) {
+                        if (self.lastInteraction && self.lastInteraction > self.lastHistoryFetch) {
                             filter.start = self.lastInteraction;
                         } else {
                             filter.start = self.lastHistoryFetch;
@@ -152,14 +152,14 @@ export default class Contact {
                 }
             }
 
-            client.searchHistory(filter, function (err, res) {
+            client.searchHistory(filter, function (err: any, res: any) {
                 if (err) return;
 
                 self.lastHistoryFetch = new Date(Date.now() + app.timeInterval);
 
                 const results = res.mamResult.items || [];
                 if (!!onlyLastMessages && !allInterval) results.reverse();
-                results.forEach(function (result) {
+                results.forEach(function (result: any) {
                     const msg = result.forwarded.message;
 
                     msg.mid = msg.id;
@@ -177,7 +177,7 @@ export default class Contact {
                         if (original && original.correct(msg)) return;
                     }
 
-                    const message = new Message(msg);
+                    const message = new Message();
                     message.archivedId = result.id;
                     message.acked = true;
 
@@ -214,17 +214,17 @@ export default class Contact {
     activeContact: boolean = false;
     avatar: string = '';
     avatarSource: string = '';
-    lastInteraction: Date = null;
-    lastHistoryFetch: Date = null;
-    lastSentMessage: Object = null;
-    lockedResource: string = '';
+    lastInteraction?: Date;
+    lastHistoryFetch?: Date;
+    lastSentMessage?: Object;
+    lockedResource?: string = '';
     offlineStatus: string = '';
-    topResource: string = '';
+    topResource?: string = '';
     unreadCount: number = 0;
     private _forceUpdate: number = 0;
     onCall: boolean = false;
     persistent: boolean = false;
-    stream: Object = null;
+    stream?: Object;
 
     id: string = '';
     avatarID: string = '';
@@ -343,7 +343,7 @@ export default class Contact {
     get supportsReceipts() {
         if (!this.lockedResource) return false;
         const res = this.resources.get(this.lockedResource);
-        return res.supportsReceipts;
+        return res ? res.supportsReceipts : false;
     }
 
     get supportsChatStates() {

@@ -2,7 +2,7 @@ import Collection from './Collection';
 import Contact from './contact';
 
 export default class Contacts extends Collection<Contact> {
-    comparator (model1, model2) {
+    comparator(model1: Contact, model2: Contact) {
         const show1 = model1.show;
         const show2 = model2.show;
 

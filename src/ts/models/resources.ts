@@ -5,14 +5,14 @@ import Resource from './resource';
 declare const me: Me;
 
 export default class Resources extends Collection<Resource> {
-    comparator(res1, res2): number {
+    comparator(res1: Resource, res2: Resource): number {
         const name1 = res1.mucDisplayName.toLowerCase(),
             name2 = res2.mucDisplayName.toLowerCase();
         return (name1 > name2) ? 1 :
             (name1 < name2) ? -1 : 0;
     }
 
-    search (letters, removeMe, addAll) {
+    search(letters: string, removeMe: boolean, addAll: boolean) {
         if (letters === '' && !removeMe) return this;
 
         const collection = this;

@@ -1,3 +1,5 @@
+import * as _ from 'underscore';
+
 import App from './App';
 import Me from './Me';
 
@@ -5,24 +7,29 @@ declare const app: App;
 declare const me: Me;
 declare const templates: any;
 
-const _ = require('underscore');
 const uuid = require('node-uuid');
 const htmlify = require('../../js/helpers/htmlify');
 
-const ID_CACHE = {};
+const ID_CACHE: { [key: string]: any; } = {};
+
+interface LinkInfo {
+    href: string;
+    desc: string;
+    source: 'body' | 'oob';
+}
 
 export default class Message {
-    constructor(attrs) {
+    constructor() {
         this._created = new Date(Date.now() + app.timeInterval);
     }
 
-    set (attrs: any) {
+    set(attrs: any) {
         for (const key of attrs) {
             (this as any)[key] = attrs[key];
         }
     }
 
-    correct (msg) {
+    correct(msg: any) {
         if (this.from.full !== msg.from.full) return false;
 
         delete msg.id;
@@ -36,7 +43,7 @@ export default class Message {
         return true;
     }
 
-    bareMessageTemplate (firstEl) {
+    bareMessageTemplate(firstEl: any) {
         if (this.type === 'groupchat') {
             return templates.includes.mucBareMessage({message: this, messageDate: new Date(this.timestamp), firstEl: firstEl});
         } else {
@@ -44,7 +51,7 @@ export default class Message {
         }
     }
 
-    save () {
+    save() {
         if (this.mid) {
             const from = this.type === 'groupchat' ? this.from.full : this.from.bare;
             Message.idStore(from, this.mid, this);
@@ -64,7 +71,7 @@ export default class Message {
         app.storage.archive.add(data);
     }
 
-    shouldGroupWith (previous) {
+    shouldGroupWith(previous: Message) {
         if (this.type === 'groupchat') {
             return previous && previous.from.full === this.from.full && Math.round((this.created - previous.created) / 1000) <= 300 && previous.created.toLocaleDateString() === this.created.toLocaleDateString();
         } else {
@@ -72,25 +79,25 @@ export default class Message {
         }
     }
 
-    private _created: Date = null;
-    private _edited: Date = null;
-    private _mucMine: boolean = false;
+    private _created?: Date;
+    private _edited?: Date;
+    public _mucMine: boolean = false;
     receiptReceived: boolean = false;
     edited: boolean = false;
-    delay: {stamp} = null;
+    delay?: { stamp: any };
     mentions: any[] = [];
 
     mid: string = '';
     owner: string = '';
-    to: Object = null;
-    from: {full; bare; resource} = null;
+    to?: Object;
+    from: { full: string; bare: string; resource: string; };
     body: string = '';
     type: string = '';
     acked: boolean = false;
     requestReceipt: boolean = false;
     receipt: boolean = false;
     archivedId: string = '';
-    oobURIs: any[] = [];
+    oobURIs: { url: string; desc: string; }[] = [];
 
     get mine() {
         return this._mucMine || me.isMe(this.from);
@@ -197,12 +204,12 @@ export default class Message {
         return this.body.indexOf('/me') === 0;
     }
 
-    get urls() {
+    get urls(): LinkInfo[] {
         const self = this;
-        const result = [];
-        const urls = htmlify.collectLinks(this.body);
-        const oobURIs = _.pluck(this.oobURIs || [], 'url');
-        const uniqueURIs = _.unique(result.concat(urls).concat(oobURIs));
+        const result: LinkInfo[] = [];
+        const urls: string[] = htmlify.collectLinks(this.body);
+        const oobURIs: string[] = _.pluck(this.oobURIs || [], 'url');
+        const uniqueURIs = _.unique(urls.concat(oobURIs));
 
         _.each(uniqueURIs, function (url) {
             const oidx = oobURIs.indexOf(url);
@@ -224,12 +231,12 @@ export default class Message {
         return result;
     }
 
-    static idLookup(jid, mid) {
+    static idLookup(jid: string, mid: string) {
         const cache = ID_CACHE[jid] || (ID_CACHE[jid] = {});
         return cache[mid];
     }
 
-    static idStore(jid, mid, msg) {
+    static idStore(jid: string, mid: string, msg: any) {
         const cache = ID_CACHE[jid] || (ID_CACHE[jid] = {});
         cache[mid] = msg;
     }

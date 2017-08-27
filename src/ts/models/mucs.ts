@@ -6,8 +6,15 @@ declare const client: any;
 import Collection from './Collection';
 import MUC from './muc';
 
+interface MucData {
+    name: string;
+    jid: { bare: string; };
+    nick: string;
+    autoJoin: boolean;
+}
+
 export default class MUCs extends Collection<MUC> {
-    comparator (model1, model2) {
+    comparator(model1: MUC, model2: MUC) {
         const name1 = model1.displayName.toLowerCase();
         const name2 = model2.displayName.toLowerCase();
         if (name1 === name2) {
@@ -22,14 +29,17 @@ export default class MUCs extends Collection<MUC> {
     fetch () {
         const self = this;
         app.whenConnected(function () {
-            client.getBookmarks(function (err, res) {
+            client.getBookmarks(function (err: any, res: any) {
                 if (err) return;
 
                 const mucs = res.privateStorage.bookmarks.conferences || new MUCs();
                 mucs.forEach(function (muc: MUC) {
                     self.add(muc);
                     if (muc.autoJoin) {
-                        self.get(muc.jid.bare).join();
+                        const mucObject = self.get(muc.jid.bare);
+                        if (mucObject) {
+                            mucObject.join();
+                        }
                     }
                 });
 
@@ -38,10 +48,10 @@ export default class MUCs extends Collection<MUC> {
         });
     }
 
-    save (cb) {
+    save(cb: Function) {
         const self = this;
         app.whenConnected(function () {
-            const models = [];
+            const models: MucData[] = [];
             self.forEach(function (model) {
                 models.push({
                     name: model.name,
@@ -50,7 +60,7 @@ export default class MUCs extends Collection<MUC> {
                     autoJoin: model.autoJoin
                 });
             });
-            client.setBookmarks({conferences: models}, cb);
+            client.setBookmarks({ conferences: models }, cb);
         });
     }
 }

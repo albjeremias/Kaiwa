@@ -16,7 +16,7 @@ export default class Resource {
         if (self.timezoneOffset) return;
 
         app.whenConnected(function () {
-            client.getTime(self.id, function (err, res) {
+            client.getTime(self.id, function (err: any, res: any) {
                 if (err) return;
                 self.timezoneOffset = res.time.tzo;
             });
@@ -29,16 +29,16 @@ export default class Resource {
         if (self.discoInfo) return;
 
         app.whenConnected(function () {
-            client.getDiscoInfo(self.id, '', function (err, res) {
+            client.getDiscoInfo(self.id, '', function (err: any, res: any) {
                 if (err) return;
                 self.discoInfo = res.discoInfo;
             });
         });
     }
 
-    setAvatar (id, type, source) {
+    setAvatar(id: any, type: any, source: any) {
         const self = this;
-        fetchAvatar(this.id, id, type, source, function (avatar) {
+        fetchAvatar(this.id, id, type, source, function (avatar: any) {
             if (source === 'vcard' && self.avatarSource === 'pubsub') return;
             self.avatarID = avatar.id;
             self.avatar = avatar.uri;
@@ -51,8 +51,8 @@ export default class Resource {
     show: string = '';
     priority: number = 0;
     chatState: string = 'gone';
-    idleSince: Date = null;
-    discoInfo: {features} = null;
+    idleSince?: Date = undefined;
+    discoInfo?: { features: any; } = undefined;
     timezoneOffset: number = 0;
     avatar: string = '';
     avatarSource: string = '';

@@ -23,7 +23,7 @@ export default class Me {
         this.setAvatar(opts ? opts.avatarID : null);
 
         this.bind('change:jid', this.load, this);
-        this.bind('change:hasFocus', function () {
+        this.bind('change:hasFocus', () => {
             this.setActiveContact(this._activeContact);
         }, this);
         this.calls.bind('add remove reset', this.updateActiveCalls, this);
@@ -37,7 +37,7 @@ export default class Me {
         app.state.bind('change:deviceIDReady', this.registerDevice, this);
     }
 
-    setActiveContact (jid) {
+    setActiveContact(jid: string | any) {
         const prev = this.getContact(this._activeContact);
         if (prev) {
             prev.activeContact = false;
@@ -52,21 +52,21 @@ export default class Me {
         }
     }
 
-    getName () {
+    getName() {
         return this.displayName;
     }
 
-    getNickname () {
+    getNickname() {
         return this.displayName !== this.nick ? this.nick : '';
     }
 
-    getAvatar () {
+    getAvatar() {
         return this.avatar;
     }
 
-    setAvatar (id, type?, source?) {
+    setAvatar(id: any, type?: any, source?: any) {
         const self = this;
-        fetchAvatar('', id, type, source, function (avatar) {
+        fetchAvatar('', id, type, source, function (avatar: any) {
             self.avatarID = avatar.id;
             self.avatar = avatar.uri;
         });
@@ -76,11 +76,11 @@ export default class Me {
         if (!data) data = this.avatar;
         if (!data || data.indexOf('https://') !== -1) return;
 
-        const resampler = new Resample(data, 80, 80, function (data) {
+        const resampler = new Resample(data, 80, 80, function (data: string) {
             const b64Data = data.split(',')[1];
             const id = crypto.createHash('sha1').update(atob(b64Data)).digest('hex');
             app.storage.avatars.add({id: id, uri: data});
-            client.publishAvatar(id, b64Data, function (err, res) {
+            client.publishAvatar(id, b64Data, function (err: any, res: any) {
                 if (err) return;
                 client.useAvatars([{
                   id: id,
@@ -93,11 +93,11 @@ export default class Me {
         });
     }
 
-    setSoundNotification(enable) {
+    setSoundNotification(enable: boolean) {
         this.soundEnabled = enable;
     }
 
-    getContact (jid, alt?: string): any {
+    getContact(jid: string | any, alt?: string): any {
         if (typeof jid === 'string') {
             if (KAIWA_CONFIG.domain && jid.indexOf('@') === -1) jid += '@' + KAIWA_CONFIG.domain;
             jid = new StanzaIo.JID(jid);
@@ -115,7 +115,7 @@ export default class Me {
             this.calls.findWhere('jid', jid);
     }
 
-    setContact (data, create) {
+    setContact(data: any, create: boolean) {
         let contact = this.getContact(data.jid);
         data.jid = data.jid.bare;
 
@@ -131,9 +131,9 @@ export default class Me {
         }
     }
 
-    removeContact (jid) {
+    removeContact(jid: any) {
         const self = this;
-        client.removeRosterItem(jid, function(err, res) {
+        client.removeRosterItem(jid, function(err: any, res: any) {
             const contact = self.getContact(jid);
             self.contacts.remove(contact.jid);
             app.storage.roster.remove(contact.storageId);
@@ -145,7 +145,7 @@ export default class Me {
 
         const self = this;
 
-        app.storage.profiles.get(this.jid.bare, function (err, profile) {
+        app.storage.profiles.get(this.jid.bare, function (err: any, profile: any) {
             if (!err) {
                 self.nick = self.jid.local;
                 self.status = profile.status;
@@ -153,7 +153,7 @@ export default class Me {
                 self.soundEnabled = profile.soundEnabled;
             }
             self.save();
-            app.storage.roster.getAll(self.jid.bare, function (err, contacts) {
+            app.storage.roster.getAll(self.jid.bare, function (err: any, contacts: any[]) {
                 if (err) return;
 
                 contacts.forEach(function (contact) {
@@ -173,11 +173,11 @@ export default class Me {
         });
     }
 
-    isMe (jid) {
+    isMe(jid?: { bare: string; }) {
         return jid && (jid.bare === this.jid.bare);
     }
 
-    updateJid(newJid) {
+    updateJid(newJid: any) {
         if (this.jid.domain && this.isMe(newJid)) {
             this.jid.full = newJid.full;
             this.jid.resource = newJid.resource;
@@ -189,22 +189,19 @@ export default class Me {
         }
     }
 
-    updateIdlePresence () {
+    updateIdlePresence() {
         const update = {
             status: this.status,
             show: this.show,
-            caps: app.api.disco.caps
+            caps: app.api.disco.caps,
+            idle: app.state.active ? undefined : { since: app.state.idleSince }
         };
-
-        if (!app.state.active) {
-            update['idle'] = {since: app.state.idleSince};
-        }
 
         app.api.sendPresence(update);
     }
 
     updateUnreadCount() {
-        const sum = function (a, b) {
+        const sum = function (a: number, b: number) {
             return a + b;
         };
 
@@ -236,7 +233,7 @@ export default class Me {
 
     cameraOn () {
         const self = this;
-        getUserMedia(function (err, stream) {
+        getUserMedia(function (err: any, stream: any) {
             if (err) {
                 console.error(err);
             } else {
@@ -257,7 +254,7 @@ export default class Me {
         if (!!deviceID && deviceID !== undefined && deviceID !== 'undefined') {
             client.otalkRegister(deviceID).then(function () {
                 client.registerPush('push@push.otalk.im/prod');
-            }).catch(function (err) {
+            }).catch(function (err: any) {
                 console.log('Could not enable push notifications');
             });
         }

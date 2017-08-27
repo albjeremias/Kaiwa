@@ -21,7 +21,7 @@ export default class MUC {
     trigger: (event: string) => void;
     unreadHlCount = 0;
 
-    constructor(attrs) {
+    constructor(attrs: { jid: { full: string } }) {
         if (attrs.jid) {
             this.id = attrs.jid.full;
         }
@@ -31,7 +31,7 @@ export default class MUC {
         });
     }
 
-    getName (jid) {
+    getName(jid: string) {
         const nickname = jid.split('/')[1];
         let name = nickname;
         const xmppContact = me.getContact(nickname) as any;
@@ -42,12 +42,12 @@ export default class MUC {
         return name !== '' ? name : nickname;
     }
 
-    getNickname (jid) {
+    getNickname(jid: string) {
         const nickname = jid.split('/')[1];
         return nickname !== this.getName(jid) ? nickname : '';
     }
 
-    getAvatar (jid) {
+    getAvatar(jid: string) {
         const resource = this.resources.get(jid);
         if (resource && resource.avatar) {
             return resource.avatar;
@@ -55,7 +55,7 @@ export default class MUC {
         return 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=80&d=mm';
     }
 
-    addMessage (message, notify) {
+    addMessage(message: Message, notify: boolean) {
         message.owner = me.jid.bare;
 
         const self = this;
@@ -80,6 +80,9 @@ export default class MUC {
         if (notify && (!this.activeContact || (this.activeContact && !app.state.focused)) && !mine) {
             this.unreadCount++;
             if (toMe) {
+                if (!this.jid) {
+                    throw new Error('JID is not defined for ' + this.id);
+                }
                 this.unreadHlCount += 1;
                 app.notifications.create(this.displayName, {
                     body: message.body,
@@ -151,13 +154,13 @@ export default class MUC {
                     },
                 ]
             };
-            client.configureRoom(this.jid, form, function(err, resp) {
+            client.configureRoom(this.jid, form, function(err: any, resp: any) {
                 if (err) return;
             });
 
             if (KAIWA_CONFIG.domain && KAIWA_CONFIG.admin) {
                 const self = this;
-                client.setRoomAffiliation(this.jid, KAIWA_CONFIG.admin + '@' + KAIWA_CONFIG.domain, 'owner', 'administration', function(err, resp) {
+                client.setRoomAffiliation(this.jid, KAIWA_CONFIG.admin + '@' + KAIWA_CONFIG.domain, 'owner', 'administration', function(err: any, resp: any) {
                     if (err) return;
                     client.setRoomAffiliation(self.jid, me.jid, 'none', 'administration');
                 });
@@ -166,14 +169,14 @@ export default class MUC {
 
         const self = this;
         // After a reconnection
-        client.on('muc:join', function (pres) {
+        client.on('muc:join', function () {
             if (self.messages.length) {
                 self.fetchHistory(true);
             }
         });
     }
 
-    fetchHistory(allInterval) {
+    fetchHistory(allInterval: boolean) {
         const self = this;
         app.whenConnected(function () {
             const filter: any = {
@@ -198,12 +201,12 @@ export default class MUC {
                 }
             }
 
-            client.searchHistory(filter, function (err, res) {
+            client.searchHistory(filter, function (err: any, res: any) {
                 if (err) return;
 
                 const results = res.mamResult.items || [];
 
-                results.forEach(function (result) {
+                results.forEach(function (result: any) {
                     const msg = result.forwarded.message;
 
                     msg.mid = msg.id;
@@ -221,7 +224,7 @@ export default class MUC {
                         if (original && original.correct(msg)) return;
                     }
 
-                    const message = new Message(msg);
+                    const message = new Message();
                     message.archivedId = result.id;
                     message.acked = true;
 
@@ -244,8 +247,8 @@ export default class MUC {
 
     subject: string = '';
     activeContact: boolean = false;
-    lastInteraction: Date = null;
-    lastSentMessage: Object = null;
+    lastInteraction?: Date;
+    lastSentMessage?: Object;
     unreadCount: number = 0;
     persistent: boolean = false;
     joined: boolean = false;
@@ -257,11 +260,11 @@ export default class MUC {
     nick: string = '';
     jid: {
         bare: string;
-    } = null;
+    };
 
     get displayName() {
         let disp = this.name;
-        if (!disp) disp = this.jid.bare;
+        if (!disp) disp = this.jid ? this.jid.bare : '';
         return disp.split('@')[0];
     }
 

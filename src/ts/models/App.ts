@@ -61,7 +61,7 @@ export default class App {
     private async launch(session: ISession): Promise<void> {
         let app: App = this as App;
 
-        window['app'] = app;
+        (window as any)['app'] = app;
 
         app.config = update(session, {useStreamManagement: {$set: false}});
         // TODO: Disabling useStreamManagement is a temporary solution because
@@ -73,7 +73,7 @@ export default class App {
 
         // _.extend(this, Backbone.Events)
 
-        let profile = {};
+        let profile: any = {};
 
         app = await (async() => new Promise<App>((resolve, reject) => {
             app.notifications = new Notify();
@@ -88,7 +88,7 @@ export default class App {
         }))();
 
         app = await (async() => new Promise<App>((resolve, reject) => {
-            app.storage.profiles.get(app.config.jid, function (err, res) {
+            app.storage.profiles.get(app.config.jid, function (err: any, res: any) {
                 if (res) {
                     profile = res;
                     profile['jid'] = {
@@ -103,7 +103,7 @@ export default class App {
 
         app = await (async() => new Promise<App>((resolve, reject) => {
             app.state = new AppState();
-            app.me = window['me'] = new Me(this.calls, profile);
+            app.me = (window as any)['me'] = new Me(this.calls, profile);
 
             window.onbeforeunload = function () {
                 if (app.api.sessionStarted) {
@@ -111,7 +111,7 @@ export default class App {
                 }
             };
 
-            app.api = window['client'] = StanzaIO.createClient(app.config);
+            app.api = (window as any)['client'] = StanzaIO.createClient(app.config);
             client.use(pushNotifications);
             xmppEventHandlers(app.api, app);
 
@@ -128,7 +128,7 @@ export default class App {
         app.whenConnected(function () {
             function getInterval() {
                 if (client.sessionStarted) {
-                    client.getTime(app.id, function (err, res) {
+                    client.getTime(app.id, function (err: any, res: any) {
                         if (err) return;
                         app.timeInterval = res.time.utc - Date.now();
                     });
@@ -172,7 +172,7 @@ export default class App {
         // TODO: Go back to the login page telling the user what the error is. ~ F
     }
 
-    whenConnected(func) {
+    whenConnected(func: () => void) {
         if (this.api.sessionStarted) {
             func();
         } else {
@@ -180,13 +180,13 @@ export default class App {
         }
     }
 
-    navigate(page) {
+    navigate(page: string) {
         const url = (page.charAt(0) === '/') ? page.slice(1) : page;
         this.state.markActive();
         this.history.navigate(url, true);
     }
 
-    renderPage(view, animation) {
+    renderPage(view: any, animation: string) {
         const container = $('#pages');
 
         if (this.currentPage) {
@@ -218,5 +218,5 @@ export default class App {
     mucInfos: any;
     composing: any;
 
-    error: Error = null;
+    error?: Error;
 }

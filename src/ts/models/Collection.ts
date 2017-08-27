@@ -17,30 +17,30 @@ export default class Collection<T> {
     }
 
     first() {
-        return this[0];
+        return this.items[0];
     }
 
     last() {
         return this.items[this.items.length - 1];
     }
 
-    add(item) {
+    add(item: T) {
         this.items.push(item);
     }
 
-    filter(predicate: (T) => boolean) {
+    filter(predicate: (item: T) => boolean) {
         return new Collection<T>(this.items.filter(predicate));
     }
 
-    get(str: string): T {
-        return null;
+    get(str: string | undefined): T | undefined {
+        return undefined;
     }
 
-    comparator(item1, item2): number {
+    comparator(item1: T, item2: T): number {
         return 0;
     }
 
-    forEach(action: (T) => void): void {
+    forEach(action: (item: T) => void): void {
         this.items.forEach(action);
     }
 
@@ -57,7 +57,7 @@ export default class Collection<T> {
     }
 
     where(property: string, value: any): T[] {
-        return this.items.filter((v) => v[property] === value);
+        return this.items.filter((v) => (v as any)[property] === value);
     }
 
     bind(events: string, handler: () => void, instance?: any) {

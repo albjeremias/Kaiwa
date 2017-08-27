@@ -17,17 +17,17 @@ export default class Call {
         app.navigate('/chat/' + encodeURIComponent(this.contact.jid));
     }
 
-    end (reasonForEnding) {
+    end(reasonForEnding?: string) {
         const reason = reasonForEnding || 'success';
         this.contact.onCall = false;
         if (this.jingleSession) {
-            this.jingleSession.end(reasonForEnding);
+            this.jingleSession.end(reason);
         }
         this.collection.remove(this);
     }
 
-    contact: {onCall; jid} = null;
-    jingleSession: {end} = null;
+    contact: { onCall: boolean; jid: string; };
+    jingleSession: { end: (reason: string) => void; };
     state: string = 'inactive';
     multiUser: boolean = false;
 }
