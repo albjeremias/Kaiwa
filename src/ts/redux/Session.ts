@@ -35,7 +35,8 @@ function getDefaultSession() {
 export const LOCAL_STORAGE_KEY = 'session';
 export function reducer(state: ISession, action: IAction): ISession {
     if (state === undefined) {
-        return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || getDefaultSession();
+        const session = localStorage.getItem(LOCAL_STORAGE_KEY);
+        return session ? JSON.parse(session) : getDefaultSession();
     }
 
     switch (action.type) {
