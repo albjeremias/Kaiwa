@@ -1,14 +1,17 @@
-// SCHEMA
-//    jid: string
-//    name: string
-//    avatarID: string
-//    status: string
-//    rosterVer: string
+import Storage from '.';
+
+interface Profile {
+    jid: string;
+    name: string;
+    avatarID: string;
+    status: string;
+    rosterVer: string;
+}
 
 export default class ProfileStorage {
-    constructor(public storage) {}
+    constructor(public storage: Storage) {}
 
-    setup (db) {
+    setup(db: IDBDatabase) {
         if (db.objectStoreNames.contains('profiles')) {
             db.deleteObjectStore('profiles');
         }
@@ -17,12 +20,12 @@ export default class ProfileStorage {
         });
     }
 
-    transaction (mode) {
-        const trans = this.storage.db.transaction('profiles', mode);
+    transaction(mode: IDBTransactionMode) {
+    const trans = this.storage.db.transaction('profiles', mode);
         return trans.objectStore('profiles');
     }
 
-    set (profile, cb) {
+    set(profile: Profile, cb: (error: false | Event, profile?: Profile) => void) {
         cb = cb || function () {};
         const request = this.transaction('readwrite').put(profile);
         request.onsuccess = function () {
@@ -31,7 +34,7 @@ export default class ProfileStorage {
         request.onerror = cb;
     }
 
-    get (id, cb) {
+    get(id: any, cb: (error: false | string | Event, result?: any) => void) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
@@ -47,7 +50,7 @@ export default class ProfileStorage {
         request.onerror = cb;
     }
 
-    remove (id, cb) {
+    remove(id: any, cb: (error: false | Event, result?: any) => void) {
         cb = cb || function () {};
         const request = this.transaction('readwrite')['delete'](id);
         request.onsuccess = function (e) {

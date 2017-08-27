@@ -1,7 +1,9 @@
-export default class ArchiveStorage {
-    constructor (public storage) {}
+import Storage from '.';
 
-    setup (db) {
+export default class ArchiveStorage {
+    constructor (public storage: Storage) {}
+
+    setup(db: IDBDatabase) {
         if (db.objectStoreNames.contains('archive')) {
             db.deleteObjectStore('archive');
         }
@@ -11,12 +13,12 @@ export default class ArchiveStorage {
         store.createIndex('owner', 'owner', {unique: false});
     }
 
-    transaction (mode) {
+    transaction(mode: IDBTransactionMode) {
         const trans = this.storage.db.transaction('archive', mode);
         return trans.objectStore('archive');
     }
 
-    add (message, cb) {
+    add(message: any, cb: (error: false | Event, message?: any) => void) {
         cb = cb || function () {};
         const request = this.transaction('readwrite').put(message);
         request.onsuccess = function () {
@@ -25,7 +27,7 @@ export default class ArchiveStorage {
         request.onerror = cb;
     }
 
-    get (id, cb) {
+    get(id: any, cb: (error: false | string | Event, result?: any) => void) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
@@ -42,14 +44,14 @@ export default class ArchiveStorage {
         request.onerror = cb;
     }
 
-    getAll (owner, cb) {
+    getAll(owner: any, cb: (error: false | Event, result?: any[]) => void) {
         cb = cb || function () {};
-        const results = [];
+        const results: any[] = [];
 
         const store = this.transaction('readonly');
         const request = store.index('owner').openCursor(IDBKeyRange.only(owner));
         request.onsuccess = function (e) {
-            const cursor = e.target.result;
+            const cursor = (e.target as any).result;
             if (cursor) {
                 cursor.value.acked = true;
                 results.push(cursor.value);

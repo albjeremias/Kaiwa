@@ -5,17 +5,17 @@ import ArchiveStorage from './archive';
 import ProfileStorage from './profile';
 
 export default class Storage {
-    open (cb) {
+    open(cb: (error: false | Event, result?: IDBDatabase) => void) {
         cb = cb || function () {};
 
         const self = this;
         const request = indexedDB.open('datastorage', this.version);
         request.onsuccess = function (e) {
-            self.db = e.target['result'];
+            self.db = (e.target as any).result as IDBDatabase;
             cb(false, self.db);
         };
         request.onupgradeneeded = function (e) {
-            const db = e.target['result'];
+            const db = (e.target as any).result as IDBDatabase;
             self.avatars.setup(db);
             self.roster.setup(db);
             self.disco.setup(db);
@@ -27,7 +27,7 @@ export default class Storage {
 
     version = 3;
 
-    db = null;
+    db: IDBDatabase;
     init = [];
 
     avatars = new AvatarStorage(this);

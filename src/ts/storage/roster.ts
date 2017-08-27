@@ -1,14 +1,17 @@
-// SCHEMA
-//    jid: string
-//    name: string
-//    subscription: string
-//    groups: array
-//    rosterID: string
+import Storage from '.';
+
+interface Contact {
+    jid: string;
+    name: string;
+    subscription: string;
+    groups: any[];
+    rosterID: string;
+}
 
 export default class RosterStorage {
-    constructor(public storage) {}
+    constructor(public storage: Storage) {}
 
-    setup (db) {
+    setup(db: IDBDatabase) {
         if (db.objectStoreNames.contains('roster')) {
             db.deleteObjectStore('roster');
         }
@@ -18,12 +21,13 @@ export default class RosterStorage {
         store.createIndex('owner', 'owner', {unique: false});
     }
 
-    transaction (mode) {
+    transaction(mode: IDBTransactionMode) {
+        let x = this.storage.init;
         const trans = this.storage.db.transaction('roster', mode);
         return trans.objectStore('roster');
     }
 
-    add (contact, cb) {
+    add(contact: Contact, cb: (error: false | Event, contact?: Contact) => void) {
         cb = cb || function () {};
         const request = this.transaction('readwrite').put(contact);
         request.onsuccess = function () {
@@ -32,7 +36,7 @@ export default class RosterStorage {
         request.onerror = cb;
     }
 
-    get (id, cb) {
+    get(id: any, cb: (error: false | string | Event, result?: Contact) => void) {
         cb = cb || function () {};
         if (!id) {
             return cb('not-found');
@@ -48,14 +52,14 @@ export default class RosterStorage {
         request.onerror = cb;
     }
 
-    getAll (owner, cb) {
+    getAll(owner: any, cb: (error: false | Event, results?: Contact[]) => void) {
         cb = cb || function () {};
-        const results = [];
+        const results: Contact[] = [];
 
         const store = this.transaction('readonly');
         const request = store.index('owner').openCursor(IDBKeyRange.only(owner));
         request.onsuccess = function (e) {
-            const cursor = e.target.result;
+            const cursor = (e.target as any).result;
             if (cursor) {
                 results.push(cursor.value);
                 cursor.continue();
@@ -66,7 +70,7 @@ export default class RosterStorage {
         request.onerror = cb;
     }
 
-    remove (id, cb) {
+    remove(id: any, cb: (error: false | Event, result?: any) => void) {
         cb = cb || function () {};
         const request = this.transaction('readwrite')['delete'](id);
         request.onsuccess = function (e) {
@@ -75,7 +79,7 @@ export default class RosterStorage {
         request.onerror = cb;
     }
 
-    clear (cb) {
+    clear(cb: (error: false | Event, result?: any) => void) {
         cb = cb || function () {};
         const request = this.transaction('readwrite').clear();
         request.onsuccess = function () {

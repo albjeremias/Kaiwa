@@ -1,7 +1,14 @@
-export default class DiscoStorage {
-    constructor (public storage) {}
+import Storage from '.';
 
-    setup (db) {
+interface DiscoData {
+    ver: any;
+    disco: any;
+}
+
+export default class DiscoStorage {
+    constructor (public storage: Storage) {}
+
+    setup(db: IDBDatabase) {
         if (db.objectStoreNames.contains('disco')) {
             db.deleteObjectStore('disco');
         }
@@ -10,12 +17,12 @@ export default class DiscoStorage {
         });
     }
 
-    transaction (mode) {
+    transaction(mode: IDBTransactionMode) {
         const trans = this.storage.db.transaction('disco', mode);
         return trans.objectStore('disco');
     }
 
-    add (ver, disco, cb) {
+    add(ver: any, disco: any, cb: (error: false | Event, result?: DiscoData) => void) {
         cb = cb || function () {};
         const data = {
             ver: ver,
@@ -28,7 +35,7 @@ export default class DiscoStorage {
         request.onerror = cb;
     }
 
-    get (ver, cb) {
+    get(ver: any, cb: (error: false | string | Event, disco?: any) => void) {
         cb = cb || function () {};
         if (!ver) {
             return cb('not-found');
