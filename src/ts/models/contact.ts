@@ -6,7 +6,7 @@ const logger = require('andlog');
 
 const fetchAvatar = require('../../js/helpers/fetchAvatar');
 
-import App from './App';
+import App from '../app/Application';
 import Me from './Me';
 
 import Resources from './resources';

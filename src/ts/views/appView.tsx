@@ -1,7 +1,7 @@
 import _ = require('lodash');
 import React = require('react');
 
-import App from '../models/App';
+import App from '../app/Application';
 import Settings from '../pages/settings';
 
 import Component = React.Component;

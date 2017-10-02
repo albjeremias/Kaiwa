@@ -1,7 +1,7 @@
 import $ = require('jquery');
 import _ = require('lodash');
 
-import App from '../models/App';
+import App from '../app/Application';
 import Me from '../models/Me';
 
 declare const app: App;

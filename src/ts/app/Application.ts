@@ -5,8 +5,8 @@ import xmppEventHandlers = require('../helpers/xmppEventHandlers');
 import {IApplicationState} from '../redux/Application';
 import {ISession} from '../redux/Session';
 import Storage from '../storage';
-import Calls from './calls';
-import Me from './Me';
+import Calls from '../models/calls';
+import Me from '../models/Me';
 
 import Store = Redux.Store;
 
@@ -32,12 +32,12 @@ interface IConfig extends ISession {
     rosterVer?: string;
 }
 
-export default class App {
+export default class Application {
     calls = new Calls();
     config: IConfig;
 
     public async launch(session: ISession): Promise<void> {
-        let app: App = this as App;
+        let app: Application = this;
 
         (window as any)['app'] = app;
 
@@ -53,7 +53,7 @@ export default class App {
 
         let profile: any = {};
 
-        app = await (async() => new Promise<App>((resolve, reject) => {
+        app = await (async() => new Promise<Application>((resolve, reject) => {
             app.notifications = new Notify();
             app.soundManager = new SoundEffectManager();
             app.desktop = new Desktop();
@@ -65,7 +65,7 @@ export default class App {
             app.mucInfos = [];
         }))();
 
-        app = await (async() => new Promise<App>((resolve, reject) => {
+        app = await (async() => new Promise<Application>((resolve, reject) => {
             app.storage.profiles.get(app.config.jid, function (err: any, res: any) {
                 if (res) {
                     profile = res;
@@ -79,7 +79,7 @@ export default class App {
             });
         }))();
 
-        app = await (async() => new Promise<App>((resolve, reject) => {
+        app = await (async() => new Promise<Application>((resolve, reject) => {
             app.state = new AppState();
             app.me = (window as any)['me'] = new Me(this.calls, profile);
 
@@ -117,7 +117,7 @@ export default class App {
             getInterval();
         });
 
-        app = await (async() => new Promise<App>((resolve, reject) => {
+        app = await (async() => new Promise<Application>((resolve, reject) => {
             app.whenConnected(function () {
                 me.publishAvatar();
             });

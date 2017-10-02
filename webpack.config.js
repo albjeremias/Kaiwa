@@ -30,7 +30,7 @@ module.exports = {
     WebpackFailPlugin],
 
     entry: {
-        'js/app': './ts/app'
+        'js/app': './ts/kaiwa'
     },
 
     output: {

@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 
-import App from './App';
+import App from '../app/Application';
 import Me from './Me';
 
 declare const app: App;

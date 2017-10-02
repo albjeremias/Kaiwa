@@ -1,4 +1,4 @@
-import App from './App';
+import App from '../app/Application';
 import Calls from './calls';
 
 declare const app: App;

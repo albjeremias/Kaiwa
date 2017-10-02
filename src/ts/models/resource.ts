@@ -1,6 +1,6 @@
 const fetchAvatar = require('../../js/helpers/fetchAvatar');
 
-import App from './App';
+import App from '../app/Application';
 
 declare const app: App;
 declare const client: any;

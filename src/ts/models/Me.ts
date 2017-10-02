@@ -4,7 +4,7 @@ const StanzaIo = require('stanza.io');
 
 const fetchAvatar = require('../../js/helpers/fetchAvatar');
 const Resample = require('../../js/libraries/resampler');
-import App from './App';
+import App from '../app/Application';
 import Collection from './Collection';
 import Contacts from './contacts';
 import Calls from './calls';

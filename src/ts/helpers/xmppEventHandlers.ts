@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import * as uuid from 'node-uuid';
 const StanzaIo = require('stanza.io');
 
-import App from '../models/App';
+import App from '../app/Application';
 import Call  from '../models/call';
 import Contact from '../models/contact';
 import Me from '../models/Me';

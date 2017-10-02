@@ -1,6 +1,6 @@
 import _ = require('lodash');
 
-import App from './App';
+import App from '../app/Application';
 import Me from './Me';
 
 declare const app: App;

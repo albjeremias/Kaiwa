@@ -1,7 +1,7 @@
 import Redux = require('redux');
 import {ThunkAction} from 'redux-thunk';
 
-import App from '../models/App';
+import App from '../app/Application';
 import {writeSession} from '../storage/localStorage';
 import {ISession} from './Session';
 
