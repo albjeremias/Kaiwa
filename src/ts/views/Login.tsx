@@ -2,8 +2,9 @@ import * as React from 'react';
 import * as Redux from 'redux';
 import {connect} from 'react-redux';
 
+import Application from '../app/Application';
 import {login} from '../redux/Actions';
-import {ApplicationStateType, IApplicationState as IAppState, IApplicationErrorState} from '../redux/State';
+import {ApplicationStatus, IApplicationStatus, IApplicationErrorStatus} from '../redux/Status';
 import {IApplicationState} from '../redux/Application';
 import {ISession} from '../redux/Session';
 
@@ -50,9 +51,10 @@ class Field extends React.Component<{
 }
 
 interface LoginProps {
+    application: Application;
     session: ISession;
-    appState: IAppState;
-    onLogin: (session: ISession) => void;
+    status: IApplicationStatus;
+    onLogin: (application: Application, session: ISession) => void;
 }
 
 class LoginView extends React.Component<LoginProps, ISession> {
@@ -61,12 +63,12 @@ class LoginView extends React.Component<LoginProps, ISession> {
         this.state = props.session;
     }
 
-    handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        this.props.onLogin(this.state);
+        this.props.onLogin(this.props.application, this.state);
     }
 
-    handleChange(event: React.FormEvent<HTMLInputElement>) {
+    handleChange = (event: React.FormEvent<HTMLInputElement>) => {
         const target = event.currentTarget;
         this.setState({
             [target.id]: target.value
@@ -76,8 +78,9 @@ class LoginView extends React.Component<LoginProps, ISession> {
     render() {
         const showWssSelector = !KAIWA_CONFIG.wss;
         const session = this.state;
-        const errorMessage = this.props.appState.type === ApplicationStateType.ConnectionError
-            ? (this.props.appState as IApplicationErrorState).error
+        const {application, status} = this.props;
+        const errorMessage = status.type === ApplicationStatus.ConnectionError
+            ? status.error
             : undefined;
         return (
             <section className='loginbox content box'>
@@ -92,28 +95,28 @@ class LoginView extends React.Component<LoginProps, ISession> {
                     ) : undefined}
 
                 <div className='content'>
-                    <form id='login-form' onSubmit={e => this.handleSubmit(e)}>
+                    <form id='login-form' onSubmit={this.handleSubmit}>
                         <Field id='jid'
                                label='Username'
                                placeholder='you'
                                tabIndex={1}
                                autoFocus={true}
                                value={session.jid}
-                               onChange={e => this.handleChange(e)}/>
+                               onChange={this.handleChange}/>
                         <Field id='password'
                                type='password'
                                label='Password'
                                placeholder='••••••••'
                                tabIndex={2}
                                value={session.password}
-                               onChange={e => this.handleChange(e)}/>
+                               onChange={this.handleChange}/>
                         {showWssSelector
                             ? <Field id='connURL'
                                      label='WebSocket or BOSH URL'
                                      placeholder='wss://aweso.me:5281/xmpp-websocket'
                                      tabIndex={3}
                                      value={session.connURL}
-                                     onChange={e => this.handleChange(e)}/>
+                                     onChange={this.handleChange}/>
                             : null}
                         <Field id='public-computer'
                                label='Public computer'
@@ -130,12 +133,12 @@ class LoginView extends React.Component<LoginProps, ISession> {
 }
 
 function stateToProps(state: IApplicationState): Partial<LoginProps> {
-    return {session: state.session, appState: state.state};
+    return {application: state.application, session: state.session, status: state.status};
 }
 
 function dispatchToProps(dispatch: Dispatch<IApplicationState>): Partial<LoginProps> {
     return {
-        onLogin: (session) => dispatch(login(session))
+        onLogin: (application, session) => dispatch(login(application, session))
     };
 }
 

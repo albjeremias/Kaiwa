@@ -1,11 +1,16 @@
 import {combineReducers} from 'redux';
 
+import Application from '../app/Application';
 import {ISession, reducer as session} from './Session';
-import {IApplicationState, reducer as state} from './State';
+import {IApplicationStatus, reducer as status} from './Status';
 
 export interface IApplicationState {
-    state: IApplicationState;
+    application: Application;
+    status: IApplicationStatus;
     session: ISession;
 }
 
-export const reducer = combineReducers<IApplicationState>({state, session});
+export const reducer = (application: Application) => {
+    let appReducer = () => application;
+    return combineReducers<IApplicationState>({application: appReducer, status, session});
+};

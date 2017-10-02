@@ -175,7 +175,6 @@ export default class Application {
         return KAIWA_CONFIG;
     }
 
-    // TODO: add typings
     api: any;
     private id: any;
     timeInterval: any;

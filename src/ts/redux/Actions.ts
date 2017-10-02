@@ -1,7 +1,7 @@
 import Redux = require('redux');
 import {ThunkAction} from 'redux-thunk';
 
-import App from '../app/Application';
+import Application from '../app/Application';
 import {writeSession} from '../storage/localStorage';
 import {ISession} from './Session';
 
@@ -29,11 +29,10 @@ const connectionError = (session: ISession, error: string): ISessionErrorAction 
     error
 });
 
-export function login(session: ISession) {
+export function login(app: Application, session: ISession) {
     return async (dispatch: Redux.Dispatch<ISession>) => {
         dispatch(connecting(session));
         try {
-            const app = new App();
             await app.launch(session);
             writeSession(session);
             dispatch(connected(session));
