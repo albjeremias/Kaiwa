@@ -1,10 +1,6 @@
 language: node_js
 node_js:
-- "4.1"
-- "4.0"
-# - "0.12" TODO: Disabled until #97 is resolved. ~ F
-# - "0.11" TODO: Disabled until #97 is resolved. ~ F
-# - "0.10" TODO: Disabled until #94 and #97 are resolved. ~ F
+- "8.11"
 sudo: false
 script:
 - cp dev_config.example.json dev_config.json
