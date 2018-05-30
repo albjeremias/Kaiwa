@@ -47,6 +47,13 @@ resolve that, visit the XMPP over Websocket URL directly (eg,
 `example.com:5281/xmpp-websocket` for Prosody) so that a client cert choice can
 be made. After that, the Kaiwa client should connect fine.
 
+## Installing using docker
+
+    $ git clone https://github.com/ForNeVeR/kaiwa.git
+    $ cd kaiwa
+    $ cp dev_config.example.json dev_config.json # and edit the file
+    $ docker-compose up
+
 ## Configuration
 
 Application configuration is taken from `dev_config.json` file.
